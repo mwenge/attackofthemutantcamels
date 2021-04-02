@@ -131,6 +131,9 @@ SETBV = $E45C
 XITBV = $E462
 WARMSV = $E474
 
+*=$02E0
+.addr b387D
+
 *=$0FE1
 f0FE1   .BYTE $E1,$30,$E1,$0F,$22,$18
 s0FE7   LDA #$3C
@@ -3476,5 +3479,4 @@ b387D   LDA #$22
         JSR s1822
         JMP (DOSVEC) ;DOSVEC  
 
-        .BYTE $E0,$02,$E1,$02,$7D,$38
 

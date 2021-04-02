@@ -19,7 +19,7 @@ runatari: aomc.xex
 	$(ATARI800) -win-height 800 -win-width 1200 $(XEX_IMAGE)
 
 aomc.p88: src/konix/AOTMC89.ASM
-	cd src/konix; wine "..\assembler.exe" -o "..\bin\aomc.p88" -i AOTMC89.ASM
+	cd src/konix; wine "..\..\assembler.exe" -o "..\..\bin\aomc.p88" -i AOTMC89.ASM
 	md5sum bin/aomc.p88 bin/aomc-bench.p88
 
 runkonix: aomc.p88

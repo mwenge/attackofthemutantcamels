@@ -6,7 +6,7 @@ This is the source code for different versions of Attack of the Mutant Camels by
 ## Playing the Games
 [C64:](https://mwenge.github.io/attackofthemutantcamels/c64/) (Ctrl key is 'Fire', Arrow Keys to move.)
 
-[Atari800:](https://mwenge.github.io/attackofthemutantcamels/atari800/?disk_filename=amc.atr) (Alt key is 'Fire', Arrow Keys to move.)
+[Atari800:](https://mwenge.github.io/attackofthemutantcamels/atari800/?disk_filename=aomc.atr) (Alt key is 'Fire', Arrow Keys to move.)
 
 ## Building the C64 Source Code
 <img src="https://user-images.githubusercontent.com/58846/114308473-13c39700-9adc-11eb-9753-3e131a3192e9.png" height=300><img src="https://user-images.githubusercontent.com/58846/114308808-f8a55700-9adc-11eb-8eec-8f9adda6bee7.gif" height=300>

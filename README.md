@@ -53,7 +53,7 @@ $ make aomc.xex
 ```
 
 # Attack of the Mutant Camels (Konix 1989) by Jeff Minter
-<img src="https://s.uvlist.net/n/y2020/06/202907.jpg" height=300>
+<img src="https://user-images.githubusercontent.com/58846/114309232-761d9700-9ade-11eb-9fc1-ba1503bda323.gif" height=300>
 
 This is the [source code] for the 1989 work-in-progress of Attack of the Mutant Camels for the Konix Multisystem by Jeff Minter. 
 

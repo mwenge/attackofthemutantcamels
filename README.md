@@ -1,16 +1,16 @@
 # Attack of the Mutant Camels (1983) by Jeff Minter
 <img src="https://user-images.githubusercontent.com/58846/114308225-0528b000-9adb-11eb-8a9c-7a6ba7b1a4a9.png" height=300><img src="https://user-images.githubusercontent.com/58846/114308352-78cabd00-9adb-11eb-968a-5694c20e899e.gif" height=300>
+
 This is the source code for different versions of Attack of the Mutant Camels by Jeff Minter.
 
 ## Playing the Games
 [C64:](https://mwenge.github.io/attackofthemutantcamels/c64/) (Ctrl key is 'Fire', Arrow Keys to move.)
 
-[Vic20:] (https://mwenge.github.io/attackofthemutantcamels/vic20/) (Ctrl key is 'Fire', Arrow Keys to move.)
-
 [Atari800:](https://mwenge.github.io/attackofthemutantcamels/atari800/?disk_filename=amc.atr) (Alt key is 'Fire', Arrow Keys to move.)
 
 ## Building the C64 Source Code
 <img src="https://user-images.githubusercontent.com/58846/114308473-13c39700-9adc-11eb-9753-3e131a3192e9.png" height=300><img src="https://user-images.githubusercontent.com/58846/114308808-f8a55700-9adc-11eb-8eec-8f9adda6bee7.gif" height=300>
+
 ### Requirements
 * [VICE][vice] - The most popular C64 emulator
 * [64tass][64tass] - An assembler for 6502 source code.
@@ -85,3 +85,11 @@ $ make aomc.p88
 ```
 
 This repository is forked from https://github.com/SavourySnaX/AOTMC89.
+
+[64tass]: http://tass64.sourceforge.net/
+[vice]: http://vice-emu.sourceforge.net/
+[atari800]: https://atari800.github.io/
+[hatari]: https://hatari.tuxfamily.org/download.html
+[vasm]: http://sun.hasenbraten.de/vasm/index.php?view=relsrc
+[https://gridrunner.xyz]: https://mwenge.github.io/gridrunner.xyz
+[commented source code]:https://github.com/mwenge/attackofthemutantcamels/blob/master/src/

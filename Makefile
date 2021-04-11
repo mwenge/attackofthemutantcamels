@@ -1,13 +1,15 @@
 .PHONY: all clean run
 
+D64_IMAGE = "bin/amc.prg"
 XEX_IMAGE = "bin/aomc.xex"
 ATARI800 = atari800
+X64 = x64
 
 slipstream = wine slipstream
 
 C1541 = c1541
 
-all: clean aomc.xex run
+all: clean run
 
 amc.prg: src/c64/amc.asm
 	64tass -Wall -Wno-implied-reg --cbm-prg -o bin/amc.prg -L bin/list-co1.txt -l bin/labels.txt src/c64/amc.asm
@@ -23,6 +25,9 @@ runatari: aomc.xex
 aomc.p88: src/konix/AOTMC89.ASM
 	cd src/konix; wine "..\..\assembler.exe" -o "..\..\bin\aomc.p88" -i AOTMC89.ASM
 	md5sum bin/aomc.p88 bin/aomc-bench.p88
+
+run: amc.prg
+	$(X64) -verbose $(D64_IMAGE)
 
 runkonix: aomc.p88
 	$(slipstream) "bin\aomc.p88"

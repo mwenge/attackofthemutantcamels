@@ -3,7 +3,24 @@
 
 This is the source code for different versions of Attack of the Mutant Camels by Jeff Minter.
 
-## Playing the Games
+
+<!-- vim-markdown-toc GFM -->
+
+* [Playing the Games Online](#playing-the-games-online)
+* [Building the C64 Source Code](#building-the-c64-source-code)
+  * [Requirements](#requirements)
+  * [Setup](#setup)
+  * [Compiling](#compiling)
+* [Building the Atari-8 bit Source Code](#building-the-atari-8-bit-source-code)
+  * [Requirements](#requirements-1)
+  * [Compiling](#compiling-1)
+* [Building the Konix Source Code](#building-the-konix-source-code)
+  * [Requirements](#requirements-2)
+  * [Compiling](#compiling-2)
+
+<!-- vim-markdown-toc -->
+
+## Playing the Games Online
 [C64:](https://mwenge.github.io/attackofthemutantcamels/c64/) (Ctrl key is 'Fire', Arrow Keys to move.)
 
 [Atari800:](https://mwenge.github.io/attackofthemutantcamels/atari800/?disk_filename=aomc.atr) (Alt key is 'Fire', Arrow Keys to move.)
@@ -52,25 +69,19 @@ To just compile the game and get a binary (`gridrunner.xex`) do:
 $ make aomc.xex
 ```
 
-# Attack of the Mutant Camels (Konix 1989) by Jeff Minter
+## Building the Konix Source Code
 <img src="https://user-images.githubusercontent.com/58846/114309543-6b173680-9adf-11eb-97db-81f28038b17f.png" height=300> <img src="https://user-images.githubusercontent.com/58846/114309232-761d9700-9ade-11eb-9fc1-ba1503bda323.gif" height=300>
 
-This is the [source code] for the 1989 work-in-progress of Attack of the Mutant Camels for the Konix Multisystem by Jeff Minter. 
-
+This is the source code for the 1989 work-in-progress of Attack of the Mutant Camels for the Konix Multisystem by Jeff Minter. 
 
 The code is released with the kind permission of its original author - Jeff Minter
 
-### Current Status
-The game compiles and plays. Interesting findings, some analysis of the game logic and an overview of the code's structure [can be found here](https://github.com/mwenge/AOTMC89/tree/master/src).
-
-
-### Build Requirements
+### Requirements
 * [Wine][wine]
 
 [wine]: https://www.winehq.org/
-[commented source code]:https://github.com/mwenge/AOTMC89/blob/master/src/
 
-### Build Instructions
+### Compiling
 To compile and run it do:
 
 ```sh

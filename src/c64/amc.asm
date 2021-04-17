@@ -22,27 +22,27 @@ fD0 = $D0
 ;
 ; **** ZP ABSOLUTE ADRESSES **** 
 ;
-a02 = $02
-a03 = $03
-a04 = $04
-a05 = $05
+currentXPosition = $02
+currentYPosition = $03
+currentCharacter = $04
+colorForCurrentCharacter = $05
 a06 = $06
 a07 = $07
-a08 = $08
-a09 = $09
-a10 = $10
-a11 = $11
-a13 = $13
+screenLineLoPtr = $08
+screenLineHiPtr = $09
+landscapePosition = $10
+shipDirection = $11
+shipMoveCounter = $13
 a14 = $14
 a15 = $15
 a16 = $16
 a17 = $17
-a18 = $18
-a19 = $19
-a1A = $1A
+shipXPosition = $18
+shipYPosition = $19
+lastJoystickInput = $1A
 a1B = $1B
 a1C = $1C
-a1D = $1D
+gameTimer = $1D
 a1E = $1E
 a1F = $1F
 a20 = $20
@@ -120,11 +120,8 @@ aFF = $FF
 ;
 ; **** ZP POINTERS **** 
 ;
-p02 = $02
-p05 = $05
 p06 = $06
 p07 = $07
-p08 = $08
 p60 = $60
 p64 = $64
 p66 = $66
@@ -133,49 +130,12 @@ p66 = $66
 ;
 f003F = $003F
 f0043 = $0043
-f0340 = $0340
-f0360 = $0360
-f03FF = $03FF
-f0412 = $0412
-f0462 = $0462
-f049F = $049F
-f04AB = $04AB
-f04B8 = $04B8
-f04F0 = $04F0
-f0500 = $0500
-f0549 = $0549
-f05B7 = $05B7
-f05DF = $05DF
-f0600 = $0600
-f0607 = $0607
-f062F = $062F
-f065C = $065C
-f06AC = $06AC
-f06FC = $06FC
-f0700 = $0700
-f074C = $074C
-f0797 = $0797
-f079C = $079C
-f07C2 = $07C2
-f07C5 = $07C5
+screenLinesLoPtrArray = $0340
+screenLinesHiPtrArray = $0360
+SCREEN_RAM = $0400
 fCFFE = $CFFE
 fCFFF = $CFFF
-fD7FF = $D7FF
-fD800 = $D800
-fD84F = $D84F
-fD870 = $D870
-fD8AB = $D8AB
-fD8B8 = $D8B8
-fD900 = $D900
-fD9B7 = $D9B7
-fD9DF = $D9DF
-fDA00 = $DA00
-fDA07 = $DA07
-fDA2F = $DA2F
-fDB00 = $DB00
-fDB97 = $DB97
-fDBC2 = $DBC2
-fDBC5 = $DBC5
+COLOR_RAM = $D800
 ;
 ; **** ABSOLUTE ADRESSES **** 
 ;
@@ -187,29 +147,11 @@ a00A2 = $00A2
 a028D = $028D
 a0314 = $0314
 a0315 = $0315
-a0463 = $0463
-a0464 = $0464
-a0465 = $0465
-a04C6 = $04C6
-a0706 = $0706
-a071B = $071B
-a071C = $071C
-a0767 = $0767
-a0768 = $0768
-a0769 = $0769
-a07F8 = $07F8
-a07F9 = $07F9
-a07FA = $07FA
-a07FB = $07FB
-a07FC = $07FC
-a07FD = $07FD
-a07FE = $07FE
-a07FF = $07FF
 a38F1 = $38F1
 a38F2 = $38F2
 a38F3 = $38F3
 a38F4 = $38F4
-aDC11 = $DC11
+joystickInput = $DC11
 ;
 ; **** POINTERS **** 
 ;
@@ -220,10 +162,6 @@ p0124 = $0124
 p012E = $012E
 p0206 = $0206
 p0300 = $0300
-p0400 = $0400
-p044F = $044F
-p0519 = $0519
-p05D0 = $05D0
 p70A0 = $70A0
 pC1C0 = $C1C0
 pC6C2 = $C6C2
@@ -239,6 +177,13 @@ eEA31 = $EA31
 ; **** PREDEFINED LABELS **** 
 ;
 ROM_CHKOUT = $FFC9
+
+.enc "petscii"  ;define an ascii->petscii encoding
+        .cdef "  ", $a0  ;characters
+        .cdef "--", $ad  ;characters
+        .cdef "..", $ae  ;characters
+        .cdef "AZ", $c1
+        .cdef "az", $41
 
         * = $0801
 
@@ -499,6 +444,9 @@ p0E20   .BYTE $00,$00,$FF,$FF,$00,$FF,$FF,$FF
         .BYTE $FF,$FF,$00,$00,$FF,$FF,$00,$00
         .BYTE $FF,$FF,$00,$00,$FF,$FF,$00,$00
         .BYTE $FF,$FF,$00,$00,$FF,$FF,$00,$00
+;-------------------------------------------------------------------------
+; StartGame
+;-------------------------------------------------------------------------
         LDA #>pD000
         STA a07
         LDA #<pD000
@@ -508,57 +456,57 @@ p0E20   .BYTE $00,$00,$FF,$FF,$00,$FF,$FF,$FF
         LDA #$18
         TAY 
         STA (p06),Y
-        JSR s1020
+        JSR InitializeScreenPointerArray
 ;-------------------------------------------------------------------------
-; j1016
+; RestartGame
 ;-------------------------------------------------------------------------
-j1016
-        JSR s2B5F
+RestartGame
+        JSR DisplayMenu
         JMP j27D8
 
         RTS 
 
         .BYTE $EA,$EA,$EA
 ;-------------------------------------------------------------------------
-; s1020
+; InitializeScreenPointerArray
 ;-------------------------------------------------------------------------
-s1020
-        LDA #<p0400
-        STA a02
-        LDA #>p0400
-        STA a03
+InitializeScreenPointerArray
+        LDA #<SCREEN_RAM + $0000
+        STA currentXPosition
+        LDA #>SCREEN_RAM + $0000
+        STA currentYPosition
         LDY #$00
-b102A   LDA a02
-        STA f0340,Y
-        LDA a03
-        STA f0360,Y
-        LDA a02
+b102A   LDA currentXPosition
+        STA screenLinesLoPtrArray,Y
+        LDA currentYPosition
+        STA screenLinesHiPtrArray,Y
+        LDA currentXPosition
         CLC 
         ADC #$28
-        STA a02
-        LDA a03
+        STA currentXPosition
+        LDA currentYPosition
         ADC #$00
-        STA a03
+        STA currentYPosition
         INY 
         CPY #$19
         BNE b102A
         LDX #$00
-b1048   LDA f0340,X
-        STA a02
-        LDA f0360,X
-        STA a03
+b1048   LDA screenLinesLoPtrArray,X
+        STA currentXPosition
+        LDA screenLinesHiPtrArray,X
+        STA currentYPosition
         LDY #$00
         LDA #$20
-b1056   STA (p02),Y
+b1056   STA (currentXPosition),Y
         INY 
         CPY #$28
         BNE b1056
         INX 
         CPX #$19
         BNE b1048
-f1064   =*+$02
-        JMP j1155
+        JMP WriteScreenHeaderText
 
+txtScreenHeader   =*-$01
         .BYTE $13,$03,$0F,$12,$05,$20,$10,$0C
         .BYTE $2E,$20,$31,$20,$3E,$20,$20,$08
         .BYTE $09,$3A
@@ -591,14 +539,14 @@ f1077   .BYTE $20,$20,$0C,$0C,$01,$0D,$01,$20
         .BYTE $00,$00,$00,$00,$00,$00,$00,$00
         .BYTE $00,$00,$00,$00,$00,$00
 ;-------------------------------------------------------------------------
-; j1155
+; WriteScreenHeaderText
 ;-------------------------------------------------------------------------
-j1155
+WriteScreenHeaderText
         LDY #$F0
-b1157   LDA f1064,Y
-        STA f03FF,Y
+b1157   LDA txtScreenHeader,Y
+        STA SCREEN_RAM - $01,Y
         LDA #$01
-        STA fD7FF,Y
+        STA COLOR_RAM - $01,Y
         DEY 
         BNE b1157
         RTS 
@@ -606,59 +554,63 @@ b1157   LDA f1064,Y
         NOP 
         NOP 
 ;-------------------------------------------------------------------------
-; s1168
+; GetLinePtrForCurrentYPosition
 ;-------------------------------------------------------------------------
-s1168
-        LDX a03
-        LDY a02
-        LDA f0340,X
-        STA a08
-        LDA f0360,X
-        STA a09
+GetLinePtrForCurrentYPosition
+        LDX currentYPosition
+        LDY currentXPosition
+        LDA screenLinesLoPtrArray,X
+        STA screenLineLoPtr
+        LDA screenLinesHiPtrArray,X
+        STA screenLineHiPtr
         RTS 
 
 ;-------------------------------------------------------------------------
-; s1177
+; WriteCurrentCharacterToCurrentXYPos
 ;-------------------------------------------------------------------------
-s1177
-        JSR s1168
-        LDA a04
-        STA (p08),Y
-        LDA a09
+WriteCurrentCharacterToCurrentXYPos
+        JSR GetLinePtrForCurrentYPosition
+        LDA currentCharacter
+        STA (screenLineLoPtr),Y
+        LDA screenLineHiPtr
         CLC 
         ADC #$D4
-        STA a09
-        LDA a09
+        STA screenLineHiPtr
+        LDA screenLineHiPtr
         NOP 
         NOP 
-        STA a09
-        LDA a05
-        STA (p08),Y
+        STA screenLineHiPtr
+        LDA colorForCurrentCharacter
+        STA (screenLineLoPtr),Y
         RTS 
 
 ;-------------------------------------------------------------------------
-; s1190
+; GetCharacterAtCurrentXYPos
 ;-------------------------------------------------------------------------
-s1190
-        JSR s1168
-        LDA (p08),Y
+GetCharacterAtCurrentXYPos
+        JSR GetLinePtrForCurrentYPosition
+        LDA (screenLineLoPtr),Y
         RTS 
 
-b1196   LDX a10
+;---------------------------------------------------------------------------------
+; DrawLandscape   
+;---------------------------------------------------------------------------------
+DrawLandscape   
+        LDX landscapePosition
         LDY #$28
 b119A   LDA f21FF,X
-        STA f05B7,Y
-        LDA f2227,X
-        STA f05DF,Y
-        LDA f224F,X
-        STA f0607,Y
-        LDA f2277,X
-        STA f062F,Y
+        STA SCREEN_RAM + $01B7,Y
+        LDA landscapeRow1,X
+        STA SCREEN_RAM + $01DF,Y
+        LDA landscapeRow2,X
+        STA SCREEN_RAM + $0207,Y
+        LDA landscapeRow3,X
+        STA SCREEN_RAM + $022F,Y
         LDA #$08
-        STA fD9B7,Y
-        STA fD9DF,Y
-        STA fDA07,Y
-        STA fDA2F,Y
+        STA COLOR_RAM + $01B7,Y
+        STA COLOR_RAM + $01DF,Y
+        STA COLOR_RAM + $0207,Y
+        STA COLOR_RAM + $022F,Y
         DEX 
         CPX #$00
         BNE b11C7
@@ -668,47 +620,47 @@ b11C7   DEY
         RTS 
 
 ;-------------------------------------------------------------------------
-; j11CB
+; MoveLandscape
 ;-------------------------------------------------------------------------
-j11CB
-        LDA a11
+MoveLandscape
+        LDA shipDirection
         BEQ b11DE
-        INC a10
-        LDA a10
+        INC landscapePosition
+        LDA landscapePosition
         CMP #$29
-        BMI b1196
+        BMI DrawLandscape
         LDA #$01
-        STA a10
-        JMP b1196
+        STA landscapePosition
+        JMP DrawLandscape
 
-b11DE   DEC a10
-        LDA a10
+b11DE   DEC landscapePosition
+        LDA landscapePosition
         CMP #$00
-        BNE b1196
+        BNE DrawLandscape
         LDA #$28
-        STA a10
-        JMP b1196
+        STA landscapePosition
+        JMP DrawLandscape
 
 ;-------------------------------------------------------------------------
-; s11ED
+; UpdateShipPosition
 ;-------------------------------------------------------------------------
-s11ED
-        DEC a13
+UpdateShipPosition
+        DEC shipMoveCounter
         BEQ b11F2
         RTS 
 
 b11F2   LDA #$08
-        STA a13
+        STA shipMoveCounter
         NOP 
         NOP 
         NOP 
         NOP 
         LDA a16
-        STA a07F8
+        STA SCREEN_RAM + $03F8
         INC $D025    ;Sprite Multi-Color Register 0
-        LDA a19
+        LDA shipYPosition
         STA $D001    ;Sprite 0 Y Pos
-        LDA a18
+        LDA shipXPosition
         CLC 
         ASL 
         STA pD000    ;Sprite 0 X Pos
@@ -740,34 +692,34 @@ b122B   LDA a15
         JMP j1750
 
 ;-------------------------------------------------------------------------
-; s1232
+; CheckJoystickInput
 ;-------------------------------------------------------------------------
-s1232
-        LDA a1D
+CheckJoystickInput
+        LDA gameTimer
         CMP #$02
         BEQ b1239
         RTS 
 
-b1239   LDA aDC11
+b1239   LDA joystickInput
         EOR #$FF
-        STA a1A
+        STA lastJoystickInput
         AND #$01
         BEQ b1250
-        DEC a19
-        LDA a19
+        DEC shipYPosition
+        LDA shipYPosition
         CMP #$60
         BNE b1250
         LDA #$61
-        STA a19
-b1250   LDA a1A
+        STA shipYPosition
+b1250   LDA lastJoystickInput
         AND #$02
         BEQ b1262
-        INC a19
-        LDA a19
+        INC shipYPosition
+        LDA shipYPosition
         CMP #$E0
         BNE b1262
         LDA #$DF
-        STA a19
+        STA shipYPosition
 b1262   RTS 
 
         NOP 
@@ -776,14 +728,14 @@ b1262   RTS
 ;-------------------------------------------------------------------------
 j1264
         STA a1B
-        LDA a11
+        LDA shipDirection
         BEQ b126E
         LDA #$08
         STA a1B
-b126E   LDA a1A
+b126E   LDA lastJoystickInput
         AND a1B
         BNE b1291
-        LDA a1A
+        LDA lastJoystickInput
         AND #$0C
         BNE b127D
         RTS 
@@ -808,16 +760,16 @@ b1291   INC a14
         BNE b129D
         LDA #$47
         STA a14
-b129D   LDA a11
+b129D   LDA shipDirection
         BNE b12AA
         LDA #$A0
         SBC a14
-        STA a18
+        STA shipXPosition
         JMP j12B0
 
 b12AA   LDA #$0A
         ADC a14
-        STA a18
+        STA shipXPosition
 ;-------------------------------------------------------------------------
 ; j12B0
 ;-------------------------------------------------------------------------
@@ -837,19 +789,19 @@ b12B4   CLC
 ; s12C0
 ;-------------------------------------------------------------------------
 s12C0
-        DEC a1D
+        DEC gameTimer
         BEQ b12C5
         RTS 
 
 b12C5   LDA #$08
-        STA a1D
+        STA gameTimer
         RTS 
 
 ;-------------------------------------------------------------------------
 ; s12CA
 ;-------------------------------------------------------------------------
 s12CA
-        LDA a1D
+        LDA gameTimer
         CMP #$01
         BEQ b12D1
 b12D0   RTS 
@@ -858,7 +810,7 @@ b12D1   DEC a1E
         BNE b12D0
         LDA #$04
         STA a1E
-        LDA a1A
+        LDA lastJoystickInput
         AND #$0C
         BEQ b12EE
         LDA #$00
@@ -894,7 +846,7 @@ b1307   JMP j1226
 ; s130A
 ;-------------------------------------------------------------------------
 s130A
-        LDA a1D
+        LDA gameTimer
         CMP #$03
         BEQ b1311
         RTS 
@@ -905,14 +857,14 @@ b1311   LDA a1C
 
 b1316   CMP #$80
         BEQ b1329
-        LDA a11
+        LDA shipDirection
         BEQ b1325
         LDA #$00
-        STA a11
+        STA shipDirection
         JMP b1329
 
 b1325   LDA #$01
-        STA a11
+        STA shipDirection
 b1329   JMP j135D
 
 ;-------------------------------------------------------------------------
@@ -937,8 +889,8 @@ j133F
         BNE b1349
         LDA #$00
         STA a1C
-b1349   LDA a1D
-        STA a1D
+b1349   LDA gameTimer
+        STA gameTimer
         LDA #$04
         STA a1E
         JMP b12EE
@@ -965,22 +917,22 @@ j135D
 ;-------------------------------------------------------------------------
 s136C
         LDX #$0F
-b136E   LDA f0340,X
-        STA a08
-        LDA f0360,X
-        STA a09
+b136E   LDA screenLinesLoPtrArray,X
+        STA screenLineLoPtr
+        LDA screenLinesHiPtrArray,X
+        STA screenLineHiPtr
         LDY #$00
 b137A   LDA #$2B
-        STA (p08),Y
-        LDA a09
-        STA a02
+        STA (screenLineLoPtr),Y
+        LDA screenLineHiPtr
+        STA currentXPosition
         CLC 
         ADC #$D4
-        STA a09
+        STA screenLineHiPtr
         LDA #$0B
-        STA (p08),Y
-        LDA a02
-        STA a09
+        STA (screenLineLoPtr),Y
+        LDA currentXPosition
+        STA screenLineHiPtr
         INY 
         CPY #$28
         BNE b137A
@@ -1000,7 +952,7 @@ s139A
 b139F   LDA #$13
         STA a21
 b13A4   =*+$01
-        LDA a11
+        LDA shipDirection
         BEQ b13B0
         JMP j13E4
 
@@ -1031,7 +983,7 @@ b13D1   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         RTS 
 
         JSR s139A
-        LDX a10
+        LDX landscapePosition
         LDY #$28
         JMP b119A
 
@@ -1063,9 +1015,9 @@ j1400
         STA a15
         STA a17
         LDA #<p70A0
-        STA a18
+        STA shipXPosition
         LDA #>p70A0
-        STA a19
+        STA shipYPosition
         LDA #$78
         STA $D017    ;Sprites Expand 2x Vertical (Y)
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
@@ -1077,17 +1029,17 @@ j1400
         STA $D026    ;Sprite Multi-Color Register 1
         LDA #$01
         STA $D027    ;Sprite 0 Color
-        LDA #>p02
-        STA a11
-        LDA #<p02
-        STA a10
+        LDA #>currentXPosition
+        STA shipDirection
+        LDA #<currentXPosition
+        STA landscapePosition
         LDA #$00
         STA $D01B    ;Sprite to Background Display Priority
         LDA #$03
         STA $D01C    ;Sprites Multi-Color Mode Select
-        JSR b1196
+        JSR DrawLandscape
         LDA #$01
-        STA a1D
+        STA gameTimer
         STA a1E
         LDA #$00
         STA $D404    ;Voice 1: Control Register
@@ -1109,7 +1061,7 @@ j1400
         LDA #$52
         STA $D00F    ;Sprite 7 Y Pos
         LDA #$D1
-        STA a07FF
+        STA SCREEN_RAM + $03FF
         LDA #$01
         STA $D02E    ;Sprite 7 Color
         LDA #$0A
@@ -1124,13 +1076,13 @@ j1400
         STA $D00B    ;Sprite 5 Y Pos
         STA $D00D    ;Sprite 6 Y Pos
         LDA #<pC1C0
-        STA a07FB
+        STA SCREEN_RAM + $03FB
         LDA #>pC1C0
-        STA a07FC
+        STA SCREEN_RAM + $03FC
         LDA #<pC6C2
-        STA a07FD
+        STA SCREEN_RAM + $03FD
         LDA #>pC6C2
-        STA a07FE
+        STA SCREEN_RAM + $03FE
         LDA #$FF
         STA a23
         LDA $D01F    ;Sprite to Background Collision Detect
@@ -1154,11 +1106,11 @@ j1400
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
         .BYTE $EA,$EA,$EA,$EA,$EA
 ;-------------------------------------------------------------------------
-; j1500
+; MainGameLoop
 ;-------------------------------------------------------------------------
-j1500
-        JSR s11ED
-        JSR s1232
+MainGameLoop
+        JSR UpdateShipPosition
+        JSR CheckJoystickInput
         JSR s12C0
         JSR s12CA
         JSR s130A
@@ -1181,7 +1133,7 @@ j1500
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
         .BYTE $EA,$EA,$EA,$EA
         NOP 
-        JMP j1500
+        JMP MainGameLoop
 
 ;-------------------------------------------------------------------------
 ; j1563
@@ -1214,7 +1166,7 @@ j1563
 ; s1600
 ;-------------------------------------------------------------------------
 s1600
-        LDA a1D
+        LDA gameTimer
         CMP #$01
         BEQ b1607
         RTS 
@@ -1283,7 +1235,7 @@ b165D   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         LDA a17
         CMP #$01
         BNE b169E
-        LDA a11
+        LDA shipDirection
         BEQ b1695
         DEC f22CF,X
         JMP j173E
@@ -1320,19 +1272,19 @@ j16A4
 
 b16AC   LDX #$06
 b16AE   JSR s1982
-        STA a02
+        STA currentXPosition
         LDA #$04
-        STA a03
+        STA currentYPosition
         STX a2C
-        JSR s1190
+        JSR GetCharacterAtCurrentXYPos
         STA a24
         LDA #$A0
         STA a25
 b16C2   LDA #<p0120
-        STA a04
+        STA currentCharacter
         LDA #>p0120
-        STA a05
-        JSR s1177
+        STA colorForCurrentCharacter
+        JSR WriteCurrentCharacterToCurrentXYPos
         DEC a25
         BNE b16C2
         LDA $D01F    ;Sprite to Background Collision Detect
@@ -1353,7 +1305,7 @@ b16E3   LDA a24
         JSR s16FC
         LDX a2C
         STX a23
-        LDA a11
+        LDA shipDirection
         BEQ b16F6
         LDA #$D5
         JMP j17F0
@@ -1372,8 +1324,8 @@ j16F8
 ; s16FC
 ;-------------------------------------------------------------------------
 s16FC
-        STA a04
-        JMP s1177
+        STA currentCharacter
+        JMP WriteCurrentCharacterToCurrentXYPos
 
         DEC a26
 b1703   BEQ b1703
@@ -1381,7 +1333,7 @@ b1703   BEQ b1703
 
         LDA #$08
         STA a26
-        JMP j11CB
+        JMP MoveLandscape
 
         LDA a17
         CMP #$01
@@ -1456,7 +1408,7 @@ b1766   JSR s2449
         LDA #$C1
         CLC 
         ADC a2D
-        STA a07FD
+        STA SCREEN_RAM + $03FD
         CLC 
         ADC #$04
         JMP j1B4A
@@ -1477,7 +1429,7 @@ j1786
 ;-------------------------------------------------------------------------
 j178B
         LDA #$C2
-        STA a07FD
+        STA SCREEN_RAM + $03FD
         LDA #$C6
         JSR s1B5B
         LDA #$01
@@ -1513,24 +1465,24 @@ s17B7
         STA a2F
         LDX #$06
 b17C1   JSR s1990
-        STA a02
+        STA currentXPosition
         LDA #<p2004
-        STA a03
+        STA currentYPosition
         LDA #>p2004
-        STA a04
+        STA currentCharacter
         LDA #$01
-        STA a05
+        STA colorForCurrentCharacter
         STX a2C
-        JSR s1177
+        JSR WriteCurrentCharacterToCurrentXYPos
         LDX a2C
         INC f22D7,X
         NOP 
         NOP 
         NOP 
-        INC a02
+        INC currentXPosition
         LDA #$24
-        STA a04
-        JSR s1177
+        STA currentCharacter
+        JSR WriteCurrentCharacterToCurrentXYPos
         LDX a2C
 ;-------------------------------------------------------------------------
 ; j17EA
@@ -1564,7 +1516,7 @@ s1800
         BEQ b1807
         RTS 
 
-b1807   LDA a1A
+b1807   LDA lastJoystickInput
         AND #$10
         BNE b1812
         LDA #$00
@@ -1593,7 +1545,7 @@ j181A
         LDA $D015    ;Sprite display Enable
         ORA #$02
         STA $D015    ;Sprite display Enable
-        LDA a11
+        LDA shipDirection
         BEQ b183B
         LDA #$02
         STA a31
@@ -1702,7 +1654,7 @@ s18C4
 ; s18D4
 ;-------------------------------------------------------------------------
 s18D4
-        LDA a19
+        LDA shipYPosition
         STA a33
         LDA #$40
         STA a21
@@ -1725,7 +1677,7 @@ b18E8   RTS
 j18E9
         LDA a30
         BNE b18E8
-        LDA a18
+        LDA shipXPosition
         STA a32
         JMP j181A
 
@@ -1772,7 +1724,7 @@ b1927   STA $D401    ;Voice 1: Frequency Control - High-Byte
         BNE b1937
         LDA #$D6
         STA a38
-b1937   LDA a1D
+b1937   LDA gameTimer
         CMP #$01
         BEQ b194F
         LDA #$00
@@ -1793,12 +1745,12 @@ b194F   DEC a3A
         LDA #$07
         STA f22C7,X
         JSR s1AB9
-        STA a02
+        STA currentXPosition
         LDA #<p2004
-        STA a03
+        STA currentYPosition
         LDA #>p2004
-        STA a04
-        JSR s1177
+        STA currentCharacter
+        JSR WriteCurrentCharacterToCurrentXYPos
         LDA #$FF
         STA a46
         LDA $D015    ;Sprite display Enable
@@ -1839,13 +1791,13 @@ b1999   PLA
 ; s199E
 ;-------------------------------------------------------------------------
 s199E
-        LDA a1D
+        LDA gameTimer
         CMP #$01
         BEQ b19A5
         RTS 
 
 b19A5   LDA a38
-        STA a07FC
+        STA SCREEN_RAM + $03FC
         RTS 
 
 ;-------------------------------------------------------------------------
@@ -1863,7 +1815,7 @@ j19AB
 ; j19B3
 ;-------------------------------------------------------------------------
 j19B3
-        LDA a11
+        LDA shipDirection
         CMP #$00
         BEQ b19CC
         INC a3C
@@ -1892,7 +1844,7 @@ b19E0   JMP j1A57
 ; s19E3
 ;-------------------------------------------------------------------------
 s19E3
-        JSR j11CB
+        JSR MoveLandscape
         LDA #$05
         STA a40
         LDX a3D
@@ -2088,16 +2040,16 @@ b1AD2   JMP j1A3E
 ;-------------------------------------------------------------------------
 s1AD5
         LDA #<p012E
-        STA a04
+        STA currentCharacter
         LDA #>p012E
-        STA a05
+        STA colorForCurrentCharacter
         LDX #$10
 b1ADF   LDA f22FF,X
-        STA a02
+        STA currentXPosition
         LDA f230F,X
-        STA a03
+        STA currentYPosition
         STX a40
-        JSR s1177
+        JSR WriteCurrentCharacterToCurrentXYPos
         LDX a40
         DEX 
         BNE b1ADF
@@ -2108,27 +2060,27 @@ b1ADF   LDA f22FF,X
 ;-------------------------------------------------------------------------
 j1AF4
         LDA #<p012E
-        STA a04
+        STA currentCharacter
         LDA #>p012E
-        STA a05
+        STA colorForCurrentCharacter
         LDX a47
         LDA f2300,X
-        STA a02
+        STA currentXPosition
         LDA f2310,X
-        STA a03
-        JSR s1177
+        STA currentYPosition
+        JSR WriteCurrentCharacterToCurrentXYPos
         INC a47
         LDA a47
         AND #$0F
         STA a47
         TAX 
         LDA f2300,X
-        STA a02
+        STA currentXPosition
         LDA f2310,X
-        STA a03
+        STA currentYPosition
         LDA #$02
-        STA a05
-        JSR s1177
+        STA colorForCurrentCharacter
+        JSR WriteCurrentCharacterToCurrentXYPos
         JMP j183C
 
 ;-------------------------------------------------------------------------
@@ -2169,7 +2121,7 @@ b1B47   NOP
 ; j1B4A
 ;-------------------------------------------------------------------------
 j1B4A
-        STA a07FE
+        STA SCREEN_RAM + $03FE
         LDA a3A
         BEQ b1B52
         RTS 
@@ -2183,7 +2135,7 @@ b1B52   LDX a2D
 ; s1B5B
 ;-------------------------------------------------------------------------
 s1B5B
-        STA a07FE
+        STA SCREEN_RAM + $03FE
         LDA a3A
         BEQ b1B63
         RTS 
@@ -2287,7 +2239,7 @@ j1BD0
         LDA a52
         STA a5F
         LDA $D005    ;Sprite 2 Y Pos
-        CMP a19
+        CMP shipYPosition
         BPL b1BE5
         INC $D005    ;Sprite 2 Y Pos
         INC $D005    ;Sprite 2 Y Pos
@@ -2325,7 +2277,7 @@ b1C13   CMP #$D9
 ; j1C1B
 ;-------------------------------------------------------------------------
 j1C1B
-        STA a07FA
+        STA SCREEN_RAM + $03FA
         JMP j1CDC
 
 b1C21   JMP j1D01
@@ -2387,7 +2339,7 @@ j1C57
         INC a56
 b1C61   DEC a56
         LDA $D005    ;Sprite 2 Y Pos
-        CMP a19
+        CMP shipYPosition
         BPL b1C70
         INC $D005    ;Sprite 2 Y Pos
         INC $D005    ;Sprite 2 Y Pos
@@ -2398,7 +2350,7 @@ b1C70   DEC $D005    ;Sprite 2 Y Pos
         STA a54
         TAX 
         LDA f1CAD,X
-        STA a07FA
+        STA SCREEN_RAM + $03FA
         LDA a56
         CLC 
         ASL 
@@ -2529,7 +2481,7 @@ s1D29
         BEQ b1D33
         RTS 
 
-b1D33   LDA a18
+b1D33   LDA shipXPosition
         CLC 
         SBC a56
         STA a60
@@ -2543,7 +2495,7 @@ b1D44   LDA a60
         BMI b1D4B
         RTS 
 
-b1D4B   LDA a19
+b1D4B   LDA shipYPosition
         NOP 
         NOP 
         NOP 
@@ -2647,10 +2599,10 @@ b1DED   DEY
         BNE b1DED
         CPX #$A0
         BNE b1DF7
-        INC a07F8
+        INC SCREEN_RAM + $03F8
 b1DF7   CPX #$50
         BNE b1DFE
-        INC a07F8
+        INC SCREEN_RAM + $03F8
 b1DFE   DEX 
         BNE b1DE8
         JMP j1E04
@@ -2659,7 +2611,7 @@ b1DFE   DEX
 ; j1E04
 ;-------------------------------------------------------------------------
 j1E04
-        STA a07F8
+        STA SCREEN_RAM + $03F8
         LDA #$79
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
         STA $D017    ;Sprites Expand 2x Vertical (Y)
@@ -2667,12 +2619,12 @@ j1E04
         STA $D020    ;Border Color
         LDA #$81
         JSR s1EEC
-        LDA a18
+        LDA shipXPosition
         STA a40
         STA a41
         STA a42
         STA a43
-        LDA a19
+        LDA shipYPosition
         STA a44
         STA a45
         STA a46
@@ -2709,9 +2661,9 @@ b1E5D   LDY #$00
 b1E5F   DEY 
         BNE b1E5F
         LDA #$D2
-        STA a07F9
-        STA a07FA
-        STA a07FB
+        STA SCREEN_RAM + $03F9
+        STA SCREEN_RAM + $03FA
+        STA SCREEN_RAM + $03FB
         LDA #$01
         STA $D028    ;Sprite 1 Color
         STA $D029    ;Sprite 2 Color
@@ -2728,26 +2680,26 @@ b1E85   LDA @wf0043,X
         JMP j28AC
 
 b1E90   LDX #$04
-b1E92   STX a04
+b1E92   STX currentCharacter
         TXA 
         CLC 
         ASL 
-        STA a05
+        STA colorForCurrentCharacter
         LDA @wf0043,X
-        LDX a05
+        LDX colorForCurrentCharacter
         STA fCFFF,X
-        LDX a04
+        LDX currentCharacter
         LDA #$01
 b1EA5   ASL 
         DEX 
         BNE b1EA5
         ROR 
         STA a06
-        LDX a04
+        LDX currentCharacter
         LDA @wf003F,X
         CLC 
         ASL 
-        LDX a05
+        LDX colorForCurrentCharacter
         STA fCFFE,X
         BCC b1EC5
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
@@ -2763,7 +2715,7 @@ b1EC5   LDA a06
 ; j1ECF
 ;-------------------------------------------------------------------------
 j1ECF
-        LDX a04
+        LDX currentCharacter
         DEX 
         CPX #$FF
         BNE b1E92
@@ -2777,7 +2729,7 @@ j1ECF
 ; s1EE3
 ;-------------------------------------------------------------------------
 s1EE3
-        STA a07F8
+        STA SCREEN_RAM + $03F8
         LDY #$00
 b1EE8   DEY 
         BNE b1EE8
@@ -2811,7 +2763,7 @@ j1F00
         STA a30
         STA a31
         LDA #$CC
-        STA a07F9
+        STA SCREEN_RAM + $03F9
         LDA #$0A
         STA $D413    ;Voice 3: Attack / Decay Cycle Control
         LDA #$00
@@ -2895,14 +2847,18 @@ b1FA3   LDA #$DD
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         LDA #$00
         STA a95
+
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$4C,$00
-        .BYTE $15,$EA,$EA,$EA,$EA,$EA,$EA,$EA
+        .BYTE $EA,$EA,$EA,$EA,$EA,$EA
+
+        JMP MainGameLoop
+
+        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA
         .BYTE $EA,$EA,$EA,$EA,$EA,$EA
 
 .include "charset.asm"
@@ -2913,17 +2869,17 @@ f21FF=*-$01
         .BYTE $20,$20,$20,$20,$20,$20,$20,$20
         .BYTE $20,$20,$20,$20,$20,$20,$20,$20
         .BYTE $20,$20,$20,$1D,$1E,$20,$20,$20
-f2227   .BYTE $20,$20,$20,$20,$20,$1B,$1D,$2B
+landscapeRow1   .BYTE $20,$20,$20,$20,$20,$1B,$1D,$2B
         .BYTE $2B,$1E,$23,$1C,$20,$20,$20,$20
         .BYTE $20,$20,$20,$20,$20,$20,$20,$20
         .BYTE $20,$20,$20,$1B,$23,$1C,$1B,$1F
         .BYTE $1D,$23,$1D,$2B,$2B,$1E,$20,$20
-f224F   .BYTE $20,$20,$20,$1B,$23,$1D,$2B,$2B
+landscapeRow2   .BYTE $20,$20,$20,$1B,$23,$1D,$2B,$2B
         .BYTE $2B,$2B,$2B,$2B,$1E,$20,$20,$20
         .BYTE $20,$20,$20,$1D,$1E,$20,$20,$20
         .BYTE $20,$20,$1B,$1D,$2B,$1E,$1D,$2B
         .BYTE $2B,$2B,$2B,$2B,$2B,$2B,$1E,$20
-f2277   .BYTE $20,$1F,$1F,$1D,$2B,$2B,$2B,$2B
+landscapeRow3   .BYTE $20,$1F,$1F,$1D,$2B,$2B,$2B,$2B
         .BYTE $2B,$2B,$2B,$2B,$2B,$1E,$23,$1F
         .BYTE $1F,$1F,$1D,$2B,$2B,$1E,$1F,$1F
         .BYTE $1F,$1F,$1D,$2B,$2B,$2B,$2B,$2B
@@ -3082,25 +3038,25 @@ b24A2   STA a68
 ;-------------------------------------------------------------------------
 s24AA
         LDA #$20
-        STA a0463
-        STA a0464
+        STA SCREEN_RAM + $0063
+        STA SCREEN_RAM + $0064
         LDA #$30
-        STA a0465
+        STA SCREEN_RAM + $0065
         LDY a68
 b24B9   LDX #$03
-b24BB   INC f0462,X
-        LDA f0462,X
+b24BB   INC SCREEN_RAM + $0062,X
+        LDA SCREEN_RAM + $0062,X
         CMP #$3A
         BNE b24DC
         LDA #$30
-        STA f0462,X
+        STA SCREEN_RAM + $0062,X
         DEX 
         BEQ b24DC
-        LDA f0462,X
+        LDA SCREEN_RAM + $0062,X
         CMP #$20
         BNE b24BB
         LDA #$30
-        STA f0462,X
+        STA SCREEN_RAM + $0062,X
         JMP b24BB
 
 b24DC   DEY 
@@ -3133,9 +3089,9 @@ b24F6   RTS
 ; s24F7
 ;-------------------------------------------------------------------------
 s24F7
-        LDA a19
+        LDA shipYPosition
         STA $D001    ;Sprite 0 Y Pos
-        LDA a18
+        LDA shipXPosition
         ASL 
         STA pD000    ;Sprite 0 X Pos
         BCC b250D
@@ -3160,24 +3116,24 @@ j2516
         LDA #$80
         STA a55
         LDA #$A0
-        STA a18
-        LDA a19
-        STA a19
+        STA shipXPosition
+        LDA shipYPosition
+        STA shipYPosition
         JSR s27B0
         NOP 
         JSR s24F7
         LDX #$20
 b2536   LDA f2579,X
-        STA f07C2,X
+        STA SCREEN_RAM + $03C2,X
         LDA #$01
-        STA fDBC2,X
+        STA COLOR_RAM + $03C2,X
         DEX 
         BNE b2536
         LDX #$20
 b2546   LDA #$00
         STA a07
-        STA a08
-b254C   LDA a08
+        STA screenLineLoPtr
+b254C   LDA screenLineLoPtr
         STA $D400    ;Voice 1: Frequency Control - Low-Byte
         LDA a07
         STA $D401    ;Voice 1: Frequency Control - High-Byte
@@ -3185,10 +3141,10 @@ b254C   LDA a08
         STA $D404    ;Voice 1: Control Register
         LDA #$21
         STA $D404    ;Voice 1: Control Register
-        LDA a08
+        LDA screenLineLoPtr
         CLC 
         ADC #$30
-        STA a08
+        STA screenLineLoPtr
         LDA a07
         ADC #$00
         STA a07
@@ -3223,7 +3179,7 @@ j25A5
         STA $D404    ;Voice 1: Control Register
         LDA $D01E    ;Sprite to Sprite Collision Detect
         LDA #$00
-        STA a11
+        STA shipDirection
         LDA #$80
         STA a20
         STA a21
@@ -3243,7 +3199,7 @@ j25C3
         BEQ b25D4
         JMP j1DBE
 
-b25D4   LDA a18
+b25D4   LDA shipXPosition
         CMP #$40
         BEQ b25DD
         JMP j25C3
@@ -3260,11 +3216,11 @@ s25E0
 
 b25E5   LDA a21
         STA a20
-        LDA a18
+        LDA shipXPosition
         JSR s24F7
         JSR b1239
         LDA #$A1
-        SBC a18
+        SBC shipXPosition
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         LDA #$00
         STA $D404    ;Voice 1: Control Register
@@ -3292,8 +3248,8 @@ b260C   LDA a23
 
 b2615   LDA a25
         STA a24
-        JSR j11CB
-        DEC a18
+        JSR MoveLandscape
+        DEC shipXPosition
         DEC a25
         JMP s24F7
 
@@ -3314,12 +3270,12 @@ j2623
 j262E
         LDA #$01
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
-        LDA a18
+        LDA shipXPosition
         CMP #$E0
         BEQ b265D
         LDA #$01
         STA a25
-        LDA a18
+        LDA shipXPosition
         STA $D025    ;Sprite Multi-Color Register 0
         ADC #$08
         STA $D026    ;Sprite Multi-Color Register 1
@@ -3341,8 +3297,8 @@ s2660
         LDA a22
         CMP #$01
         BNE b2668
-        DEC a18
-b2668   JSR j11CB
+        DEC shipXPosition
+b2668   JSR MoveLandscape
         JMP s2607
 
 ;-------------------------------------------------------------------------
@@ -3380,7 +3336,7 @@ b2677   TXA
 s26A3
         TXA 
         PHA 
-        JSR j11CB
+        JSR MoveLandscape
         PLA 
         TAX 
         LDA $D012    ;Raster Position
@@ -3395,7 +3351,7 @@ j26AE
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
         LDX #$20
         LDA #$20
-b26BA   STA f07C2,X
+b26BA   STA SCREEN_RAM + $03C2,X
         DEX 
         BNE b26BA
         LDA #$0E
@@ -3404,7 +3360,7 @@ b26BA   STA f07C2,X
         STA a20
         STA a21
 b26CB   LDA a20
-        STA a18
+        STA shipXPosition
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         ADC #$80
         STA $D408    ;Voice 2: Frequency Control - High-Byte
@@ -3474,7 +3430,7 @@ b2732   LDA a6A
         LDA a40
         CMP #$F0
         BNE b274F
-        LDA a19
+        LDA shipYPosition
         SBC #$10
         STA $D005    ;Sprite 2 Y Pos
         LDA $D012    ;Raster Position
@@ -3509,7 +3465,7 @@ b276C   LDA $D010    ;Sprites 0-7 MSB of X coordinate
 j2774
         LDX a2E
         LDA f278D,X
-        STA a07FA
+        STA SCREEN_RAM + $03FA
         DEC a3D
         BEQ b2795
 b2780   RTS 
@@ -3528,7 +3484,7 @@ f278D   RTS
 
         .BYTE $DB,$DC,$DD,$DE,$DD,$DC,$DB
 b2795   LDA $D005    ;Sprite 2 Y Pos
-        CMP a19
+        CMP shipYPosition
         BPL b27A2
         INC $D005    ;Sprite 2 Y Pos
         INC $D005    ;Sprite 2 Y Pos
@@ -3550,7 +3506,7 @@ s27B0
         STA $D015    ;Sprite display Enable
         LDA #$CA
         STA a16
-        STA a07F8
+        STA SCREEN_RAM + $03F8
         JMP j259A
 
         DEC a6B
@@ -3571,7 +3527,7 @@ s27C2
 ;-------------------------------------------------------------------------
 s27C9
         STA a56
-        LDA a18
+        LDA shipXPosition
         CLC 
         ROR 
         STA a07
@@ -3626,7 +3582,7 @@ j2807
 b281A   DEC a6D
         JMP j2827
 
-        JMP (p05D0)
+        JMP (SCREEN_RAM + $01D0)
 
 ;-------------------------------------------------------------------------
 ; j2822
@@ -3646,13 +3602,13 @@ j2827
 ;-------------------------------------------------------------------------
 j282B
         LDA #>f38C0
-        STA a08
+        STA screenLineLoPtr
         LDA #<f38C0
         STA a07
         LDA a6E
         CMP #$01
         BNE b283B
-        INC a08
+        INC screenLineLoPtr
 b283B   LDY #$30
 b283D   LDA f22C7,Y
         STA (p07),Y
@@ -3672,14 +3628,14 @@ b283D   LDA f22C7,Y
         CMP #$02
         BEQ b286B
         LDA #$38
-        STA a08
+        STA screenLineLoPtr
         LDA #$4F
         STA a64
         STA a66
         JMP j2875
 
 b286B   LDA #$39
-        STA a08
+        STA screenLineLoPtr
         LDA #$70
         STA a64
         STA a66
@@ -3754,20 +3710,20 @@ j28AC
 s28B6
         LDX #$07
         LDA #$01
-b28BA   STA fD84F,X
-        STA fD870,X
+b28BA   STA COLOR_RAM + $004F,X
+        STA COLOR_RAM + $0070,X
         DEX 
         BNE b28BA
         LDX #$28
         LDA #$20
-b28C7   STA f049F,X
+b28C7   STA SCREEN_RAM + $009F,X
         DEX 
         BNE b28C7
         LDX #$0B
 b28CF   LDA f2926,X
-        STA f04AB,X
+        STA SCREEN_RAM + $00AB,X
         LDA #$0E
-        STA fD8AB,X
+        STA COLOR_RAM + $00AB,X
         DEX 
         BNE b28CF
         LDX #$0D
@@ -3777,9 +3733,9 @@ b28CF   LDA f2926,X
         LDX #$10
 b28E7   LDY #$03
 b28E9   LDA f2926,X
-        STA f04B8,Y
+        STA SCREEN_RAM + $00B8,Y
         LDA #$07
-        STA fD8B8,Y
+        STA COLOR_RAM + $00B8,Y
         INX 
         DEY 
         BNE b28E9
@@ -3800,7 +3756,7 @@ b2903   STA $D400    ;Voice 1: Frequency Control - Low-Byte
         BNE b28FC
         LDX #$28
         LDA #$20
-b291C   STA f049F,X
+b291C   STA SCREEN_RAM + $009F,X
         DEX 
         BNE b291C
         LDX #$06
@@ -3828,13 +3784,13 @@ b2942   LDA f22E7,X
         BEQ b295E
         JSR s2962
         NOP 
-        STA a03
+        STA currentYPosition
         LDA #<p0124
-        STA a04
+        STA currentCharacter
         LDA #>p0124
-        STA a05
+        STA colorForCurrentCharacter
         STX a2C
-        JSR s1177
+        JSR WriteCurrentCharacterToCurrentXYPos
         LDX a2C
 b295E   DEX 
         BNE b2942
@@ -3845,7 +3801,7 @@ b295E   DEX
 ;-------------------------------------------------------------------------
 s2962
         LDA f22D7,X
-        STA a02
+        STA currentXPosition
         LDA #$04
         RTS 
 
@@ -3863,7 +3819,7 @@ j296A
 s2971
         LDA #$20
         LDX #$50
-b2975   STA f0797,X
+b2975   STA SCREEN_RAM + $0397,X
         DEX 
         BNE b2975
         JMP j2AF0
@@ -3942,9 +3898,9 @@ s29BB
         STA a58
         LDX #$28
 b29DE   LDA f29EE,X
-        STA f0797,X
+        STA SCREEN_RAM + $0397,X
         LDA #$07
-        STA fDB97,X
+        STA COLOR_RAM + $0397,X
         DEX 
         BNE b29DE
 f29EE   =*+$02
@@ -4042,27 +3998,27 @@ b2B23   LDA @wa0095
 s2B3D
         LDX #$00
 b2B3F   LDA #$20
-        STA f04F0,X
-        STA f0500,X
-        STA f0600,X
-        STA f0700,X
+        STA SCREEN_RAM + $00F0,X
+        STA SCREEN_RAM + $0100,X
+        STA SCREEN_RAM + $0200,X
+        STA SCREEN_RAM + $0300,X
         LDA #$01
-        STA fD800,X
-        STA fD900,X
-        STA fDA00,X
-        STA fDB00,X
+        STA COLOR_RAM + $0000,X
+        STA COLOR_RAM + $0100,X
+        STA COLOR_RAM + $0200,X
+        STA COLOR_RAM + $0300,X
         DEX 
         BNE b2B3F
         RTS 
 
 ;-------------------------------------------------------------------------
-; s2B5F
+; DisplayMenu
 ;-------------------------------------------------------------------------
-s2B5F
+DisplayMenu
         JSR s2B3D
         LDX #$14
 b2B64   LDA f2B6F,X
-        STA f0549,X
+        STA SCREEN_RAM + $0149,X
         DEX 
         BNE b2B64
 f2B6F   =*+$02
@@ -4102,13 +4058,13 @@ j2B84
         STA $D002    ;Sprite 1 X Pos
         STA $D006    ;Sprite 3 X Pos
         LDA #<pE0DF
-        STA a07F8
+        STA SCREEN_RAM + $03F8
         LDA #>pE0DF
-        STA a07F9
+        STA SCREEN_RAM + $03F9
         LDA #<pE2E1
-        STA a07FA
+        STA SCREEN_RAM + $03FA
         LDA #>pE2E1
-        STA a07FB
+        STA SCREEN_RAM + $03FB
         LDA #$0F
         STA $D015    ;Sprite display Enable
 b2BE2   LDY #$10
@@ -4126,15 +4082,15 @@ b2BE6   DEX
         BNE b2BE2
         LDX #$20
 b2C02   LDA f2C4F,X
-        STA f065C,X
+        STA SCREEN_RAM + $025C,X
         LDA f2C8F,X
-        STA f06AC,X
+        STA SCREEN_RAM + $02AC,X
         LDA f2C2F,X
-        STA f06FC,X
+        STA SCREEN_RAM + $02FC,X
         LDA f2C6F,X
-        STA f074C,X
+        STA SCREEN_RAM + $034C,X
         LDA f2CAF,X
-        STA f079C,X
+        STA SCREEN_RAM + $039C,X
         DEX 
         BNE b2C02
         LDA #$01
@@ -4183,7 +4139,7 @@ b2CE8   CMP #$06
         BNE b2CEF
         JMP j2D4B
 
-b2CEF   LDA aDC11
+b2CEF   LDA joystickInput
         CMP #$EF
         BNE b2CF9
         JMP j2DB6
@@ -4198,12 +4154,12 @@ b2CF9   NOP
 ; j2D00
 ;-------------------------------------------------------------------------
 j2D00
-        INC a0706
-        LDA a0706
+        INC SCREEN_RAM + $0306
+        LDA SCREEN_RAM + $0306
         CMP #$33
         BNE b2D0C
         LDA #$31
-b2D0C   STA a0706
+b2D0C   STA SCREEN_RAM + $0306
 b2D0F   LDA aC5
         CMP #$40
         BNE b2D0F
@@ -4224,16 +4180,16 @@ j2D18
 ;-------------------------------------------------------------------------
 j2D22
         LDA #$30
-        STA a071B
-        STA a071C
+        STA SCREEN_RAM + $031B
+        STA SCREEN_RAM + $031C
         LDX a07
-b2D2C   INC a071C
-        LDA a071C
+b2D2C   INC SCREEN_RAM + $031C
+        LDA SCREEN_RAM + $031C
         CMP #$3A
         BNE b2D3E
         LDA #$30
-        STA a071C
-        INC a071B
+        STA SCREEN_RAM + $031C
+        INC SCREEN_RAM + $031B
 b2D3E   DEX 
         BNE b2D2C
         JMP b2D0F
@@ -4246,23 +4202,23 @@ b2D44   LDA #$01
 ; j2D4B
 ;-------------------------------------------------------------------------
 j2D4B
-        LDA a0767
+        LDA SCREEN_RAM + $0367
         CMP #$20
         BEQ b2D64
         LDA #<p0E20
-        STA a0767
+        STA SCREEN_RAM + $0367
         LDA #>p0E20
-        STA a0768
+        STA SCREEN_RAM + $0368
         LDA #$0F
-        STA a0769
+        STA SCREEN_RAM + $0369
         JMP b2D0F
 
-b2D64   LDA #<p0519
-        STA a0767
-        LDA #>p0519
-        STA a0768
+b2D64   LDA #<SCREEN_RAM + $0119
+        STA SCREEN_RAM + $0367
+        LDA #>SCREEN_RAM + $0119
+        STA SCREEN_RAM + $0368
         LDA #$13
-        STA a0769
+        STA SCREEN_RAM + $0369
         JMP b2D0F
 
 ;-------------------------------------------------------------------------
@@ -4284,13 +4240,13 @@ j2D87
         STA a6F
         LDA #$00
         STA aFD
-        LDA a0767
+        LDA SCREEN_RAM + $0367
         CMP #$20
         BEQ b2D9A
         LDA #$FF
         STA aFD
 b2D9A   JSR s2B3D
-        JSR s1020
+        JSR InitializeScreenPointerArray
         RTS 
 
 ;-------------------------------------------------------------------------
@@ -4301,7 +4257,7 @@ s2DA1
         STA a6D
         LDA #>p0206
         STA a6E
-        LDA a0706
+        LDA SCREEN_RAM + $0306
         CMP #$31
         BEQ b2DB1
         RTS 
@@ -4342,7 +4298,7 @@ b2DCD   LDA #$20
 ;-------------------------------------------------------------------------
 s2DD7
         LDY #$01
-b2DD9   LDA (p05),Y
+b2DD9   LDA (colorForCurrentCharacter),Y
         CMP f1077,Y
         BEQ b2DE4
         BPL b2DEA
@@ -4353,9 +4309,9 @@ b2DE4   INY
 b2DE9   RTS 
 
 b2DEA   LDY #$01
-b2DEC   LDA (p05),Y
+b2DEC   LDA (colorForCurrentCharacter),Y
         STA f1077,Y
-        STA f0412,Y
+        STA SCREEN_RAM + $0012,Y
         JMP j2E0D
 
         RTS 
@@ -4364,15 +4320,15 @@ b2DEC   LDA (p05),Y
 ; j2DF8
 ;-------------------------------------------------------------------------
 j2DF8
-        LDA #>p044F
+        LDA #>SCREEN_RAM + $004F
         STA a06
-        LDA #<p044F
-        STA a05
+        LDA #<SCREEN_RAM + $004F
+        STA colorForCurrentCharacter
         JSR s2DD7
         LDA #$70
-        STA a05
+        STA colorForCurrentCharacter
         JSR s2DD7
-        JMP j1016
+        JMP RestartGame
 
 ;-------------------------------------------------------------------------
 ; j2E0D
@@ -4387,7 +4343,7 @@ j2E0D
 ; s2E13
 ;-------------------------------------------------------------------------
 s2E13
-        LDA a04C6
+        LDA SCREEN_RAM + $00C6
         CMP #$24
         BEQ b2E1B
         RTS 
@@ -4407,9 +4363,9 @@ b2E28   LDA #$01
 j2E2C
         LDX #$1A
 b2E2E   LDA f2E5E,X
-        STA f07C5,X
+        STA SCREEN_RAM + $03C5,X
         LDA #$03
-        STA fDBC5,X
+        STA COLOR_RAM + $03C5,X
         DEX 
         BNE b2E2E
         LDY #$00
@@ -4457,7 +4413,7 @@ j2E84
 ;-------------------------------------------------------------------------
 j2E8C
         LDA #$70
-        STA a19
+        STA shipYPosition
         JMP j26AE
 
 ;-------------------------------------------------------------------------

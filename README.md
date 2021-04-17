@@ -45,7 +45,7 @@ To compile and run:
 $ make
 ```
 
-To just compile the game and get a binary (`gridrunner.prg`) do:
+To just compile the game and get a binary (`amc.prg`) do:
 
 ```sh
 $ make amc.prg
@@ -63,7 +63,7 @@ To compile and run:
 $ make runatari
 ```
 
-To just compile the game and get a binary (`gridrunner.xex`) do:
+To just compile the game and get a binary (`aomc.xex`) do:
 
 ```sh
 $ make aomc.xex
@@ -102,5 +102,5 @@ This repository is forked from https://github.com/SavourySnaX/AOTMC89.
 [atari800]: https://atari800.github.io/
 [hatari]: https://hatari.tuxfamily.org/download.html
 [vasm]: http://sun.hasenbraten.de/vasm/index.php?view=relsrc
-[https://gridrunner.xyz]: https://mwenge.github.io/gridrunner.xyz
+[https://amc.xyz]: https://mwenge.github.io/amc.xyz
 [commented source code]:https://github.com/mwenge/attackofthemutantcamels/blob/master/src/

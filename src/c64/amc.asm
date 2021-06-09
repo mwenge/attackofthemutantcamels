@@ -33,10 +33,10 @@ screenLineHiPtr = $09
 landscapePosition = $10
 shipDirection = $11
 shipMoveCounter = $13
-a14 = $14
-a15 = $15
+shipXOffset = $14
+initialCamelUpdateFrameRate = $15
 a16 = $16
-a17 = $17
+camelUpdateFrameRate = $17
 shipXPosition = $18
 shipYPosition = $19
 lastJoystickInput = $1A
@@ -112,10 +112,10 @@ a6D = $6D
 a6E = $6E
 a6F = $6F
 a70 = $70
-a95 = $95
+collisionDetectedBits = $95
 aC5 = $C5
 aFD = $FD
-aFE = $FE
+CollisionDetectionRate = $FE
 aFF = $FF
 ;
 ; **** ZP POINTERS **** 
@@ -673,22 +673,20 @@ b11F2   LDA #$08
 b121B   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         ORA #$01
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-;-------------------------------------------------------------------------
-; j1223
-;-------------------------------------------------------------------------
+
 j1223
         JMP j12F9
 
 ;-------------------------------------------------------------------------
-; j1226
+; MaybeUpdateCamelAndShipPosition
 ;-------------------------------------------------------------------------
-j1226
-        DEC a17
+MaybeUpdateCamelAndShipPosition
+        DEC camelUpdateFrameRate
         BEQ b122B
         RTS 
 
-b122B   LDA a15
-        STA a17
+b122B   LDA initialCamelUpdateFrameRate
+        STA camelUpdateFrameRate
         JMP j1750
 
 ;-------------------------------------------------------------------------
@@ -724,9 +722,9 @@ b1262   RTS
 
         NOP 
 ;-------------------------------------------------------------------------
-; j1264
+; CheckJoystickLeftOrRight
 ;-------------------------------------------------------------------------
-j1264
+CheckJoystickLeftOrRight
         STA a1B
         LDA shipDirection
         BEQ b126E
@@ -754,27 +752,25 @@ b128C   LDA #$CB
         STA a16
         RTS 
 
-b1291   INC a14
-        LDA a14
+b1291   INC shipXOffset
+        LDA shipXOffset
         CMP #$48
-        BNE b129D
+        BNE UpdateShipSpeed
         LDA #$47
-        STA a14
-b129D   LDA shipDirection
+        STA shipXOffset
+UpdateShipSpeed   LDA shipDirection
         BNE b12AA
         LDA #$A0
-        SBC a14
+        SBC shipXOffset
         STA shipXPosition
         JMP j12B0
 
 b12AA   LDA #$0A
-        ADC a14
+        ADC shipXOffset
         STA shipXPosition
-;-------------------------------------------------------------------------
-; j12B0
-;-------------------------------------------------------------------------
+
 j12B0
-        LDA a14
+        LDA shipXOffset
         LDY #$03
 b12B4   CLC 
         ROR 
@@ -782,13 +778,13 @@ b12B4   CLC
         BNE b12B4
         TAX 
         LDA f22A8,X
-        STA a15
+        STA initialCamelUpdateFrameRate
         RTS 
 
 ;-------------------------------------------------------------------------
-; s12C0
+; UpdateGameTimer
 ;-------------------------------------------------------------------------
-s12C0
+UpdateGameTimer
         DEC gameTimer
         BEQ b12C5
         RTS 
@@ -798,9 +794,9 @@ b12C5   LDA #$08
         RTS 
 
 ;-------------------------------------------------------------------------
-; s12CA
+; CheckJoystickInputLeftOrRight
 ;-------------------------------------------------------------------------
-s12CA
+CheckJoystickInputLeftOrRight
         LDA gameTimer
         CMP #$01
         BEQ b12D1
@@ -818,13 +814,13 @@ b12D1   DEC a1E
         LDA #$81
         STA $D404    ;Voice 1: Control Register
         LDA #$04
-        JMP j1264
+        JMP CheckJoystickLeftOrRight
 
-b12EE   DEC a14
+b12EE   DEC shipXOffset
         BNE b12F6
         LDA #$01
-        STA a14
-b12F6   JMP b129D
+        STA shipXOffset
+b12F6   JMP UpdateShipSpeed
 
 ;-------------------------------------------------------------------------
 ; j12F9
@@ -833,19 +829,19 @@ j12F9
         NOP 
         NOP 
         NOP 
-        LDA a15
+        LDA initialCamelUpdateFrameRate
         CMP #$FF
         BNE b1307
         LDA #$10
-        STA a17
+        STA camelUpdateFrameRate
         RTS 
 
-b1307   JMP j1226
+b1307   JMP MaybeUpdateCamelAndShipPosition
 
 ;-------------------------------------------------------------------------
-; s130A
+; ChangeShipDirection
 ;-------------------------------------------------------------------------
-s130A
+ChangeShipDirection
         LDA gameTimer
         CMP #$03
         BEQ b1311
@@ -884,7 +880,7 @@ b1338   LDA #$21
 ; j133F
 ;-------------------------------------------------------------------------
 j133F
-        LDA a14
+        LDA shipXOffset
         CMP #$06
         BNE b1349
         LDA #$00
@@ -908,8 +904,8 @@ j135D
         CMP #$FF
         BNE b1354
         LDA #$90
-        SBC a14
-        STA a14
+        SBC shipXOffset
+        STA shipXOffset
         JMP b1354
 
 ;-------------------------------------------------------------------------
@@ -999,8 +995,7 @@ j13E4
         STA a20
         JMP b13C0
 
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA
+        .FILL 13, $EA
 ;-------------------------------------------------------------------------
 ; j1400
 ;-------------------------------------------------------------------------
@@ -1008,12 +1003,12 @@ j1400
         LDA #$81
         STA $D015    ;Sprite display Enable
         LDA #$01
-        STA a14
+        STA shipXOffset
         LDA #>pCA20
         STA a16
         LDA #<pCA20
-        STA a15
-        STA a17
+        STA initialCamelUpdateFrameRate
+        STA camelUpdateFrameRate
         LDA #<p70A0
         STA shipXPosition
         LDA #>p70A0
@@ -1098,41 +1093,36 @@ j1400
         STA $D408    ;Voice 2: Frequency Control - High-Byte
         LDA #$40
         STA a2F
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA
+
+        .FILL 21, $EA
+
         JMP j1F00
 
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA
+        .FILL 13, $EA
 ;-------------------------------------------------------------------------
 ; MainGameLoop
 ;-------------------------------------------------------------------------
 MainGameLoop
         JSR UpdateShipPosition
         JSR CheckJoystickInput
-        JSR s12C0
-        JSR s12CA
-        JSR s130A
-        JSR s1600
-        JSR s179A
-        JSR s1800
-        JSR s18A6
-        JSR s1922
-        JSR s199E
-        JSR s1B68
-        JSR s1D92
-        JSR s2DC8
-        JSR s2B19
-        JSR s2E13
-        JSR s2EC4
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA
-        NOP 
+        JSR UpdateGameTimer
+        JSR CheckJoystickInputLeftOrRight
+        JSR ChangeShipDirection
+        JSR AnimateCamels
+        JSR MoveCamels
+        JSR CheckFirePressed
+        JSR AnimateSky
+        JSR AnimateDyingCamel
+        JSR AnimateCamelHeads
+        JSR AnimateCamelSpitting
+        JSR AnimateShipDamage
+        JSR CheckForCollisions
+        JSR DetectShipAndCamelCollisions
+        JSR CheckSectorDefences
+        JSR CheckPausePressed
+
+        .FILL 45, $EA
+
         JMP MainGameLoop
 
 ;-------------------------------------------------------------------------
@@ -1143,29 +1133,11 @@ j1563
         STA $D015    ;Sprite display Enable
         JMP j28AC
 
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA
+        .FILL 149, $EA
 ;-------------------------------------------------------------------------
-; s1600
+; AnimateCamels
 ;-------------------------------------------------------------------------
-s1600
+AnimateCamels
         LDA gameTimer
         CMP #$01
         BEQ b1607
@@ -1232,7 +1204,7 @@ b165D   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         STA $D010    ;Sprites 0-7 MSB of X coordinate
         RTS 
 
-        LDA a17
+        LDA camelUpdateFrameRate
         CMP #$01
         BNE b169E
         LDA shipDirection
@@ -1335,12 +1307,12 @@ b1703   BEQ b1703
         STA a26
         JMP MoveLandscape
 
-        LDA a17
+        LDA camelUpdateFrameRate
         CMP #$01
         BEQ b1714
         RTS 
 
-b1714   LDA a15
+b1714   LDA initialCamelUpdateFrameRate
         CMP #$FF
         BNE b171B
         RTS 
@@ -1437,9 +1409,9 @@ j178B
 b1799   RTS 
 
 ;-------------------------------------------------------------------------
-; s179A
+; MoveCamels
 ;-------------------------------------------------------------------------
-s179A
+MoveCamels
         DEC a28
         BNE b1799
         JSR s27C2
@@ -1492,12 +1464,12 @@ j17EA
         BNE b17C1
 b17ED   RTS 
 
-        ROR a17
+        ROR camelUpdateFrameRate
 ;-------------------------------------------------------------------------
 ; j17F0
 ;-------------------------------------------------------------------------
 j17F0
-        LDA a14
+        LDA shipXOffset
         CMP #$01
         BEQ b17FB
         LDA #$D5
@@ -1508,9 +1480,9 @@ b17FB   JMP b16F6
         NOP 
         NOP 
 ;-------------------------------------------------------------------------
-; s1800
+; CheckFirePressed
 ;-------------------------------------------------------------------------
-s1800
+CheckFirePressed
         LDA a34
         CMP #$02
         BEQ b1807
@@ -1615,9 +1587,9 @@ b1894   LDA #$00
         JMP j18DD
 
 ;-------------------------------------------------------------------------
-; s18A6
+; AnimateSky
 ;-------------------------------------------------------------------------
-s18A6
+AnimateSky
         DEC a34
         BEQ b18AB
         RTS 
@@ -1710,9 +1682,9 @@ b1914   LDA a23
         RTS 
 
 ;-------------------------------------------------------------------------
-; s1922
+; AnimateDyingCamel
 ;-------------------------------------------------------------------------
-s1922
+AnimateDyingCamel
         LDA a3A
         BNE b1927
         RTS 
@@ -1788,9 +1760,9 @@ b1999   PLA
         JMP j17EA
 
 ;-------------------------------------------------------------------------
-; s199E
+; AnimateCamelHeads
 ;-------------------------------------------------------------------------
-s199E
+AnimateCamelHeads
         LDA gameTimer
         CMP #$01
         BEQ b19A5
@@ -2145,9 +2117,9 @@ b1B63   LDA #$C1
         RTS 
 
 ;-------------------------------------------------------------------------
-; s1B68
+; AnimateCamelSpitting
 ;-------------------------------------------------------------------------
-s1B68
+AnimateCamelSpitting
         DEC a5D
         BEQ b1B6D
         RTS 
@@ -2536,9 +2508,9 @@ b1D8D   LDA #$80
         JMP j1DB7
 
 ;-------------------------------------------------------------------------
-; s1D92
+; AnimateShipDamage
 ;-------------------------------------------------------------------------
-s1D92
+AnimateShipDamage
         LDA a62
         BNE b1D97
         RTS 
@@ -2846,20 +2818,13 @@ b1FA3   LDA #$DD
         LDA #$19
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         LDA #$00
-        STA a95
+        STA collisionDetectedBits
 
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA
+        .FILL 54, $EA
 
         JMP MainGameLoop
 
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA
+        .FILL 13, $EA
 
 .include "charset.asm"
 
@@ -3079,10 +3044,10 @@ b24E7   JMP j297E
 
         NOP 
         LDA @wa0095
-        STA a95
+        STA collisionDetectedBits
         AND #$00
         BNE b24F6
-        LDA a95
+        LDA collisionDetectedBits
 b24F6   RTS 
 
 ;-------------------------------------------------------------------------
@@ -3970,11 +3935,11 @@ b2B0E   DEC a6D
         JMP j2892
 
 ;-------------------------------------------------------------------------
-; s2B19
+; DetectShipAndCamelCollisions
 ;-------------------------------------------------------------------------
-s2B19
+DetectShipAndCamelCollisions
         LDA @wa0095
-        STA a95
+        STA collisionDetectedBits
         LDA a3A
         BEQ b2B23
 b2B22   RTS 
@@ -3982,12 +3947,12 @@ b2B22   RTS
 b2B23   LDA @wa0095
         AND #$02
         BNE b2B22
-        LDA a95
+        LDA collisionDetectedBits
         AND #$04
         BNE b2B22
         LDA aFD
         BEQ b2B22
-        LDA a95
+        LDA collisionDetectedBits
         AND #$01
         BEQ b2B22
         JMP j1DBE
@@ -4280,17 +4245,17 @@ b2DB8   LDA #$00
         JMP j2D76
 
 ;-------------------------------------------------------------------------
-; s2DC8
+; CheckForCollisions
 ;-------------------------------------------------------------------------
-s2DC8
-        DEC aFE
+CheckForCollisions
+        DEC CollisionDetectionRate
         BEQ b2DCD
         RTS 
 
 b2DCD   LDA #$20
-        STA aFE
+        STA CollisionDetectionRate
         LDA $D01E    ;Sprite to Sprite Collision Detect
-        STA a95
+        STA collisionDetectedBits
         RTS 
 
 ;-------------------------------------------------------------------------
@@ -4340,9 +4305,9 @@ j2E0D
         RTS 
 
 ;-------------------------------------------------------------------------
-; s2E13
+; CheckSectorDefences
 ;-------------------------------------------------------------------------
-s2E13
+CheckSectorDefences
         LDA SCREEN_RAM + $00C6
         CMP #$24
         BEQ b2E1B
@@ -4422,7 +4387,7 @@ j2E8C
 s2E93
         STA $D40F    ;Voice 3: Frequency Control - High-Byte
         LDA #$00
-        STA a95
+        STA collisionDetectedBits
 b2E9A   RTS 
 
 b2E9B   LDA aC5
@@ -4446,51 +4411,13 @@ b2EBD   LDA aC5
         RTS 
 
 ;-------------------------------------------------------------------------
-; s2EC4
+; CheckPausePressed
 ;-------------------------------------------------------------------------
-s2EC4
+CheckPausePressed
         LDA a028D
         CMP #$02
         BEQ b2E9B
         RTS 
 
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA,$EA,$EA,$EA,$EA
-        .BYTE $EA,$EA,$EA,$EA
+        .FILL 308, $EA
 .include "sprites.asm"

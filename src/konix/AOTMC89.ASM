@@ -1,3 +1,4 @@
+%include "kms.inc"			;PORT definitions file !
 
 ;-------------------------------------------------------------------
 ;
@@ -6,10 +7,9 @@
 ;
 
 
-		include kms.inc			;PORT definitions file !
 
 
-		opt d+					;enable downloading
+opt d+					;enable downloading
 
 
 ;		object amc.com			;save out an executable

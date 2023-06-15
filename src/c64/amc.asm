@@ -120,7 +120,6 @@ aFF = $FF
 ;
 ; **** ZP POINTERS **** 
 ;
-p06 = $06
 p07 = $07
 p60 = $60
 p64 = $64
@@ -455,7 +454,7 @@ p0E20   .BYTE $00,$00,$FF,$FF,$00,$FF,$FF,$FF
         STA $D021    ;Background Color 0
         LDA #$18
         TAY 
-        STA (p06),Y
+        STA (a06),Y
         JSR InitializeScreenPointerArray
 ;-------------------------------------------------------------------------
 ; RestartGame

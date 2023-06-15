@@ -9,35 +9,35 @@ a40 = $40
 ATRACT = $4D
 aC0 = $C0
 aC1 = $C1
-aC2 = $C2
-aC3 = $C3
+shipSpeed = $C2
+scrollingOffset = $C3
 aC4 = $C4
 aC5 = $C5
 aC6 = $C6
 aC7 = $C7
 aC8 = $C8
 aC9 = $C9
-aCA = $CA
-aCB = $CB
-aCC = $CC
+currentXPosition = $CA
+currentYPosition = $CB
+scrollDirection = $CC
 aCD = $CD
-aCE = $CE
-aD0 = $D0
-aD1 = $D1
+shipDirection = $CE
+scrollingPyraimdsLoPtr = $D0
+scrollingPyramidsHiPtr = $D1
 FR0 = $D4
 aD5 = $D5
 aD6 = $D6
-aD7 = $D7
-aD8 = $D8
-aD9 = $D9
+bulletFireRate = $D7
+bulletXPosition = $D8
+bulletYPosition = $D9
 FR3 = $DA
-aDB = $DB
+bulletDirection = $DB
 aaDC = $DC
 aDD = $DD
 aDE = $DE
 aDF = $DF
 FR1 = $E0
-aE1 = $E1
+camelSpeed = $E1
 aE2 = $E2
 aE3 = $E3
 aE4 = $E4
@@ -45,7 +45,7 @@ aE5 = $E5
 FR2 = $E6
 aE7 = $E7
 aE8 = $E8
-aE9 = $E9
+currentCamalRadarSpeed = $E9
 aEA = $EA
 aEB = $EB
 FPCOC = $EC
@@ -53,7 +53,7 @@ FPTEM1 = $ED
 FPTEM2 = $EE
 aEF = $EF
 aF0 = $F0
-aF1 = $F1
+updatedXPosition = $F1
 CIX = $F2
 INBUFF = $F3
 aF4 = $F4
@@ -62,7 +62,7 @@ aF6 = $F6
 aF7 = $F7
 aF8 = $F8
 aF9 = $F9
-aFA = $FA
+currentPlayerOffset = $FA
 DEGFLG = $FB
 FLPTR = $FC
 aFD = $FD
@@ -72,26 +72,73 @@ aFF = $FF
 ; **** ZP POINTERS **** 
 ;
 CASINI = $02
-pD0 = $D0
-pE2 = $E2
 ;
 ; **** FIELDS **** 
 ;
 f3AFF = $3AFF
-f3B00 = $3B00
-f3C00 = $3C00
-f3D00 = $3D00
-f3E00 = $3E00
-f3F00 = $3F00
+yPositionArray = $3B00
+
+; Sprites are defined and vertically positioned by using a
+; a 256 byte region of memory. The base position for this is
+; defined as spriteData ($3800) and Player 0 (our ship) is
+; located at a $400 offset from that base, giving $3C00. 
+; The position of the bytes defining the sprite in the 
+; 256 byte range is what defines its vertical position.
+; So for example here is the ship's memory map when the
+; ship is near the top of the screen.:
+; 
+; 3C00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C20: 00 00 00 00 00 00 00 00 C3 00 81 81 00 C3 00 00 
+; 3C30: 00 00 00 00 00 00 00 01 03 1F 3F 00 3C 00 00 00 
+; 3C40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CA0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CB0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CC0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CD0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CE0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CF0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+;
+; And here it is when the ship is at the bottom of the
+; screen:
+;
+; 3C00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C20: 00 00 00 00 00 00 00 00 C3 00 81 81 00 C3 00 00 
+; 3C30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3C90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CA0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CB0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CC0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CD0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+; 3CE0: 00 00 00 00 00 00 00 01 03 1F 3F 00 3C 00 00 00 
+; 3CF0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+;
+; You can hopefully see that '01 03 1F 3F 00 3C', which
+; are the bytes that define the appearance of the ship,
+; have moved position. See shipFacingLeftSpriteDefinition
+; for where these bytes are defined.
+;
+; See https://atariwiki.org/wiki/Wiki.jsp?page=Pm-memory-map
+; for a full memory map of the offsets used.
+missileMemory = $3B00
+shipSpriteMemory = $3C00
+camelSpriteMemory1 = $3D00
+camelSpriteMemory2 = $3E00
+camelSpriteMemory3 = $3F00
 ;
 ; **** ABSOLUTE ADRESSES **** 
 ;
-a0201 = $0201
-a3B8F = $3B8F
-a3C28 = $3C28
-a3C2A = $3C2A
-a3C2B = $3C2B
-a3C2D = $3C2D
 a5886 = $5886
 a5889 = $5889
 ;
@@ -135,8 +182,12 @@ WARMSV = $E474
 .addr b387D
 
 *=$0FE1
-f0FE1   .BYTE $E1,$30,$E1,$0F,$22,$18
-s0FE7   LDA #$3C
+f0FE1   .BYTE <f30E1,>f30E1,<f0FE1,>f0FE1,<LaunchGame,>LaunchGame
+;-------------------------------------------------------------------------
+; SomeKindOfSetup
+;-------------------------------------------------------------------------
+SomeKindOfSetup
+        LDA #$3C
         STA $D302    ;PACTL
         LDA #$02
         STA BOOT     ;BOOT?   boot flag; 0 if none, 1 for disk, 2 for cassette
@@ -148,41 +199,101 @@ s0FE7   LDA #$3C
         STA a03
         JMP (DOSINI) ;DOSINI  
 
-        .BYTE $70,$70,$42,$4D,$10,$42,$B3,$13
-        .BYTE $C2,$80,$10,$C2,$67,$12,$C2,$67
-        .BYTE $12,$C2,$67,$12,$C2,$67,$12,$C2
-        .BYTE $67,$12,$C2,$67,$12,$C2,$67,$12
-        .BYTE $C2,$67,$12,$C2,$67,$12,$C2,$67
-        .BYTE $12
-p1029   .BYTE $D4
-a102A   .BYTE $AF
-a102B   .BYTE $10,$D4
-a102D   .BYTE $07
-a102E   .BYTE $11,$D4
-a1030   .BYTE $5F
-a1031   .BYTE $11,$D4
-a1033   .BYTE $B7
-a1034   .BYTE $11,$D4
-a1036   .BYTE $0F
-a1037   .BYTE $12,$44,$99,$12,$44,$C8,$12,$44
-        .BYTE $F7,$12,$44,$26,$13,$44,$55,$13
-        .BYTE $44,$84,$13,$41,$00,$50
-f104D   .BYTE $00,$00,$00,$00,$00,$00,$33,$23
-        .BYTE $2F,$32,$25,$00,$11
-f105A   .BYTE $1A,$10,$10,$10,$10,$10,$10,$10
-        .BYTE $00,$44
-f1064   .BYTE $1A
-f1065   .BYTE $10,$10,$10,$10,$00,$00,$33,$23
-        .BYTE $2F,$32,$25,$00,$12
-f1072   .BYTE $1A,$10,$10,$10,$10,$10,$10,$10
+;-------------------------------------------------------------------------
+; gameScreenDisplayList
+; https://www.atariarchives.org/mapping/appendix8.php
+;-------------------------------------------------------------------------
+gameScreenDisplayList
+        ; 70 - 8 blank lines
+        .BYTE $70,$70
+
+        ; + 40 - 'Load Memory Scan'
+        ; +  2 - Text mode with 8 scan lines and 40 bytes per line
+        ; = 42
+        .BYTE $42,<scoreLine,>scoreLine
+        .BYTE $42,<bannerLine2,>bannerLine2
+
+        ;   80 - Enable a 'Display List Interrupt'
+        ; + 40 - 'Load Memory Scan'
+        ; +  2 - Text mode with 8 scan lines and 40 bytes per line
+        ; = C2
+        .BYTE $C2,<radarLine,>radarLine
+
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+        .BYTE $C2,<messageLine,>messageLine
+
+        ; The scrolling pyramids.
+        ;   80 - Enable a 'Display List Interrupt'
+        ; + 40 - 'Load Memory Scan'
+        ; + 10 - Horizontal Scroll
+        ; +  4 - Text mode with 8 scan lines and 40 bytes per line
+        ; = D4
+scrollingPyramidsDisplayLists   
+        .BYTE $D4
+a102A   .BYTE <pyramidsLine1
+a102B   .BYTE >pyramidsLine1
+        .BYTE $D4
+a102D   .BYTE <pyramidsLine2
+a102E   .BYTE >pyramidsLine2
+        .BYTE $D4
+a1030   .BYTE <pyramidsLine3
+a1031   .BYTE >pyramidsLine3
+        .BYTE $D4
+a1033   .BYTE <pyramidsLine4
+a1034   .BYTE >pyramidsLine4
+        .BYTE $D4
+a1036   .BYTE <pyramidsLine5
+a1037   .BYTE >pyramidsLine5
+
+        ;  40 - 'Load Memory Scan'
+        ;+  4 - Text mode with 8 scan lines and 40 bytes per line
+        ;= 44
+        .BYTE $44,<rollingHorizonLine1,>rollingHorizonLine1
+        .BYTE $44,<rollingHorizonLine2,>rollingHorizonLine2
+        .BYTE $44,<rollingHorizonLine3,>rollingHorizonLine3
+        .BYTE $44,<rollingHorizonLine4,>rollingHorizonLine4
+        .BYTE $44,<rollingHorizonLine5,>rollingHorizonLine5
+        .BYTE $44,<rollingHorizonLine6,>rollingHorizonLine6
+
+        ; 41 = Jump to following address and wait for VBlank.
+        .BYTE $41,<p5000,>p5000
+
+p5000 = $5000
+
+scoreLine
+.enc "atascii" 
+score1Label   
+        .TEXT '     '
+titleScreenScoreLine
+        .TEXT' SCORE 1'
+currentScore1   
+        .TEXT ':0000000 '
+        .BYTE $44
+        .TEXT ':'
+camelsLeftText   
+        .TEXT '0000  SCORE 2'
+currentScore2   
+        .TEXT ':0000000'
+.enc "none"
+
         .BYTE $00,$00,$00,$00,$00,$00
-f1080   .BYTE $45,$45,$45,$45,$45,$45,$44,$45
+radarLine   
+        .BYTE $45,$45,$45,$45,$45,$45,$44,$45
         .BYTE $45,$45,$44,$45,$45,$45,$44,$45
         .BYTE $45,$45,$44,$45,$45,$45,$44,$45
         .BYTE $45,$45,$44,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$40,$41,$45,$45
-p10AF   .BYTE $45,$45,$45,$45,$40,$41,$45,$45
+pyramidsLine1   
+        .BYTE $45,$45,$45,$45,$40,$41,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
@@ -193,7 +304,8 @@ p10AF   .BYTE $45,$45,$45,$45,$40,$41,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
-p1107   .BYTE $45,$45,$45,$47,$43,$46,$41,$45
+pyramidsLine2   
+        .BYTE $45,$45,$45,$47,$43,$46,$41,$45
         .BYTE $45,$40,$41,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
@@ -204,7 +316,8 @@ p1107   .BYTE $45,$45,$45,$47,$43,$46,$41,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
-p115F   .BYTE $45,$45,$47,$42,$46,$46,$46,$41
+pyramidsLine3   
+        .BYTE $45,$45,$47,$42,$46,$46,$46,$41
         .BYTE $47,$43,$46,$41,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$40,$41,$45,$45
         .BYTE $40,$41,$45,$45,$45,$45,$45,$45
@@ -215,7 +328,8 @@ p115F   .BYTE $45,$45,$47,$42,$46,$46,$46,$41
         .BYTE $40,$41,$45,$45,$40,$41,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
-p11B7   .BYTE $45,$47,$48,$43,$46,$46,$46,$46
+pyramidsLine4   
+        .BYTE $45,$47,$48,$43,$46,$46,$46,$46
         .BYTE $49,$46,$46,$46,$41,$45,$45,$45
         .BYTE $45,$45,$45,$47,$43,$46,$41,$47
         .BYTE $43,$46,$41,$45,$45,$40,$41,$45
@@ -226,7 +340,8 @@ p11B7   .BYTE $45,$47,$48,$43,$46,$46,$46,$46
         .BYTE $43,$46,$41,$47,$43,$46,$41,$45
         .BYTE $45,$40,$41,$45,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
-p120F   .BYTE $47,$48,$42,$46,$46,$46,$46,$46
+pyramidsLine5   
+        .BYTE $47,$48,$42,$46,$46,$46,$46,$46
         .BYTE $46,$46,$46,$46,$46,$41,$45,$45
         .BYTE $45,$45,$47,$42,$46,$46,$46,$49
         .BYTE $46,$46,$46,$41,$47,$43,$46,$41
@@ -237,101 +352,125 @@ p120F   .BYTE $47,$48,$42,$46,$46,$46,$46,$46
         .BYTE $46,$46,$46,$49,$46,$46,$46,$41
         .BYTE $47,$43,$46,$41,$45,$45,$45,$45
         .BYTE $45,$45,$45,$45,$45,$45,$45,$45
-f1267   .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00
-f1276   .BYTE $00,$00,$00
-f1279   .BYTE $00,$00
-f127B   .BYTE $00
-f127C   .BYTE $00,$00,$00,$00,$00,$00,$00
-a1283   .BYTE $00,$00,$00,$00,$00,$00,$00,$00
+messageLine
         .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$50,$50
+        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
+        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
+        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
+        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
+        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
+        .BYTE $00,$00
+rollingHorizonLine1
         .BYTE $50,$50,$50,$50,$50,$50,$50,$50
         .BYTE $50,$50,$50,$50,$50,$50,$50,$50
         .BYTE $50,$50,$50,$50,$50,$50,$50,$50
         .BYTE $50,$50,$50,$50,$50,$50,$50,$50
         .BYTE $50,$50,$50,$50,$50,$50,$50,$50
-        .BYTE $50,$50,$50,$50,$50,$51,$51,$51
+        .BYTE $50,$50,$50,$50,$50,$50,$50
+rollingHorizonLine2
         .BYTE $51,$51,$51,$51,$51,$51,$51,$51
         .BYTE $51,$51,$51,$51,$51,$51,$51,$51
         .BYTE $51,$51,$51,$51,$51,$51,$51,$51
         .BYTE $51,$51,$51,$51,$51,$51,$51,$51
         .BYTE $51,$51,$51,$51,$51,$51,$51,$51
-        .BYTE $51,$51,$51,$51,$52,$52,$52,$52
+        .BYTE $51,$51,$51,$51,$51,$51,$51
+rollingHorizonLine3
         .BYTE $52,$52,$52,$52,$52,$52,$52,$52
         .BYTE $52,$52,$52,$52,$52,$52,$52,$52
         .BYTE $52,$52,$52,$52,$52,$52,$52,$52
         .BYTE $52,$52,$52,$52,$52,$52,$52,$52
         .BYTE $52,$52,$52,$52,$52,$52,$52,$52
-        .BYTE $52,$52,$52,$53,$53,$53,$53,$53
+        .BYTE $52,$52,$52,$52,$52,$52,$52
+rollingHorizonLine4
         .BYTE $53,$53,$53,$53,$53,$53,$53,$53
         .BYTE $53,$53,$53,$53,$53,$53,$53,$53
         .BYTE $53,$53,$53,$53,$53,$53,$53,$53
         .BYTE $53,$53,$53,$53,$53,$53,$53,$53
         .BYTE $53,$53,$53,$53,$53,$53,$53,$53
-        .BYTE $53,$53,$54,$54,$54,$54,$54,$54
+        .BYTE $53,$53,$53,$53,$53,$53,$53
+rollingHorizonLine5
         .BYTE $54,$54,$54,$54,$54,$54,$54,$54
         .BYTE $54,$54,$54,$54,$54,$54,$54,$54
         .BYTE $54,$54,$54,$54,$54,$54,$54,$54
         .BYTE $54,$54,$54,$54,$54,$54,$54,$54
         .BYTE $54,$54,$54,$54,$54,$54,$54,$54
-        .BYTE $54,$55,$55,$55,$55,$55,$55,$55
+        .BYTE $54,$54,$54,$54,$54,$54,$54
+rollingHorizonLine6
         .BYTE $55,$55,$55,$55,$55,$55,$55,$55
         .BYTE $55,$55,$55,$55,$55,$55,$55,$55
         .BYTE $55,$55,$55,$55,$55,$55,$55,$55
         .BYTE $55,$55,$55,$55,$55,$55,$55,$55
         .BYTE $55,$55,$55,$55,$55,$55,$55,$55
-        .BYTE $00,$00,$00,$00,$00,$00,$2A,$25
-        .BYTE $34,$33,$1A
-a13BE   .BYTE $15,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$33,$28,$29,$25,$2C,$24
-        .BYTE $1A
-a13CF   .BYTE $19,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$2A,$25,$34,$33,$1A
-a13DF   .BYTE $15,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $70,$70,$42,$52,$10,$70,$47,$01
-        .BYTE $14,$02,$07,$06,$07,$70,$02,$70
-        .BYTE $02,$70,$02,$70,$02,$70,$07,$41
-        .BYTE $E7,$13,$00,$00,$00,$39,$21,$2B
-        .BYTE $00,$34,$28,$25,$00,$28,$21,$29
-        .BYTE $32,$39,$00,$00,$00,$00,$00,$00
-        .BYTE $30,$32,$25,$33,$25,$2E,$34,$33
-        .BYTE $00,$2C,$2C,$21,$2D,$21,$33,$2F
-        .BYTE $26,$34,$07,$33,$00,$23,$2C,$21
-        .BYTE $33,$33,$29,$23,$00,$22,$2C,$21
-        .BYTE $33,$34,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$21,$34,$34
-        .BYTE $21,$23,$2B,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$2F,$26,$00,$34,$28,$25,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$2D,$35,$34,$21,$2E,$34,$00
-        .BYTE $23,$21,$2D,$25,$2C,$33,$00,$00
-        .BYTE $00,$00,$00,$2E,$35,$2D,$22,$25
-        .BYTE $32,$00,$2F,$26,$00,$22,$2C,$21
-        .BYTE $33,$34,$25,$32,$33,$00,$22,$2C
-        .BYTE $21,$33,$34,$29,$2E,$27,$1A,$00
-a1497   .BYTE $11,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$24,$29,$26,$26,$29
-        .BYTE $23,$35,$2C,$34,$39,$1A,$00
-f14AE   .BYTE $26,$25,$32,$00,$33,$35,$32,$25
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$22,$25,$21,$33
-        .BYTE $34,$00,$22,$2C,$21,$33,$34,$29
-        .BYTE $2E,$27,$00,$22,$35,$2C,$2C,$25
-        .BYTE $34,$00,$30,$2F,$34,$25,$2E,$34
-        .BYTE $29,$21,$2C,$1A,$00
-a14EB   .BYTE $12,$00,$00,$00,$00,$00,$00,$22
-        .BYTE $25,$33,$34,$00,$33,$30,$2F,$34
-        .BYTE $00,$2F,$07,$00,$3A,$21,$30,$30
-        .BYTE $29,$2E,$27,$00,$33,$2F,$00,$26
-        .BYTE $21,$32,$1A,$00
-f150F   .BYTE $10,$10,$10,$10,$10,$10,$10,$00
-        .BYTE $00,$00,$00,$30,$32,$25,$33,$33
-        .BYTE $00,$26,$29,$32,$25,$00,$34,$07
-        .BYTE $33,$34,$21,$32,$34,$00
-p152D   .BYTE $73,$63,$63,$63,$61,$61,$73,$76
+        .BYTE $55,$55,$55,$55,$55,$55,$55
+
+bannerLine2
+.enc "atascii" 
+        .TEXT '      JETS:'
+player1LivesText   
+        .TEXT '5         SHIELD:'
+currentShieldText   
+        .TEXT '9          JETS:'
+player2LivesText   
+        .TEXT '5       '
+
+;-------------------------------------------------------------------------
+; titleScreenDisplayList
+; This controls the display of the title screen text.
+;-------------------------------------------------------------------------
+titleScreenDisplayList
+        ; 70 - 8 blank lines
+        .BYTE $70,$70
+        ; + 40 - 'Load Memory Scan'
+        ; +  2 - Text mode with 8 scan lines and 40 bytes per line
+        ; = 42
+        .BYTE $42,<titleScreenScoreLine,>titleScreenScoreLine
+
+        ; 70 - 8 blank lines
+        .BYTE $70
+
+        ; + 40 - 'Load Memory Scan'
+        ; +  7 - Text mode 2 with 16 scan lines and 40 bytes per line
+        ; = 47
+        .BYTE $47,<titleScreenText,>titleScreenText
+
+        .BYTE $02
+        ; 07 - Text mode with 16 scan lines high.
+        ; This results in 'YAK THE HAIRY' in double font size. 
+        .BYTE $07
+        ; 06 - Text mode with 8 scan lines high.
+        .BYTE $06,$07,$70,$02,$70
+        .BYTE $02,$70,$02,$70
+        .BYTE $02
+        .BYTE $70
+        ; 'Press Fire' in double font size.
+        .BYTE $07
+        .BYTE $41,<titleScreenDisplayList,>titleScreenDisplayList
+
+titleScreenText
+        .TEXT "   YAK THE HAIRY    "
+        .TEXT "  PRESENTS LLAMASOFT'S CLASSIC BLAST    "
+        .TEXT "       ATTACK       "
+        .TEXT "       OF THE       "
+        .TEXT "   MUTANT CAMELS    "
+        .TEXT " NUMBER OF BLASTERS BLASTING: "
+numberOfPlayersText   
+        .TEXT '1          DIFFICULT'
+        .TEXT 'Y: '
+difficultyText   
+        .TEXT 'FER SURE            '
+        .TEXT '        BEAST BLASTI'
+        .TEXT 'NG BULLET POTENTIAL:'
+        .TEXT ' '
+bulletStrengthText   
+        .TEXT "2      BEST SPOT O' "
+        .TEXT 'ZAPPING SO FAR: '
+highScoreText   
+        .TEXT '0000000    PRESS FIR'
+        .TEXT "E T'START "
+.enc "none"
+
+p152D   
+        .BYTE $73,$63,$63,$63,$61,$61,$73,$76
         .BYTE $3A,$BC,$BD,$FB,$7F,$3F,$3F,$1F
         .BYTE $0F,$07,$00,$00,$00,$8D,$0D,$19
         .BYTE $30,$98,$99,$0B,$07,$0E,$3F,$FF
@@ -423,20 +562,27 @@ p152D   .BYTE $73,$63,$63,$63,$61,$61,$73,$76
         .BYTE $00,$00,$CE,$8C,$98,$98,$18,$0D
         .BYTE $0D,$0B,$03,$3F,$FF,$FF,$FF,$FC
         .BYTE $F8,$F0,$E0,$80,$00,$00,$00,$F0
-        RTS 
+        .BYTE $60 
 
         .BYTE $C0,$C0,$C0,$C0,$80,$80,$00,$00
         .BYTE $80,$C0,$E0,$F0,$78,$38,$1C,$16
         .BYTE $1C,$10,$00,$FF
-s1822   LDA #$34
+;-------------------------------------------------------------------------
+; LaunchGame
+;-------------------------------------------------------------------------
+LaunchGame
+        LDA #>charsetData
         STA CHBAS    ;CHBAS   shadow for CHBASE ($D409)
+
         LDA #$10
         STA a2A9A
         STA a2F0E
-        JSR s2BCA
-        JSR s23E0
-        JSR s195A
-j1838   LDA #<p152D
+        JSR SetUpTitleScreenInterrupts
+        JSR ResetPlayer1AndPlayer2
+        JSR SetUpInGameInterrupts
+
+SetUpTitleScreen
+        LDA #<p152D
         STA aE2
         LDA #>p152D
         STA aE3
@@ -466,16 +612,17 @@ b1871   LDA #$01
         STA aDE
         STA INBUFF   ;INBUFF  
         STA FR0      ;FR0     floating point register 0
-        STA aC3
+        STA scrollingOffset
         STA aC6
         STA aC7
         STA aC5
         LDA #$FF
         STA aE8
         STA FLPTR
-        JSR s2B71
-        JSR s28C1
+        JSR GetGameSettingsForDifficultyLevel
+        JSR ClearMessageAndRadarLine
         JSR s2F43
+
         LDA #$00
         STA $D404    ;HSCROL
         STA aD5
@@ -492,54 +639,69 @@ b1871   LDA #$01
         STA aDD
         STA aDF
         STA FR2
+
         LDX #$00
 b18B8   STA f3680,X
         INX 
         CPX #$40
         BNE b18B8
+
         STA aC4
-        STA aC3
-        STA aCC
-        STA aC2
-        STA aCE
+        STA scrollingOffset
+        STA scrollDirection
+        STA shipSpeed
+        STA shipDirection
+
         LDA #$7F
         STA COLOR4   ;COLOR4  shadow for COLBK ($D01A)
         LDA #$C0
-        STA aCA
-        JSR s26D0
-        JSR s1BC8
-        JSR s2F0F
-        JSR s1C56
-        JSR s2F2E
+        STA currentXPosition
+
+        JSR UpdateCamelsLeftText
+        JSR ClearGameData
+        JSR UpdateCurrentPlayerText
+        JSR UpdatePositionOnRadar
+        JSR ClearMessageLine
         LDA aFD
-        BNE b18ED
+        BNE GamePlayLoop
         LDA #$F0
         STA FLPTR
         JMP j18FF
 
-b18ED   JSR s1DA6
-        JSR s1E64
+GamePlayLoop   
+        JSR UpdateShipDirectionAndSpeed
+        JSR CheckIfFirePressed
         JSR s2441
         JSR s2335
         LDA FLPTR
         CMP #$F0
-        BNE b18ED
-j18FF   JMP j2729
+        BNE GamePlayLoop
 
-p1902   PHA 
+j18FF
+        JMP MaybePerformWarp
+
+;-------------------------------------------------------------------------
+; DisplayListInterrupt   
+;-------------------------------------------------------------------------
+DisplayListInterrupt   
+        PHA 
         LDA aC0
         STA $D40A    ;WSYNC
         STA $D018    ;COLPF2
         STA $D01A    ;COLBK
+
         AND #$0F
         CMP #$0D
         BEQ b1924
         INC aC0
         BEQ b1924
-        LDA aCA
+
+        LDA currentXPosition
         STA $D000    ;HPOSP0
+
         LDA aC1
         STA $D017    ;COLPF1
+
         PLA 
         RTI 
 
@@ -563,7 +725,7 @@ b1926   DEC aC0
         PHA 
         TYA 
         PHA 
-        JSR s1E1A
+        JSR ScrollPyramidLeftOrRight
         PLA 
         TAY 
         PLA 
@@ -573,26 +735,40 @@ b1926   DEC aC0
         PLA 
         RTI 
 
-s195A   LDA #<p00
+;-------------------------------------------------------------------------
+; SetUpInGameInterrupts
+;-------------------------------------------------------------------------
+SetUpInGameInterrupts
+        LDA #$00
         STA SDMCTL   ;SDMCTL  shadow for DMACTL ($D400)
-        LDA #>p00
+
+        LDA #<gameScreenDisplayList
         STA SDLSTL   ;SDLSTL  shadow for DLISTL ($D402)
-        LDA #$10
+        LDA #>gameScreenDisplayList
         STA SDLSTH   ;SDLSTH  shadow for DLISTH ($D403)
+
         LDA #$22
         STA SDMCTL   ;SDMCTL  shadow for DMACTL ($D400)
-        LDY #$87
-        LDX #$19
+
+        LDY #<VerticalBlankInterruptHandler
+        LDX #>VerticalBlankInterruptHandler
         LDA #$07
         JSR SETBV    ;$E45C (jmp) SETBV
-        LDA #<p1902
+
+        LDA #<DisplayListInterrupt
         STA VDSLST   ;VDSLST  display list interrupt vector
-        LDA #>p1902
-        STA a0201
+        LDA #>DisplayListInterrupt
+        STA VDSLST + 1
+
+        ; Enable Display List Interrupts
         LDA #$C0
         STA $D40E    ;NMIEN
         RTS 
 
+;-------------------------------------------------------------------------
+; VerticalBlankInterruptHandler
+;-------------------------------------------------------------------------
+VerticalBlankInterruptHandler
         LDA FLPTR
         CMP #$01
         BNE b1992
@@ -600,32 +776,42 @@ s195A   LDA #<p00
         JMP j1995
 
 b1992   LDA a2A9A
-j1995   STA aC0
+
+j1995
+        STA aC0
         STA $D01A    ;COLBK
         STA $D018    ;COLPF2
         LDA FLPTR
         CMP #$01
         BEQ b19C3
+
         LDA aC0
         CLC 
         ADC #$10
         STA aC0
+
         EOR #$F0
         ORA #$06
         STA aC1
+
         SBC #$04
         STA COLOR0   ;COLOR0  shadow for COLPF0 ($D016)
+
         LDA FPTEM1
         CMP #$BD
         BNE b19C3
+
         LDA #$0F
         STA COLOR0   ;COLOR0  shadow for COLPF0 ($D016)
         STA $D019    ;COLPF3
+
 b19C3   LDA #$0F
         STA COLOR1   ;COLOR1  shadow for COLPF1 ($D017)
-        JSR s1B4C
-        JSR s1D10
-        LDA aF1
+
+        JSR LookAfterScrolling
+        JSR GetJoystickInput
+
+        LDA updatedXPosition
         STA $D000    ;HPOSP0
         LDA PCOLR0   ;PCOLR0  shadow for COLPM0 ($D012)
         CLC 
@@ -634,116 +820,136 @@ b19C3   LDA #$0F
         STA PCOLR0   ;PCOLR0  shadow for COLPM0 ($D012)
         LDA $D009    ;SIZEP1
         STA aE7
-        JSR s1F56
-        JSR s20FE
-        JSR s21DE
-        JSR s219C
+
+        JSR CheckForCollisions
+        JSR UpdateCamelYPosition
+        JSR UpdateTheRadarView
+        JSR FlashingOfPlayerAndCamels
+
         JMP XITBV    ;$E462 (jmp) XITBV
 
-j19F2   PLA 
-        STA aD0
-        LDA aC3
+;-------------------------------------------------------------------------
+; j19F2
+;-------------------------------------------------------------------------
+j19F2
+        PLA 
+        STA scrollingPyraimdsLoPtr
+        LDA scrollingOffset
         SEC 
-        SBC aD0
-        STA aC3
+        SBC scrollingPyraimdsLoPtr
+        STA scrollingOffset
         AND #$F0
         BEQ b1A03
-f1A00   JSR s1A0D
-b1A03   LDA aC3
+f1A00   
+        JSR ScrollPyramids
+b1A03   LDA scrollingOffset
         AND #$0F
         STA $D404    ;HSCROL
-        STA aC3
+        STA scrollingOffset
         RTS 
 
-s1A0D   LDA #<p1029
-        STA aD0
-        LDA #>p1029
-        STA aD1
+;-------------------------------------------------------------------------
+; ScrollPyramids
+;-------------------------------------------------------------------------
+ScrollPyramids
+        LDA #<scrollingPyramidsDisplayLists
+        STA scrollingPyraimdsLoPtr
+        LDA #>scrollingPyramidsDisplayLists
+        STA scrollingPyramidsHiPtr
         LDX #$05
 b1A17   LDY #$01
-        LDA (pD0),Y
+        LDA (scrollingPyraimdsLoPtr),Y
         CLC 
         ADC #$04
-        STA (pD0),Y
+        STA (scrollingPyraimdsLoPtr),Y
         INY 
-        LDA (pD0),Y
+        LDA (scrollingPyraimdsLoPtr),Y
         ADC #$00
-        STA (pD0),Y
-        LDA aD0
+        STA (scrollingPyraimdsLoPtr),Y
+        LDA scrollingPyraimdsLoPtr
         CLC 
         ADC #$03
-        STA aD0
-        LDA aD1
+        STA scrollingPyraimdsLoPtr
+        LDA scrollingPyramidsHiPtr
         ADC #$00
-        STA aD1
+        STA scrollingPyramidsHiPtr
         DEX 
         BNE b1A17
         INC aC4
         LDA aC4
         CMP #$0B
-        BEQ b1A40
+        BEQ ResetScrollingPyramids
         RTS 
 
-b1A40   LDA #$00
+ResetScrollingPyramids   
+        LDA #$00
         STA aC4
-        LDA #<p10AF
+        LDA #<pyramidsLine1
         STA a102A
-        LDA #>p10AF
+        LDA #>pyramidsLine1
         STA a102B
-        LDA #<p1107
+        LDA #<pyramidsLine2
         STA a102D
-        LDA #>p1107
+        LDA #>pyramidsLine2
         STA a102E
-        LDA #<p115F
+        LDA #<pyramidsLine3
         STA a1030
-        LDA #>p115F
+        LDA #>pyramidsLine3
         STA a1031
-        LDA #<p11B7
+        LDA #<pyramidsLine4
         STA a1033
-        LDA #>p11B7
+        LDA #>pyramidsLine4
         STA a1034
-        LDA #<p120F
+        LDA #<pyramidsLine5
         STA a1036
-        LDA #>p120F
+        LDA #>pyramidsLine5
         STA a1037
         RTS 
 
-j1A77   PLA 
+;-------------------------------------------------------------------------
+; j1A77
+;-------------------------------------------------------------------------
+j1A77
+        PLA 
         CLC 
-        ADC aC3
-        STA aC3
+        ADC scrollingOffset
+        STA scrollingOffset
         AND #$F0
         BEQ b1A84
         JSR s1A8E
-b1A84   LDA aC3
+b1A84   LDA scrollingOffset
         AND #$0F
         STA $D404    ;HSCROL
-        STA aC3
+        STA scrollingOffset
         RTS 
 
-s1A8E   LDA #<p1029
-        STA aD0
-        LDA #>p1029
-        STA aD1
+;-------------------------------------------------------------------------
+; s1A8E
+;-------------------------------------------------------------------------
+s1A8E
+        LDA #<scrollingPyramidsDisplayLists
+        STA scrollingPyraimdsLoPtr
+        LDA #>scrollingPyramidsDisplayLists
+        STA scrollingPyramidsHiPtr
         LDX #$05
 b1A98   LDY #$01
-        LDA (pD0),Y
+        LDA (scrollingPyraimdsLoPtr),Y
         SEC 
         SBC #$04
-        STA (pD0),Y
+        STA (scrollingPyraimdsLoPtr),Y
         BCS b1AAB
         INY 
-        LDA (pD0),Y
+        LDA (scrollingPyraimdsLoPtr),Y
         SEC 
         SBC #$01
-        STA (pD0),Y
-b1AAB   LDA aD0
+        STA (scrollingPyraimdsLoPtr),Y
+b1AAB   LDA scrollingPyraimdsLoPtr
         CLC 
         ADC #$03
-        STA aD0
-        LDA aD1
+        STA scrollingPyraimdsLoPtr
+        LDA scrollingPyramidsHiPtr
         ADC #$00
-        STA aD1
+        STA scrollingPyramidsHiPtr
         DEX 
         BNE b1A98
         DEC aC4
@@ -754,27 +960,27 @@ b1AAB   LDA aD0
 
 b1AC4   LDA #$0A
         STA aC4
-        LDA #<p1029
-        STA aD0
-        LDA #>p1029
-        STA aD1
+        LDA #<scrollingPyramidsDisplayLists
+        STA scrollingPyraimdsLoPtr
+        LDA #>scrollingPyramidsDisplayLists
+        STA scrollingPyramidsHiPtr
         LDX #$05
 b1AD2   LDY #$01
-        LDA (pD0),Y
+        LDA (scrollingPyraimdsLoPtr),Y
         CLC 
         ADC #$2C
-        STA (pD0),Y
+        STA (scrollingPyraimdsLoPtr),Y
         INY 
-        LDA (pD0),Y
+        LDA (scrollingPyraimdsLoPtr),Y
         ADC #$00
-        STA (pD0),Y
-        LDA aD0
+        STA (scrollingPyraimdsLoPtr),Y
+        LDA scrollingPyraimdsLoPtr
         CLC 
         ADC #$03
-        STA aD0
-        LDA aD1
+        STA scrollingPyraimdsLoPtr
+        LDA scrollingPyramidsHiPtr
         ADC #$00
-        STA aD1
+        STA scrollingPyramidsHiPtr
         DEX 
         BNE b1AD2
         RTS 
@@ -791,7 +997,11 @@ f1B2C   .BYTE $00,$00,$00,$00,$00,$00,$00,$00
         .BYTE $00,$00,$00,$00,$00,$00,$00,$00
 f1B3C   .BYTE $00,$00,$00,$00,$00,$00,$00,$00
         .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-s1B4C   DEC aC6
+;-------------------------------------------------------------------------
+; LookAfterScrolling
+;-------------------------------------------------------------------------
+LookAfterScrolling
+        DEC aC6
         BEQ b1B51
         RTS 
 
@@ -829,27 +1039,31 @@ b1B8C   INX
         BNE b1B7B
         RTS 
 
-s1B92   LDA f1B2C,X
-        STA aD0
+;-------------------------------------------------------------------------
+; s1B92
+;-------------------------------------------------------------------------
+s1B92
+        LDA f1B2C,X
+        STA scrollingPyraimdsLoPtr
         CLC 
         ROR 
-        STA aD1
+        STA scrollingPyramidsHiPtr
         INC f1B2C,X
         LDA #$00
-        LDY aD0
+        LDY scrollingPyraimdsLoPtr
         STA f3680,Y
         INY 
         TYA 
-        STA aD0
+        STA scrollingPyraimdsLoPtr
         CMP #$30
         BNE b1BAE
         RTS 
 
-b1BAE   LDY aD1
+b1BAE   LDY scrollingPyramidsHiPtr
         LDA f1AF3,Y
         STA f1B3C,X
         LDX f1B0F,Y
-        LDY aD0
+        LDY scrollingPyraimdsLoPtr
         LDA #$AA
         STA f3680,Y
 b1BC0   INY 
@@ -858,58 +1072,90 @@ b1BC0   INY
         BNE b1BC0
         RTS 
 
-s1BC8   LDA #$38
+;-------------------------------------------------------------------------
+; ClearGameData
+;-------------------------------------------------------------------------
+ClearGameData
+        LDA #>spriteData
         STA $D407    ;PMBASE
+
         LDA SDMCTL   ;SDMCTL  shadow for DMACTL ($D400)
         ORA #$1C
         STA SDMCTL   ;SDMCTL  shadow for DMACTL ($D400)
+
         LDA #$00
         STA $D208    ;AUDCTL
+
         LDA #$03
         STA SSKCTL   ;SSKCTL  shadow for SKCTL ($D20F)
         STA $D20F    ;SKCTL
+
+        ; Clear the sprite memory.
         LDX #$00
 b1BE4   LDA #$00
-        STA f3B00,X
-        STA f3C00,X
-        STA f3D00,X
-        STA f3E00,X
-        STA f3F00,X
+        STA yPositionArray,X
+        STA shipSpriteMemory,X
+        STA camelSpriteMemory1,X
+        STA camelSpriteMemory2,X
+        STA camelSpriteMemory3,X
         INX 
         BNE b1BE4
+
 b1BF8   STA $D000,X  ;HPOSP0
         INX 
         CPX #$08
         BNE b1BF8
+
         LDA #$C0
         STA $D000    ;HPOSP0
         STA $D004    ;HPOSM0
+
+        ; Turn on players and missiles.
         LDA #$03
         STA $D01D    ;GRACTL
+
+        ; Make the camels double size.
         LDA #$01
         STA $D009    ;SIZEP1
         STA $D00A    ;SIZEP2
         STA $D00B    ;SIZEP3
+
         LDA #$11
         STA GPRIOR   ;GPRIOR  shadow for PRIOR ($D01B)
+
         LDA #$5F
         STA $D00C    ;SIZEM
+
         RTS 
 
 f1C23   .BYTE $00,$00,$00,$00,$00
 a1C28   .BYTE $00
 f1C29   .BYTE $10,$10,$10,$10,$10,$10
 f1C2F   .BYTE $04,$04,$04,$04,$04,$04
-f1C35   .BYTE $3C,$00,$3F,$1F,$03,$01
-f1C3B   .BYTE $3C,$00,$FC,$E0,$C0,$80
+shipFacingLeftSpriteDefinition
+        .BYTE $3C,$00,$3F,$1F,$03,$01           ;.BYTE $3C,$00,$3F,$1F,$03,$01
+                                                ; 00000001          *
+                                                ; 00000011         **
+                                                ; 00011111      *****
+                                                ; 00111111     ******
+                                                ; 00000000           
+                                                ; 00111100     ****  
+
+shipFacingRightSpriteDefinition
+        .BYTE $3C,$00,$FC,$E0,$C0,$80
+
 f1C41   .BYTE $01,$01,$02,$02,$04,$04,$08,$08
         .BYTE $10
 f1C4A   .BYTE $90,$8F,$8E,$8D,$8C
 a1C4F   .BYTE $8B
 f1C50   .BYTE $08,$08,$08,$08,$08,$08
-s1C56   LDA #<p2000
+;-------------------------------------------------------------------------
+; UpdatePositionOnRadar
+;-------------------------------------------------------------------------
+UpdatePositionOnRadar
+        LDA #$00
         STA aC8
-        LDA #>p2000
+        LDA #$20
         STA aC9
 b1C5E   DEC aC9
         BEQ b1C65
@@ -931,41 +1177,53 @@ b1C72   LDX aC8
         STA $D200    ;POT0
         LDA #$8F
         STA $D201    ;POT1
-j1C87   LDX #$00
+
+        ; Copy the 
+j1C87
+        LDX #$00
 b1C89   LDA f1C23,X
         BEQ b1C91
-        JSR s1CCF
+        JSR UpdateYPositionOfShipSprite
 b1C91   INX 
         CPX #$06
         BNE b1C89
+
         LDX #$02
 b1C98   LDY #$00
 b1C9A   DEY 
         BNE b1C9A
         DEX 
         BNE b1C98
+
         LDA a1C28
         CMP a1C4F
         BNE b1C5E
         LDA #$03
-        STA a3B8F
+        STA missileMemory + $8F
         LDA #$90
-        STA aCB
+        STA currentYPosition
         LDA #$00
         STA $D201    ;POT1
         STA FLPTR
         STA aD5
         LDA #$C0
-        STA aF1
+        STA updatedXPosition
+
+        ; This updates the ship's current position on the 
+        ; radar.
         LDA #$C3
-        STA a3C28
-        STA a3C2D
+        STA shipSpriteMemory + $28
+        STA shipSpriteMemory + $2D
         LDA #$81
-        STA a3C2A
-        STA a3C2B
+        STA shipSpriteMemory + $2A
+        STA shipSpriteMemory + $2B
         RTS 
 
-s1CCF   DEC f1C29,X
+;-------------------------------------------------------------------------
+; UpdateYPositionOfShipSprite
+;-------------------------------------------------------------------------
+UpdateYPositionOfShipSprite
+        DEC f1C29,X
         BEQ b1CD5
 b1CD4   RTS 
 
@@ -984,107 +1242,147 @@ b1CF0   LDA f1C23,X
         BEQ b1CD4
         TAY 
         LDA #$00
-        STA f3C00,Y
+        STA shipSpriteMemory,Y
         INY 
-        LDA f1C35,X
-        STA f3C00,Y
+        LDA shipFacingLeftSpriteDefinition,X
+        STA shipSpriteMemory,Y
         INC f1C23,X
         INC aD5
         LDA aD5
         STA $D200    ;POT0
-b1D0F   RTS 
+ReturnEarly   
+        RTS 
 
-s1D10   LDY aCB
-        BEQ b1D0F
+MIN_Y_POSITION = $38
+LEFT = $00
+RIGHT = $01
+;-------------------------------------------------------------------------
+; GetJoystickInput   
+;-------------------------------------------------------------------------
+GetJoystickInput   
+        LDY currentYPosition
+        BEQ ReturnEarly
         LDA FLPTR
         CMP #$FF
-        BEQ b1D0F
+        BEQ ReturnEarly
+
+        ; Clear the ship's current Y Position
         LDX #$06
         LDA #$00
 b1D1E   LDA #$00
-        STA f3C00,Y
+        STA shipSpriteMemory,Y
         DEY 
         DEX 
         BNE b1D1E
-        LDY aCB
+
+        LDY currentYPosition
         DEY 
-        LDA f3B00,Y
+        LDA yPositionArray,Y
         AND #$FC
-        STA f3B00,Y
+        STA yPositionArray,Y
+
+MaybeJoystickDown
         LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
         AND #$01
-        BNE b1D47
-        LDA aCB
+        BNE MaybeJoystickUp
+
+        ; Joystick moved down
+        LDA currentYPosition
         SEC 
         SBC #$04
-        CMP #$38
-        BNE b1D45
+        CMP #MIN_Y_POSITION
+        BNE UpdateYPos
+
         CLC 
         ADC #$04
-b1D45   STA aCB
-b1D47   LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
+UpdateYPos   
+        STA currentYPosition
+
+MaybeJoystickUp   
+        LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
         AND #$02
-        BNE b1D5C
-        LDA aCB
+        BNE MaybeJoystickLeftOrRight
+        LDA currentYPosition
         CLC 
         ADC #$04
         CMP #$F0
-        BNE b1D5A
+        BNE UpdateYPos2
+
         SEC 
         SBC #$04
-b1D5A   STA aCB
-b1D5C   LDA FLPTR
-        BEQ b1D67
-        LDA #$00
-        STA aCC
-        JMP j1D7D
+UpdateYPos2   
+        STA currentYPosition
 
-b1D67   LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
+MaybeJoystickLeftOrRight   
+        LDA FLPTR
+        BEQ MaybeJoystickLeft
+        LDA #LEFT
+        STA scrollDirection
+        JMP UpdateDirectionAndSpeed
+
+MaybeJoystickLeft   
+        LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
         AND #$04
-        BNE b1D72
-        LDA #$00
-        STA aCC
-b1D72   LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
+        BNE MaybeJoystickRight
+        LDA #LEFT
+        STA scrollDirection
+
+MaybeJoystickRight   
+        LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
         AND #$08
-        BNE j1D7D
-        LDA #$01
-        STA aCC
-j1D7D   LDY aCB
+        BNE UpdateDirectionAndSpeed
+        LDA #RIGHT
+        STA scrollDirection
+
+UpdateDirectionAndSpeed   
+        LDY currentYPosition
         LDX #$00
-b1D81   LDA aCC
+
+UpdateShipYPositionLoop
+        LDA scrollDirection
         BNE b1D8B
-        LDA f1C35,X
+
+        LDA shipFacingLeftSpriteDefinition,X
         JMP j1D8E
 
-b1D8B   LDA f1C3B,X
-j1D8E   STA f3C00,Y
+b1D8B   LDA shipFacingRightSpriteDefinition,X
+
+j1D8E
+        STA shipSpriteMemory,Y
         DEY 
         INX 
         CPX #$06
-        BNE b1D81
-        LDY aCB
+        BNE UpdateShipYPositionLoop
+
+        LDY currentYPosition
         DEY 
-        LDA f3B00,Y
+        LDA yPositionArray,Y
         ORA #$03
-        STA f3B00,Y
+        STA yPositionArray,Y
         JMP j240D
 
 b1DA5   RTS 
 
-s1DA6   DEC aCD
+;-------------------------------------------------------------------------
+; UpdateShipDirectionAndSpeed
+;-------------------------------------------------------------------------
+UpdateShipDirectionAndSpeed
+        DEC aCD
         BNE b1DA5
-        LDA aCC
+        LDA scrollDirection
         BNE b1DBF
-        LDA aCA
+        LDA currentXPosition
         CMP #$C0
         BEQ b1DCB
         CLC 
         ADC #$02
-j1DB7   STA $D004    ;HPOSM0
-        STA aCA
+
+j1DB7
+        STA $D004    ;HPOSM0
+        STA currentXPosition
         JMP b1DCB
 
-b1DBF   LDA aCA
+b1DBF   LDA currentXPosition
         CMP #$40
         BEQ b1DCB
         SEC 
@@ -1093,66 +1391,85 @@ b1DBF   LDA aCA
 
 b1DCB   DEC FR0      ;FR0     floating point register 0
         BEQ b1DD0
-b1DCF   RTS 
-
-b1DD0   LDA #$04
-        STA FR0      ;FR0     floating point register 0
-        JSR s1E2B
-        LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
-        AND #$04
-        BNE b1DFE
-        LDA aCE
-        BEQ b1DF3
-        LDA aC2
-        BEQ b1DEA
-        DEC aC2
-        BNE b1DCF
-b1DEA   LDA #$00
-        STA aCE
-        LDA #$02
-        STA aC2
+ReturnFromDirectionAndSpeed   
         RTS 
 
-b1DF3   INC aC2
-        LDA aC2
+JOY_RIGHT = $04
+b1DD0   LDA #$04
+        STA FR0      ;FR0     floating point register 0
+        JSR CheckJoystickAndPlayASound
+
+        LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
+        AND #JOY_RIGHT
+        BNE MaybeStickMovedLeft
+
+        ; Joystick Moved Right.
+        LDA shipDirection
+        BEQ b1DF3
+        LDA shipSpeed
+        BEQ b1DEA
+        DEC shipSpeed
+        BNE ReturnFromDirectionAndSpeed
+
+b1DEA   LDA #$00
+        STA shipDirection
+        LDA #$02
+        STA shipSpeed
+        RTS 
+
+b1DF3   INC shipSpeed
+        LDA shipSpeed
         CMP #$0A
-        BNE b1DCF
-        DEC aC2
+        BNE ReturnFromDirectionAndSpeed
+        DEC shipSpeed
 b1DFD   RTS 
 
-b1DFE   LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
+MaybeStickMovedLeft   
+        LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
         AND #$08
         BNE b1DFD
-        LDA aCE
+
+        ; Joystick moved left.
+        LDA shipDirection
         BNE b1DF3
-        LDA aC2
+        LDA shipSpeed
         BEQ b1E11
-        DEC aC2
+        DEC shipSpeed
         BNE b1DFD
+
 b1E11   LDA #$01
-        STA aCE
+        STA shipDirection
         LDA #$02
-        STA aC2
+        STA shipSpeed
 b1E19   RTS 
 
-s1E1A   LDA aC2
+;-------------------------------------------------------------------------
+; ScrollPyramidLeftOrRight
+;-------------------------------------------------------------------------
+ScrollPyramidLeftOrRight
+        LDA shipSpeed
         CLC 
         ROR 
         BEQ b1E19
         PHA 
-        LDA aCE
+        LDA shipDirection
         BNE b1E28
         JMP j1A77
 
 b1E28   JMP j19F2
 
-s1E2B   LDA a2BA7
+JOYSTICK_UP_OR_DOWN = $0C
+;-------------------------------------------------------------------------
+; CheckJoystickAndPlayASound
+;-------------------------------------------------------------------------
+CheckJoystickAndPlayASound
+        LDA a2BA7
         BEQ b1E33
-        JMP j2BA8
+        JMP PlayASound1
 
 b1E33   LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
-        AND #$0C
-        CMP #$0C
+        AND #JOYSTICK_UP_OR_DOWN
+        CMP #JOYSTICK_UP_OR_DOWN
         BEQ b1E59
         INC aD5
         LDA aD5
@@ -1163,7 +1480,7 @@ b1E46   CLC
         ROR 
         ORA #$80
         STA $D201    ;POT1
-        LDA aCB
+        LDA currentYPosition
         CLC 
         ROR 
         ADC #$10
@@ -1177,31 +1494,45 @@ b1E59   LDA aD5
         LDA aD5
         JMP b1E46
 
-s1E64   DEC aD7
+;-------------------------------------------------------------------------
+; CheckIfFirePressed
+;-------------------------------------------------------------------------
+CheckIfFirePressed
+        DEC bulletFireRate
         BEQ b1E69
 b1E68   RTS 
 
 b1E69   LDA #$50
-        STA aD7
-        LDA aD8
+        STA bulletFireRate
+
+        LDA bulletXPosition
         BNE b1E97
+
+        ; Check if fire pressed.
         LDA STRIG0   ;STRIG0  shadow for TRIG0 ($D001)
         BNE b1E68
-        LDA aCA
-        STA aD8
-        LDA aCC
-        STA aDB
-        LDY aCB
-        STY aD9
+
+        ;Fire was pressed.
+        LDA currentXPosition
+        STA bulletXPosition
+        LDA scrollDirection
+        STA bulletDirection
+        LDY currentYPosition
+        STY bulletYPosition
+
         LDA #$0C
-        STA f3AFF,Y
+        STA yPositionArray - 1,Y
+
         LDA #$30
         STA aF7
+
         LDA #$10
         STA aD6
+
         LDA #$C5
         STA $D203    ;POT3
-        STA $D01E
+        STA CLEAR_HIT_REGISTER
+
 b1E97   LDA aE7
         AND #$0E
         BEQ b1EF2
@@ -1215,14 +1546,17 @@ b1E97   LDA aE7
         SEC 
         SBC a2C30
         STA f1F44,X
+
         LDA #>p04D0
         STA aF0
         LDA #<p04D0
         STA aEF
+
         LDA f1F44,X
         AND #$F0
         CMP #$F0
         BNE b1EE0
+
         LDA #$00
         STA aF0
         JSR s2216
@@ -1230,11 +1564,11 @@ b1E97   LDA aE7
         PHA 
         LDY DEGFLG
         LDA #$04
-        JSR s26B2
+        JSR IncrementCurrentPlayerScore
         LDA DEGFLG
         ASL 
         STA DEGFLG
-        JSR s26D0
+        JSR UpdateCamelsLeftText
         PLA 
         TAX 
         JMP j1F1F
@@ -1245,22 +1579,22 @@ b1EE0   TYA
         PHA 
         LDA #$06
         LDY #$01
-        JSR s26B2
+        JSR IncrementCurrentPlayerScore
         PLA 
         TAX 
         PLA 
         TAY 
         JMP j1F1F
 
-b1EF2   LDA aDB
+b1EF2   LDA bulletDirection
         BNE b1EFE
-        DEC aD8
-        DEC aD8
-        DEC aD8
-        DEC aD8
-b1EFE   INC aD8
-        INC aD8
-        LDA aD8
+        DEC bulletXPosition
+        DEC bulletXPosition
+        DEC bulletXPosition
+        DEC bulletXPosition
+b1EFE   INC bulletXPosition
+        INC bulletXPosition
+        LDA bulletXPosition
         AND #$F0
         CMP #$10
         BEQ j1F1F
@@ -1268,31 +1602,44 @@ b1EFE   INC aD8
         BEQ j1F1F
         DEC aF7
         BEQ j1F1F
+
         INC aD6
         LDA aD6
         STA $D202    ;POT2
-        LDA aD8
+
+        LDA bulletXPosition
         STA $D005    ;HPOSM1
         RTS 
 
-j1F1F   LDA #$00
+;-------------------------------------------------------------------------
+; j1F1F
+;-------------------------------------------------------------------------
+j1F1F
+        LDA #$00
         STA $D203    ;POT3
-        STA aD8
+        STA bulletXPosition
         STA $D005    ;HPOSM1
-        LDY aD9
+        LDY bulletYPosition
         LDA f3AFF,Y
         AND #$F3
         STA f3AFF,Y
-        STA $D01E
+        STA CLEAR_HIT_REGISTER
         RTS 
 
 a1F37   .BYTE $00
+
+; Arrays for Camel Data.
 f1F38   .BYTE $12,$10,$0E,$0C,$0A,$08
 f1F3E   .BYTE $12,$10,$0E,$0C,$0A,$08
 f1F44   .BYTE $F1,$F1,$FF,$FF,$FF,$FF
-f1F4A   .BYTE $06,$0A,$0E,$12,$16,$1A
+currentCamelPositionOnRadarArray   
+        .BYTE $06,$0A,$0E,$12,$16,$1A
 f1F50   .BYTE $06,$0A,$0E,$12,$16,$1A
-s1F56   LDA $D00C    ;SIZEM
+;-------------------------------------------------------------------------
+; CheckForCollisions
+;-------------------------------------------------------------------------
+CheckForCollisions
+        LDA $D00C    ;SIZEM
         STA FPTR2
         LDA aDF
         BEQ b1F64
@@ -1317,24 +1664,24 @@ b1F64   LDA FLPTR
         STA a2400
         LDA #$10
         STA a2BA7
-        LDA aCE
+        LDA shipDirection
         EOR #$01
-        STA aCE
+        STA shipDirection
         LDA #$06
-        STA aC2
-        STA $D01E
+        STA shipSpeed
+        STA CLEAR_HIT_REGISTER
         STA aDF
-        JMP j1FEA
+        JMP DecrementCurrentShields
 
 b1FA1   LDA aEA
         BEQ b1FA8
         JMP j202D
 
-b1FA8   LDA aCE
+b1FA8   LDA shipDirection
         EOR #$01
-        STA aCE
+        STA shipDirection
         LDA #$09
-        STA aC2
+        STA shipSpeed
         LDA #$10
         STA aDF
         LDA #$10
@@ -1353,21 +1700,27 @@ b1FCE   JSR s2216
         PHA 
         LDY DEGFLG
         LDA #$04
-        JSR s26B2
+        JSR IncrementCurrentPlayerScore
         LDA DEGFLG
         ASL 
         STA DEGFLG
-        JSR s26D0
+        JSR UpdateCamelsLeftText
         PLA 
         TAX 
-b1FE4   JSR j1FEA
+b1FE4   JSR DecrementCurrentShields
         JMP j202D
 
-j1FEA   DEC a13CF
-        LDA a13CF
+;-------------------------------------------------------------------------
+; DecrementCurrentShields
+;-------------------------------------------------------------------------
+DecrementCurrentShields
+        DEC currentShieldText
+        LDA currentShieldText
         CMP #$10
         BNE b202C
-j1FF4   LDA aEA
+
+j1FF4
+        LDA aEA
         BEQ b1FFB
         JSR s2311
 b1FFB   LDA #$FF
@@ -1384,8 +1737,8 @@ p2000   =*+$01
         JSR s2216
 b2019   LDA aEA
         BNE b2019
-        JSR s28C1
-        JSR s26F9
+        JSR ClearMessageAndRadarLine
+        JSR DecrementCurrentPlayerLives
         JSR s2396
         LDX #$F8
         TXS 
@@ -1393,15 +1746,20 @@ b2019   LDA aEA
 
 b202C   RTS 
 
-j202D   LDA aC2
-        STA $D01E
+CLEAR_HIT_REGISTER = $D01E
+;-------------------------------------------------------------------------
+; j202D
+;-------------------------------------------------------------------------
+j202D
+        LDA shipSpeed
+        STA CLEAR_HIT_REGISTER
         CMP #$01
         BEQ b2085
-        LDA aCE
+        LDA shipDirection
         BEQ b206F
         LDA aaDC
         SEC 
-        SBC aC2
+        SBC shipSpeed
         STA aaDC
         LDA aDD
         SBC #$00
@@ -1409,11 +1767,15 @@ j202D   LDA aC2
         BNE b204B
         LDA #$11
 b204B   STA aDD
-j204D   CLC 
+;-------------------------------------------------------------------------
+; j204D
+;-------------------------------------------------------------------------
+j204D
+        CLC 
         ASL 
         ASL 
         ASL 
-        STA aD0
+        STA scrollingPyraimdsLoPtr
         LDA aaDC
         CLC 
         ROL 
@@ -1423,17 +1785,17 @@ j204D   CLC
         ROL 
         ADC #$00
         AND #$07
-        ADC aD0
-        STA aD0
+        ADC scrollingPyraimdsLoPtr
+        STA scrollingPyraimdsLoPtr
         LDA #$C0
         SEC 
-        SBC aD0
-        STA aF1
+        SBC scrollingPyraimdsLoPtr
+        STA updatedXPosition
         JMP b2085
 
 b206F   LDA aaDC
         CLC 
-        ADC aC2
+        ADC shipSpeed
         STA aaDC
         LDA aDD
         ADC #$00
@@ -1452,7 +1814,7 @@ b208C   LDX #$00
 b208E   LDA a1F37
         SEC 
         SBC aaDC
-        STA aD0
+        STA scrollingPyraimdsLoPtr
         LDA f1F38,X
         SBC aDD
         BEQ b20B0
@@ -1466,7 +1828,7 @@ b208E   LDA a1F37
         STA aF4
         RTS 
 
-b20B0   LDA aD0
+b20B0   LDA scrollingPyraimdsLoPtr
         EOR #$FF
         STA $D001    ;HPOSP1
         CLC 
@@ -1478,6 +1840,7 @@ b20B0   LDA aD0
         CLC 
         ADC #$06
         STA aF4
+
         LDA aEA
         BEQ b20D8
         TXA 
@@ -1497,19 +1860,23 @@ b20D8   STX aE8
         ADC #$00
         ASL 
         ADC #$00
-        STA aD0
+        STA scrollingPyraimdsLoPtr
         AND #$0F
         STA aE4
-        LDA aD0
+        LDA scrollingPyraimdsLoPtr
         AND #$F0
-        STA aD0
+        STA scrollingPyraimdsLoPtr
         LDA aE5
         AND #$0F
-        ORA aD0
+        ORA scrollingPyraimdsLoPtr
         STA aE5
 b20FD   RTS 
 
-s20FE   LDA aEA
+;-------------------------------------------------------------------------
+; UpdateCamelYPosition
+;-------------------------------------------------------------------------
+UpdateCamelYPosition
+        LDA aEA
         BEQ b2105
         JMP j2255
 
@@ -1519,12 +1886,12 @@ b2105   LDA FLPTR
         BEQ b210E
         RTS 
 
-b210E   JMP j2934
+b210E   JMP ClearCamelSpriteMemory
 
-b2111   DEC aE1
+b2111   DEC camelSpeed
         BNE b20FD
-        LDA a2BA5
-        STA aE1
+        LDA camelRadarSpeed
+        STA camelSpeed
         DEC aF9
         LDA aF9
         AND #$07
@@ -1537,58 +1904,63 @@ b2126   STA aF9
         STA $D206    ;POT6
         LDY #$00
         LDA #$DC
-        STA aD0
+        STA scrollingPyraimdsLoPtr
+
 b2136   TYA 
         PHA 
-        LDA (pE2),Y
-        LDX aD0
-        STA f3D00,X
+        LDA (aE2),Y
+        LDX scrollingPyraimdsLoPtr
+        STA camelSpriteMemory1,X
         DEX 
-        STA f3D00,X
+        STA camelSpriteMemory1,X
         DEX 
-        STA f3D00,X
+        STA camelSpriteMemory1,X
         TYA 
         CLC 
         ADC #$15
         TAY 
-        LDA (pE2),Y
-        LDX aD0
-        STA f3E00,X
+        LDA (aE2),Y
+        LDX scrollingPyraimdsLoPtr
+        STA camelSpriteMemory2,X
         DEX 
-        STA f3E00,X
+        STA camelSpriteMemory2,X
         DEX 
-        STA f3E00,X
+        STA camelSpriteMemory2,X
         TYA 
         CLC 
         ADC #$15
         TAY 
-        LDA (pE2),Y
-        LDX aD0
-        STA f3F00,X
+        LDA (aE2),Y
+        LDX scrollingPyraimdsLoPtr
+        STA camelSpriteMemory3,X
         DEX 
-        STA f3F00,X
+        STA camelSpriteMemory3,X
         DEX 
-        STA f3F00,X
-        LDA aD0
+        STA camelSpriteMemory3,X
+        LDA scrollingPyraimdsLoPtr
         SEC 
         SBC #$03
-        STA aD0
+        STA scrollingPyraimdsLoPtr
         PLA 
         TAY 
         INY 
         CPY #$15
         BNE b2136
+
         LDA aE2
         CLC 
         ADC #$3F
         STA aE2
+
         LDA aE3
         ADC #$00
         STA aE3
+
         LDY #$00
-        LDA (pE2),Y
+        LDA (aE2),Y
         CMP #$FF
         BEQ b2193
+
         RTS 
 
 b2193   LDA #<p152D
@@ -1597,7 +1969,11 @@ b2193   LDA #<p152D
         STA aE3
         RTS 
 
-s219C   LDA aE4
+;-------------------------------------------------------------------------
+; FlashingOfPlayerAndCamels
+;-------------------------------------------------------------------------
+FlashingOfPlayerAndCamels
+        LDA aE4
         CMP #$0F
         BNE b21AB
         LDA aE5
@@ -1615,7 +1991,9 @@ b21AB   LDA FR2
         LDA FR2
         EOR #$FF
         STA FR2
-j21BF   LDA aE5
+
+j21BF
+        LDA aE5
         STA PCOLR1   ;PCOLR1  shadow for COLPM1 ($D013)
         STA PCOLR2   ;PCOLR2  shadow for COLPM2 ($D014)
         STA PCOLR3   ;PCOLR3  shadow for COLPM3 ($D015)
@@ -1631,17 +2009,21 @@ b21CB   INC aE5
         STA FR2
         JMP j21BF
 
-s21DE   DEC aE9
+;-------------------------------------------------------------------------
+; UpdateTheRadarView
+;-------------------------------------------------------------------------
+UpdateTheRadarView
+        DEC currentCamalRadarSpeed
         BNE b2203
-        LDA a2BA5
-        STA aE9
+        LDA camelRadarSpeed
+        STA currentCamalRadarSpeed
         LDA FLPTR
         BNE b2203
         INC CIX      ;CIX     
         LDA CIX      ;CIX     
         CMP #$40
         BNE b21F6
-        JSR s236D
+        JSR UpdateCamelRadar
 b21F6   DEC a1F37
         DEC a1F37
         LDA a1F37
@@ -1659,26 +2041,30 @@ b2210   INX
         BNE b2206
         RTS 
 
-s2216   LDA FLPTR
+;-------------------------------------------------------------------------
+; s2216
+;-------------------------------------------------------------------------
+s2216
+        LDA FLPTR
         BNE b2241
         LDX aE8
-        LDA f1F4A,X
+        LDA currentCamelPositionOnRadarArray,X
         TAY 
         LDA #$FF
-        STA f1F4A,X
+        STA currentCamelPositionOnRadarArray,X
         LDA #$00
-        STA f1080,Y
+        STA radarLine,Y
         DEC aFD
         BNE b223D
         LDA #$F0
         STA FLPTR
-        JSR s271A
+        JSR ResetSoundChannels
         LDA #$00
         STA a2400
         STA a2403
 b223D   LDA #$9D
         BNE b2246
-b2241   LDA aCB
+b2241   LDA currentYPosition
         SEC 
         SBC #$0A
 b2246   STA aEB
@@ -1690,18 +2076,22 @@ b2246   STA aEB
         STA aEA
         RTS 
 
-j2255   LDA aEB
-        STA aD0
+;-------------------------------------------------------------------------
+; j2255
+;-------------------------------------------------------------------------
+j2255
+        LDA aEB
+        STA scrollingPyraimdsLoPtr
         SEC 
         SBC FPCOC
-        STA aD1
+        STA scrollingPyramidsHiPtr
         LDA #$BF
         SBC FPTEM1
         STA $D204    ;POT4
         LDA #$0F
         STA $D205    ;POT5
         INC aEF
-        LDA aD1
+        LDA scrollingPyramidsHiPtr
         AND #$F0
         BEQ b2279
         CMP #$F0
@@ -1713,7 +2103,7 @@ b2279   LDA aEB
         ADC FPCOC
         STA aEB
         DEC FPCOC
-        LDA aD0
+        LDA scrollingPyraimdsLoPtr
         ADC FPCOC
         TAY 
         INY 
@@ -1722,70 +2112,94 @@ b2279   LDA aEB
         CMP #$FF
         BNE b2298
         LDA #$00
-        STA f3C00,Y
+        STA shipSpriteMemory,Y
         JMP j22A3
 
 b2298   LDA #$00
-        STA f3D00,Y
-        STA f3E00,Y
-        STA f3F00,Y
-j22A3   DEC FPTEM1
+        STA camelSpriteMemory1,Y
+        STA camelSpriteMemory2,Y
+        STA camelSpriteMemory3,Y
+;-------------------------------------------------------------------------
+; j22A3
+;-------------------------------------------------------------------------
+j22A3
+        DEC FPTEM1
         BNE j2255
         JMP j230B
 
-j22AA   LDA aD1
+;-------------------------------------------------------------------------
+; j22AA
+;-------------------------------------------------------------------------
+j22AA
+        LDA scrollingPyramidsHiPtr
         STA aEB
         LDA FPCOC
         PHA 
-j22B1   DEC FPCOC
+;-------------------------------------------------------------------------
+; j22B1
+;-------------------------------------------------------------------------
+j22B1
+        DEC FPCOC
         BNE b22BB
 b22B5   PLA 
         STA FPCOC
         INC FPCOC
         RTS 
 
-b22BB   LDA aD0
+b22BB   LDA scrollingPyraimdsLoPtr
         CLC 
         ADC FPCOC
-        STA aD0
-        INC aD0
-        LDA aD0
+        STA scrollingPyraimdsLoPtr
+        INC scrollingPyraimdsLoPtr
+        LDA scrollingPyraimdsLoPtr
         SEC 
         SBC FPCOC
-        STA aD1
-        LDA aD0
+        STA scrollingPyramidsHiPtr
+        LDA scrollingPyraimdsLoPtr
         CMP #$FC
         BEQ b22B5
-        JSR s22D7
+        JSR ChangeCamelVerticalPosition
         JMP j22B1
 
-s22D7   LDX aD0
-        LDY aD1
+;-------------------------------------------------------------------------
+; ChangeCamelVerticalPosition
+;-------------------------------------------------------------------------
+ChangeCamelVerticalPosition
+        LDX scrollingPyraimdsLoPtr
+        LDY scrollingPyramidsHiPtr
         LDA FLPTR
         CMP #$FF
         BEQ b22FF
-        LDA f3D00,X
-        STA f3D00,Y
-        LDA f3E00,X
-        STA f3E00,Y
-        LDA f3F00,X
-        STA f3F00,Y
+        LDA camelSpriteMemory1,X
+        STA camelSpriteMemory1,Y
+        LDA camelSpriteMemory2,X
+        STA camelSpriteMemory2,Y
+        LDA camelSpriteMemory3,X
+        STA camelSpriteMemory3,Y
         LDA #$00
-        STA f3D00,X
-        STA f3E00,X
-        STA f3F00,X
+        STA camelSpriteMemory1,X
+        STA camelSpriteMemory2,X
+        STA camelSpriteMemory3,X
         RTS 
 
-b22FF   LDA f3C00,X
-        STA f3C00,Y
+b22FF   LDA shipSpriteMemory,X
+        STA shipSpriteMemory,Y
         LDA #$00
-        STA f3C00,X
+        STA shipSpriteMemory,X
         RTS 
 
-j230B   LDA FLPTR
+;-------------------------------------------------------------------------
+; j230B
+;-------------------------------------------------------------------------
+j230B
+        LDA FLPTR
         CMP #$FF
         BEQ b2318
-s2311   LDY aE8
+;-------------------------------------------------------------------------
+; s2311
+;-------------------------------------------------------------------------
+s2311
+        LDY aE8
         LDA #$80
         STA f1F38,Y
 b2318   LDA #$00
@@ -1796,18 +2210,22 @@ b2318   LDA #$00
         BEQ b2334
         LDY #$00
         TYA 
-b2328   STA f3D00,Y
-        STA f3E00,Y
-        STA f3F00,Y
+b2328   STA camelSpriteMemory1,Y
+        STA camelSpriteMemory2,Y
+        STA camelSpriteMemory3,Y
         INY 
         BNE b2328
 b2334   RTS 
 
-s2335   DEC FPTEM2
+;-------------------------------------------------------------------------
+; s2335
+;-------------------------------------------------------------------------
+s2335
+        DEC FPTEM2
         BNE b2334
         LDA #$30
         STA FPTEM2
-        JSR j2BA8
+        JSR PlayASound1
         LDA aF0
         BEQ b2334
         TAY 
@@ -1830,43 +2248,52 @@ s2335   DEC FPTEM2
 
 f2368   .BYTE $00,$05,$08
         .BYTE $0C,$0F
-s236D   LDX #$00
+;-------------------------------------------------------------------------
+; UpdateCamelRadar
+;-------------------------------------------------------------------------
+UpdateCamelRadar
+        LDX #$00
         LDA #$00
         STA CIX      ;CIX     
-b2373   LDA f1F4A,X
+b2373   LDA currentCamelPositionOnRadarArray,X
         TAY 
         CMP #$FF
         BEQ b2390
         LDA #$00
-        STA f1080,Y
+        STA radarLine,Y
         INY 
-        INC f1F4A,X
-        LDA #$44
-        STA f1080,Y
+        INC currentCamelPositionOnRadarArray,X
+        LDA #CAMEL
+        STA radarLine,Y
         CPY #$29
         BNE b2390
-        JMP j2D4A
+
+        JMP WriteYouAreOverrunText
 
 b2390   INX 
         CPX #$06
         BNE b2373
         RTS 
 
-s2396   LDX #$00
+;-------------------------------------------------------------------------
+; s2396
+;-------------------------------------------------------------------------
+s2396
+        LDX #$00
 b2398   LDA FLPTR
         CMP #$FF
         BEQ b23C0
         LDA f1F3E,X
         STA f1F38,X
-        LDY f1F4A,X
+        LDY currentCamelPositionOnRadarArray,X
         LDA #$00
-        STA f1080,Y
+        STA radarLine,Y
         STA a1F37
         LDA f1F50,X
-        STA f1F4A,X
+        STA currentCamelPositionOnRadarArray,X
         TAY 
         LDA #$44
-        STA f1080,Y
+        STA radarLine,Y
         LDA #$F0
         STA f1F44,X
 b23C0   LDA #$10
@@ -1882,21 +2309,25 @@ b23C0   LDA #$10
         BNE b2398
         LDA FLPTR
         BNE b23F8
-        JMP b1A40
+        JMP ResetScrollingPyramids
 
-s23E0   LDX #$07
+;-------------------------------------------------------------------------
+; ResetPlayer1AndPlayer2
+;-------------------------------------------------------------------------
+ResetPlayer1AndPlayer2
+        LDX #$07
 b23E2   LDA #$10
-        STA f105A,X
-        STA f1072,X
+        STA currentScore1,X
+        STA currentScore2,X
         DEX 
         BNE b23E2
         LDA #$15
-        STA a13BE
-        STA a13DF
-        JSR s28C1
+        STA player1LivesText
+        STA player2LivesText
+        JSR ClearMessageAndRadarLine
 b23F8   LDA #$19
-        STA a13CF
-        JMP b1A40
+        STA currentShieldText
+        JMP ResetScrollingPyramids
 
 a2400   .BYTE $00
 a2401   .BYTE $00
@@ -1911,16 +2342,21 @@ a2409   .BYTE $01
 a240A   .BYTE $00
 a240B   .BYTE $01
 a240C   .BYTE $01
-j240D   LDA a2400
+
+;-------------------------------------------------------------------------
+; j240D
+;-------------------------------------------------------------------------
+j240D
+        LDA a2400
         STA $D007    ;HPOSM3
         CLC 
         ADC #$02
         STA $D006    ;HPOSM2
         LDY a2402
         LDX #$06
-b241E   LDA f3B00,Y
+b241E   LDA yPositionArray,Y
         AND #$0F
-        STA f3B00,Y
+        STA yPositionArray,Y
         INY 
         DEX 
         BNE b241E
@@ -1929,14 +2365,18 @@ b241E   LDA f3B00,Y
         TAY 
         LDX #$06
 b2433   LDA f25DD,X
-        ORA f3B00,Y
-        STA f3B00,Y
+        ORA yPositionArray,Y
+        STA yPositionArray,Y
         INY 
         DEX 
         BNE b2433
 b2440   RTS 
 
-s2441   DEC aF5
+;-------------------------------------------------------------------------
+; s2441
+;-------------------------------------------------------------------------
+s2441
+        DEC aF5
         BNE b2440
         LDA a2BA6
         STA aF5
@@ -1946,7 +2386,11 @@ s2441   DEC aF5
 b2452   JSR s2456
         RTS 
 
-s2456   LDA aF8
+;-------------------------------------------------------------------------
+; s2456
+;-------------------------------------------------------------------------
+s2456
+        LDA aF8
         BEQ b2474
         INC aF8
         LDA aF8
@@ -1982,19 +2426,27 @@ b2493   LDA #$00
         STA $D205    ;POT5
 b24A0   RTS 
 
-j24A1   DEC a2409
+;-------------------------------------------------------------------------
+; j24A1
+;-------------------------------------------------------------------------
+j24A1
+        DEC a2409
         BNE b24A0
         LDA a2408
         STA a2409
         LDA a2401
-        CMP aCB
+        CMP currentYPosition
         BMI b24E8
         LDA a2407
         BEQ b24CB
         LDA a2405
         BEQ b24CB
         DEC a2405
-j24C0   LDA a2405
+;-------------------------------------------------------------------------
+; j24C0
+;-------------------------------------------------------------------------
+j24C0
+        LDA a2405
         CLC 
         ADC a2401
         STA a2401
@@ -2029,7 +2481,11 @@ b24F8   LDA #$01
         DEC a2405
 b250A   JMP j24C0
 
-j250D   CMP #$02
+;-------------------------------------------------------------------------
+; j250D
+;-------------------------------------------------------------------------
+j250D
+        CMP #$02
         BEQ b2514
         JMP j25F3
 
@@ -2048,12 +2504,16 @@ b2529   LDA #$00
         STA a2401
 b2531   RTS 
 
-j2532   DEC a2409
+;-------------------------------------------------------------------------
+; j2532
+;-------------------------------------------------------------------------
+j2532
+        DEC a2409
         BNE b2531
         LDA a2408
         STA a2409
         LDA a2401
-        CMP aCB
+        CMP currentYPosition
         BMI b254F
         LDA a2401
         SEC 
@@ -2067,7 +2527,11 @@ b254F   LDA a2401
         STA a2401
 b2559   RTS 
 
-s255A   LDA aF4
+;-------------------------------------------------------------------------
+; s255A
+;-------------------------------------------------------------------------
+s255A
+        LDA aF4
         BEQ b2559
         AND #$F0
         CMP #$20
@@ -2095,24 +2559,28 @@ b2588   LDA INBUFF   ;INBUFF
         STA a2403
         LDA #$00
         STA a2405
-        JSR s25E4
+        JSR GetAPseudoRandomValue
         AND a25F1
         ORA a25F2
         STA a2408
-j25A2   LDA #$A0
+;-------------------------------------------------------------------------
+; j25A2
+;-------------------------------------------------------------------------
+j25A2
+        LDA #$A0
         STA a2401
         LDA aF4
         STA a2400
-        CMP aCA
+        CMP currentXPosition
         BMI b25BE
-        JSR s25E4
+        JSR GetAPseudoRandomValue
         AND a25F0
         ORA #$01
         EOR #$FF
         STA a2404
         RTS 
 
-b25BE   JSR s25E4
+b25BE   JSR GetAPseudoRandomValue
         AND a25F0
         ORA #$01
         STA a2404
@@ -2127,12 +2595,12 @@ b25D1   STA a2403
         STA a2405
         JMP j25A2
 
-f25DD   BRK #$60
-        BEQ b2641
-        RTS 
-
-        BEQ b2644
-s25E4   INC aF6
+f25DD   .BYTE $00,$60,$F0,$60,$60,$F0,$60
+;-------------------------------------------------------------------------
+; GetAPseudoRandomValue
+;-------------------------------------------------------------------------
+GetAPseudoRandomValue
+        INC aF6
         STX aFF
         LDX aF6
         LDA f1A00,X
@@ -2142,7 +2610,11 @@ b25EF   RTS
 a25F0   .BYTE $03
 a25F1   .BYTE $07
 a25F2   .BYTE $04
-j25F3   CMP #$03
+;-------------------------------------------------------------------------
+; j25F3
+;-------------------------------------------------------------------------
+j25F3
+        CMP #$03
         BNE b25EF
         JSR j24A1
         DEC a240B
@@ -2152,7 +2624,7 @@ j25F3   CMP #$03
 b2600   LDA a240A
         STA a240B
         LDA a2400
-        CMP aCA
+        CMP currentXPosition
         BPL b2648
         LDA a240C
         BNE b2629
@@ -2197,13 +2669,21 @@ b2658   LDA #$00
         DEC a2404
         JMP b261A
 
-j266D   DEC a2406
+;-------------------------------------------------------------------------
+; j266D
+;-------------------------------------------------------------------------
+j266D
+        DEC a2406
         BEQ b2673
         RTS 
 
 b2673   JMP b2493
 
-j2676   STA a2403
+;-------------------------------------------------------------------------
+; j2676
+;-------------------------------------------------------------------------
+j2676
+        STA a2403
         LDA aF4
         SEC 
         SBC #$28
@@ -2214,7 +2694,7 @@ j2676   STA a2403
         STA a2401
         LDA #$40
         STA a2406
-        JSR s25E4
+        JSR GetAPseudoRandomValue
         AND a25F1
         ORA a25F2
         STA a240B
@@ -2228,17 +2708,21 @@ j2676   STA a2403
 
 a26AD   .BYTE $04
 f26AE   .BYTE $00,$04,$06,$03
-s26B2   CLC 
-        ADC aFA
+;-------------------------------------------------------------------------
+; IncrementCurrentPlayerScore
+;-------------------------------------------------------------------------
+IncrementCurrentPlayerScore
+        CLC 
+        ADC currentPlayerOffset
         TAX 
 b26B6   TXA 
         PHA 
-b26B8   INC f104D,X
-        LDA f104D,X
+b26B8   INC score1Label,X
+        LDA score1Label,X
         CMP #$1A
         BNE b26CA
         LDA #$10
-        STA f104D,X
+        STA score1Label,X
         DEX 
         BNE b26B8
 b26CA   PLA 
@@ -2247,21 +2731,28 @@ b26CA   PLA
         BNE b26B6
         RTS 
 
-s26D0   LDA #$10
+;-------------------------------------------------------------------------
+; UpdateCamelsLeftText
+;-------------------------------------------------------------------------
+UpdateCamelsLeftText
+        LDA #$10
         LDX #$04
-b26D4   STA f1064,X
+b26D4   STA camelsLeftText - $01,X
         DEX 
         BNE b26D4
+
         LDX #$01
         LDY DEGFLG
 b26DE   TXA 
         PHA 
-j26E0   INC f1065,X
-        LDA f1065,X
+
+j26E0
+        INC camelsLeftText,X
+        LDA camelsLeftText,X
         CMP #$1A
         BNE b26F3
         LDA #$10
-        STA f1065,X
+        STA camelsLeftText,X
         DEX 
         JMP j26E0
 
@@ -2271,41 +2762,55 @@ b26F3   PLA
         BNE b26DE
         RTS 
 
-s26F9   LDA aFA
+;-------------------------------------------------------------------------
+; DecrementCurrentPlayerLives
+;-------------------------------------------------------------------------
+DecrementCurrentPlayerLives
+        LDA currentPlayerOffset
         CMP #$0E
         BNE b2708
-        DEC a13BE
-        LDA a13BE
+        DEC player1LivesText
+        LDA player1LivesText
         JMP j270E
 
-b2708   DEC a13DF
-        LDA a13DF
-j270E   JSR s2E16
+b2708   DEC player2LivesText
+        LDA player2LivesText
+
+j270E
+        JSR MaybeSwitchCurrentPlayer
         BEQ b2714
         RTS 
 
 b2714   LDX #$F8
         TXS 
-        JMP j2D7C
+        JMP WriteGameOverTextAndRestart
 
-s271A   LDA #$00
+;-------------------------------------------------------------------------
+; ResetSoundChannels
+;-------------------------------------------------------------------------
+ResetSoundChannels
+        LDA #$00
         STA $D201    ;POT1
         STA $D203    ;POT3
         STA $D205    ;POT5
         STA $D207    ;POT7
         RTS 
 
-j2729   LDA aEA
-        BNE j2729
+;-------------------------------------------------------------------------
+; MaybePerformWarp
+;-------------------------------------------------------------------------
+MaybePerformWarp
+        LDA aEA
+        BNE MaybePerformWarp
         LDA #$00
-        STA aC2
-        STA aCE
-        STA aD8
+        STA shipSpeed
+        STA shipDirection
+        STA bulletXPosition
         STA $D005    ;HPOSM1
         LDA #$C0
-        STA aCA
+        STA currentXPosition
         STA $D004    ;HPOSM0
-        JSR s271A
+        JSR ResetSoundChannels
         LDA #<pA080
         STA aD5
         LDA #>pA080
@@ -2319,7 +2824,11 @@ j2729   LDA aEA
         STA $D203    ;POT3
         STA $D205    ;POT5
         STA $D207    ;POT7
-j2760   DEC aD5
+;-------------------------------------------------------------------------
+; j2760
+;-------------------------------------------------------------------------
+j2760
+        DEC aD5
         LDA aD5
         CMP #$20
         BNE b276A
@@ -2364,21 +2873,28 @@ b27AE   DEY
         LDA #$01
         STA $D208    ;AUDCTL
         LDX #$00
-b27BB   LDA f27C9,X
-        STA f1080,X
+b27BB   LDA warpMessageText,X
+        STA radarLine,X
         INX 
         CPX #$30
         BNE b27BB
         JMP j27FA
 
-f27C9   .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$30,$32,$25,$30,$21,$32,$25
-        .BYTE $00,$26,$2F,$32,$00,$28,$39,$30
-        .BYTE $25,$32,$37,$21,$32,$30,$00,$21
-        .BYTE $23,$34,$29,$36,$21,$34,$29,$2F
-        .BYTE $2E,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00
-j27FA   LDA #$06
+.enc "atascii"  ;define an ascii->atascii encoding
+        .cdef " Z", $00
+.enc "none"
+
+.enc "atascii" 
+warpMessageText   
+        .TEXT '         PREPARE FOR'
+        .TEXT ' HYPERWARP ACTIVATIO'
+        .TEXT 'N        '
+.enc "none"
+;-------------------------------------------------------------------------
+; j27FA
+;-------------------------------------------------------------------------
+j27FA
+        LDA #$06
         STA aD5
 b27FE   DEY 
         BNE b27FE
@@ -2398,9 +2914,13 @@ b27FE   DEY
         STA $D201    ;POT1
         LDA #$06
         STA aD5
-j2825   DEC aCA
+;-------------------------------------------------------------------------
+; j2825
+;-------------------------------------------------------------------------
+j2825
+        DEC currentXPosition
         JSR s2A57
-        LDA aCA
+        LDA currentXPosition
         STA $D004    ;HPOSM0
         CMP #$40
         BEQ b2853
@@ -2408,10 +2928,10 @@ j2825   DEC aCA
         STA $D200    ;POT0
         DEC aD5
         BNE b2848
-        LDA aC2
+        LDA shipSpeed
         CMP #$0F
         BEQ b2848
-        INC aC2
+        INC shipSpeed
         LDA #$06
         STA aD5
 b2848   LDX #$40
@@ -2423,15 +2943,19 @@ b284A   DEY
 
 b2853   LDA #$01
         STA $D008    ;SIZEP0
-        JSR s28B3
+        JSR WriteHyperTransitionText
         LDA #$E8
         STA $D201    ;POT1
-j2860   DEC aCA
-        LDY a2ABE
+;-------------------------------------------------------------------------
+; j2860
+;-------------------------------------------------------------------------
+j2860
+        DEC currentXPosition
+        LDY currentDifficultyLevel
         INY 
         LDA #$04
-        JSR s26B2
-        LDA aCA
+        JSR IncrementCurrentPlayerScore
+        LDA currentXPosition
         CMP #$10
         BEQ b288D
         STA $D004    ;HPOSM0
@@ -2452,43 +2976,52 @@ b288D   LDA a2A9A
         CLC 
         ADC #$F0
         STA a2A9A
-        INC a2ABE
-        LDA a2ABE
+        INC currentDifficultyLevel
+        LDA currentDifficultyLevel
         CMP #$19
         BNE b28A5
         LDA #$12
-        STA a2ABE
-b28A5   JSR s271A
-        JSR s28C1
+        STA currentDifficultyLevel
+b28A5   JSR ResetSoundChannels
+        JSR ClearMessageAndRadarLine
         LDA #$00
         STA $D008    ;SIZEP0
-        JMP j1838
+        JMP SetUpTitleScreen
 
-s28B3   LDX #$00
-b28B5   LDA f28D4,X
-        STA f1080,X
+;-------------------------------------------------------------------------
+; WriteHyperTransitionText
+;-------------------------------------------------------------------------
+WriteHyperTransitionText
+        LDX #$00
+b28B5   LDA hyperTransitionActivatedText,X
+        STA radarLine,X
         INX 
         CPX #$30
         BNE b28B5
         RTS 
 
-s28C1   LDX #$00
+;-------------------------------------------------------------------------
+; ClearMessageAndRadarLine
+;-------------------------------------------------------------------------
+ClearMessageAndRadarLine
+        LDX #$00
 b28C3   LDA #$00
-        STA f1080,X
-        STA f1267,X
+        STA radarLine,X
+        STA messageLine,X
         INX 
         CPX #$30
         BNE b28C3
         STA $D008    ;SIZEP0
         RTS 
 
-f28D4   .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$28,$39,$30,$25,$32
-        .BYTE $00,$34,$32,$21,$2E,$33,$29,$34
-        .BYTE $29,$2F,$2E,$00,$21,$23,$34,$29
-        .BYTE $36,$21,$34,$25,$24,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00
-f2902   .BYTE $50,$C8,$78
+.enc "atascii" 
+hyperTransitionActivatedText   
+        .TEXT '           HYPER TRA'
+        .TEXT 'NSITION ACTIVATED   '
+        .TEXT '      '
+.enc "none"
+
+xPositionArray   .BYTE $50,$C8,$78
 a2905   .BYTE $64
 a2906   .BYTE $A0
 a2907   .BYTE $C8
@@ -2507,64 +3040,78 @@ a291B   .BYTE $01
 f291C   .BYTE $F8,$C0,$F0,$FF,$F0,$C0,$F8,$00
 f2924   .BYTE $00,$F8,$C0,$FF,$C0,$F8,$00,$00
 f292C   .BYTE $00,$C0,$F8,$FF,$F8,$C0,$00,$00
-j2934   LDX #$00
-b2936   LDA f2902,X
+;-------------------------------------------------------------------------
+; ClearCamelSpriteMemory
+;-------------------------------------------------------------------------
+ClearCamelSpriteMemory
+        LDX #$00
+b2936   LDA xPositionArray,X
         STA $D001,X  ;HPOSP1
         INX 
         CPX #$03
         BNE b2936
+
         LDX #$00
         TXA 
         LDY a2908
-b2947   STA f3D00,Y
+b2947   STA camelSpriteMemory1,Y
         INY 
         DEX 
         BNE b2947
+
         LDX #$08
         LDY a2909
-b2953   STA f3E00,Y
+b2953   STA camelSpriteMemory2,Y
         INY 
         DEX 
         BNE b2953
+
         LDX #$08
         LDY a290A
-b295F   STA f3F00,Y
+b295F   STA camelSpriteMemory3,Y
         INY 
         DEX 
         BNE b295F
+
         LDX #$00
 b2968   LDA a2917
         BNE b2973
+
         LDA f291C,X
         JMP j2980
 
 b2973   CMP #$02
         BEQ b297D
+
         LDA f2924,X
         JMP j2980
 
 b297D   LDA f292C,X
-j2980   PHA 
+;-------------------------------------------------------------------------
+; j2980
+;-------------------------------------------------------------------------
+j2980
+        PHA 
         TXA 
         CLC 
         ADC a2905
         TAY 
         PLA 
-        STA f3D00,Y
+        STA camelSpriteMemory1,Y
         PHA 
         TXA 
         CLC 
         ADC a2906
         TAY 
         PLA 
-        STA f3E00,Y
+        STA camelSpriteMemory2,Y
         PHA 
         TXA 
         CLC 
         ADC a2907
         TAY 
         PLA 
-        STA f3F00,Y
+        STA camelSpriteMemory3,Y
         INX 
         CPX #$08
         BNE b2968
@@ -2587,20 +3134,20 @@ b29AD   LDA #$06
 b29CE   LDX #$00
 b29D0   LDA a2905,X
         STA a2908,X
-        LDA f2902,X
+        LDA xPositionArray,X
         CLC 
         ADC f290B,X
-        STA f2902,X
+        STA xPositionArray,X
         AND #$F0
         CMP #$F0
         BNE b29EB
-        LDA aCB
+        LDA currentYPosition
         STA a2905,X
 b29EB   DEC f2914,X
         BNE b2A15
         LDA f2911,X
         STA f2914,X
-        LDA aCB
+        LDA currentYPosition
         CLC 
         SBC #$05
         CMP a2905,X
@@ -2611,16 +3158,24 @@ b29EB   DEC f2914,X
 b2A06   LDA a2905,X
         SBC f290E,X
         SBC f290E,X
-j2A0F   ADC f290E,X
+;-------------------------------------------------------------------------
+; j2A0F
+;-------------------------------------------------------------------------
+j2A0F
+        ADC f290E,X
         STA a2905,X
 b2A15   INX 
         CPX #$03
         BNE b29D0
         RTS 
 
-s2A1B   LDX #$00
+;-------------------------------------------------------------------------
+; s2A1B
+;-------------------------------------------------------------------------
+s2A1B
+        LDX #$00
 b2A1D   LDA #$00
-        STA f2902,X
+        STA xPositionArray,X
         LDA #$01
         STA f2914,X
         TXA 
@@ -2633,10 +3188,10 @@ b2A1D   LDA #$00
         STA f2911,X
         LDA a291B
         STA f290E,X
-        JSR s25E4
+        JSR GetAPseudoRandomValue
         AND #$1F
         SBC #$10
-        ADC aCB
+        ADC currentYPosition
         STA a2905,X
         INX 
         CPX #$03
@@ -2646,7 +3201,11 @@ b2A1D   LDA #$00
         STA a2918
         RTS 
 
-s2A57   LDA FPTR2
+;-------------------------------------------------------------------------
+; s2A57
+;-------------------------------------------------------------------------
+s2A57
+        LDA FPTR2
         AND #$0F
         BNE b2A5E
         RTS 
@@ -2654,15 +3213,15 @@ s2A57   LDA FPTR2
 b2A5E   LDA #$FF
         STA FLPTR
         STA $D004    ;HPOSM0
-        JSR s2A9B
-        JSR s271A
+        JSR WriteFatalPreJumpImpactText
+        JSR ResetSoundChannels
         LDA #$00
-        STA aC2
+        STA shipSpeed
         JSR s2216
 b2A72   LDA aEA
         BNE b2A72
-        JSR s271A
-        JSR s2F2E
+        JSR ResetSoundChannels
+        JSR ClearMessageLine
         LDA #$00
         STA CIX      ;CIX     
         STA FLPTR
@@ -2670,8 +3229,8 @@ b2A72   LDA aEA
         STA aFD
         JSR s2396
         LDA #$19
-        STA a13CF
-        JSR s26F9
+        STA currentShieldText
+        JSR DecrementCurrentPlayerLives
         LDX #$F8
         TXS 
         JMP b1871
@@ -2679,19 +3238,25 @@ b2A72   LDA aEA
         JMP b28A5
 
 a2A9A   .BYTE $00
-s2A9B   LDX #$00
-b2A9D   LDA f2AA9,X
-        STA f1276,X
+;-------------------------------------------------------------------------
+; WriteFatalPreJumpImpactText
+;-------------------------------------------------------------------------
+WriteFatalPreJumpImpactText
+        LDX #$00
+b2A9D   LDA fatalPreJumpImpactText,X
+        STA messageLine + $0F,X
         INX 
         CPX #$15
         BNE b2A9D
         RTS 
 
-f2AA9   .BYTE $26,$21,$34,$21,$2C,$00,$30,$32
-        .BYTE $25,$0D,$2A,$35,$2D,$30,$00,$29
-        .BYTE $2D,$30,$21,$23,$34
-a2ABE   .BYTE $00
-f2ABF   .BYTE $08,$06,$06,$04,$04,$04,$03,$04
+.enc "atascii" 
+fatalPreJumpImpactText   
+        .TEXT 'FATAL PRE-JUMP IMPACT'
+.enc "none"
+currentDifficultyLevel   .BYTE $00
+camelSpeedsPerDifficulty   
+        .BYTE $08,$06,$06,$04,$04,$04,$03,$04
         .BYTE $04,$03,$03,$02,$04,$03,$03,$03
         .BYTE $03,$03,$02,$04,$03,$02,$02,$01
         .BYTE $01
@@ -2719,30 +3284,45 @@ f2B58   .BYTE $01,$02,$03,$03,$01,$02,$03,$03
         .BYTE $01,$02,$03,$04,$01,$02,$03,$04
         .BYTE $02,$03,$04,$05,$03,$04,$05,$06
         .BYTE $07
-s2B71   LDX a2ABE
-        LDA f2ABF,X
-        STA aE1
-        STA aE9
-        STA a2BA5
+;-------------------------------------------------------------------------
+; GetGameSettingsForDifficultyLevel
+;-------------------------------------------------------------------------
+GetGameSettingsForDifficultyLevel
+        LDX currentDifficultyLevel
+        LDA camelSpeedsPerDifficulty,X
+        STA camelSpeed
+        STA currentCamalRadarSpeed
+        STA camelRadarSpeed
+
         LDA f2AD8,X
         STA a2BA6
         STA aF5
+
         LDA f2AF2,X
         STA a25F1
+
         LDA f2B0D,X
         STA a25F2
+
         LDA f2B26,X
         STA a25F0
+
         LDA f2B3F,X
         STA a291A
+
         LDA f2B58,X
         STA a2919
+
         RTS 
 
-a2BA5   .BYTE $00
+camelRadarSpeed   .BYTE $00
 a2BA6   .BYTE $00
 a2BA7   .BYTE $00
-j2BA8   LDA a2BA7
+;-------------------------------------------------------------------------
+; PlayASound1
+;-------------------------------------------------------------------------
+PlayASound1
+        LDA a2BA7
         BNE b2BAE
         RTS 
 
@@ -2760,23 +3340,37 @@ b2BC1   LDA #$00
         STA $D201    ;POT1
         RTS 
 
-s2BCA   LDA #<pE700
+;-------------------------------------------------------------------------
+; SetUpTitleScreenInterrupts
+;-------------------------------------------------------------------------
+SetUpTitleScreenInterrupts
+        LDA #$00
         STA SDMCTL   ;SDMCTL  shadow for DMACTL ($D400)
-        LDA #>pE700
+
+        LDA #<titleScreenDisplayList
         STA SDLSTL   ;SDLSTL  shadow for DLISTL ($D402)
-        LDA #$13
+        LDA #>titleScreenDisplayList
         STA SDLSTH   ;SDLSTH  shadow for DLISTH ($D403)
+
+        ; Initialize Direct Memory access control first.
         LDA #$22
         STA SDMCTL   ;SDMCTL  shadow for DMACTL ($D400)
+
+        ; Use a normal playfield.
         LDA SDMCTL   ;SDMCTL  shadow for DMACTL ($D400)
         AND #$FC
         ORA #$02
         STA SDMCTL   ;SDMCTL  shadow for DMACTL ($D400)
-        JSR s271A
-        LDY #$14
-        LDX #$2C
+
+        JSR ResetSoundChannels
+
+        LDY #<TitleScreenVerticalBlankInterruptHandler
+        LDX #>TitleScreenVerticalBlankInterruptHandler
         LDA #$07
         JSR SETBV    ;$E45C (jmp) SETBV
+
+        ; Initialise the horizontal position of all
+        ; player graphics.
         LDA #$00
         LDX #$00
 b2BF8   STA $D000,X  ;HPOSP0
@@ -2784,13 +3378,18 @@ b2BF8   STA $D000,X  ;HPOSP0
         INX 
         CPX #$04
         BNE b2BF8
+
         STA COLOR4   ;COLOR4  shadow for COLBK ($D01A)
         STA COLOR3   ;COLOR3  shadow for COLPF3 ($D019)
         STA COLOR2   ;COLOR2  shadow for COLPF2 ($D018)
         LDA #$0F
         STA COLOR1   ;COLOR1  shadow for COLPF1 ($D017)
-        JMP j2C86
+        JMP SetUpTitleScreenVariables
 
+;-------------------------------------------------------------------------
+; TitleScreenVerticalBlankInterruptHandler
+;-------------------------------------------------------------------------
+TitleScreenVerticalBlankInterruptHandler
         STY a40
         LDY #$C0
         STX aFF
@@ -2807,40 +3406,44 @@ b2C1E   STX $D40A    ;WSYNC
 
 a2C2F   .BYTE $00
 a2C30   .BYTE $00
-a2C31   .BYTE $00
-f2C32   .BYTE $26,$25,$32,$00,$33,$35,$32,$25
-        .BYTE $00,$00,$00,$00,$00,$04,$27,$25
-        .BYTE $34,$34,$29,$2E,$07,$00,$28,$25
-        .BYTE $21,$36,$39,$08,$26,$21,$32,$00
-        .BYTE $2F,$35,$34,$0C,$00,$2D,$21,$2E
-        .BYTE $00,$0E,$29,$2E,$34,$25,$2E,$33
-        .BYTE $25,$00,$00,$00,$00,$00,$00,$12
-        .BYTE $2C,$29,$2B,$25,$00,$37,$2F,$37
-        .BYTE $01,$01,$01,$01,$00,$14,$32,$25
-        .BYTE $21,$2C,$00,$23,$2F,$2F,$2C,$00
-        .BYTE $00,$00,$00,$00
-j2C86   LDA #$03
+offsetToDifficultyText   .BYTE $00
+difficultyLevels   
+.enc "atascii" 
+        .TEXT "FER SURE     $GETTIN"
+        .TEXT "' HEAVY(FAR OUT, MAN"
+        .TEXT " .INTENSE      2LIKE"
+        .TEXT " WOW!!!! 4REAL COOL "
+        .TEXT "    "
+.enc "none"
+;-------------------------------------------------------------------------
+; SetUpTitleScreenVariables
+;-------------------------------------------------------------------------
+SetUpTitleScreenVariables
+        LDA #$03
         STA a2C30
         LDA #$13
-        STA a14EB
+        STA bulletStrengthText
         LDA #$01
         STA a2C2F
         LDA #$11
-        STA a1497
+        STA numberOfPlayersText
         LDA #$50
         STA a2A9A
         LDA #$00
-        STA a2C31
+        STA offsetToDifficultyText
+
         LDX #$00
 b2CA6   STA $D000,X  ;HPOSP0
         INX 
         CPX #$08
         BNE b2CA6
-        LDA #$04
-        STA a2ABE
-        JMP j2CF1
 
-b2CB6   LDA STRIG0   ;STRIG0  shadow for TRIG0 ($D001)
+        LDA #$04
+        STA currentDifficultyLevel
+        JMP UpdateDifficultyLevel
+
+TitleScreenInputLoop   
+        LDA STRIG0   ;STRIG0  shadow for TRIG0 ($D001)
         BNE b2CBE
         JMP j2D36
 
@@ -2849,57 +3452,71 @@ b2CBE   LDA #$08
         LDA STICK0   ;STICK0  shadow for PORTA lo ($D300)
         AND #$08
         BNE b2CCD
-        JMP j2D1F
+        JMP UpdateBulletStrength
 
 b2CCD   LDA $D01F    ;CONSOL
-        BEQ b2CB6
+        BEQ TitleScreenInputLoop
         CMP #$03
-        BNE b2CED
-        INC a1497
-        LDA a1497
+        BNE MaybeUpdateDifficultyLevel
+
+        INC numberOfPlayersText
+        LDA numberOfPlayersText
         CMP #$13
         BNE b2CE5
         LDA #$11
-        STA a1497
+        STA numberOfPlayersText
 b2CE5   AND #$03
         STA a2C2F
         JMP j2D14
 
-b2CED   CMP #$05
-        BNE b2CB6
-j2CF1   LDX a2C31
+MaybeUpdateDifficultyLevel   
+        CMP #$05
+        BNE TitleScreenInputLoop
+
+UpdateDifficultyLevel
+        LDX offsetToDifficultyText
         LDY #$00
-b2CF6   LDA f2C32,X
-        STA f14AE,Y
+b2CF6   LDA difficultyLevels,X
+        STA difficultyText,Y
         INX 
         INY 
         CPY #$0D
         BNE b2CF6
-        LDA f2C32,X
-        STA a2ABE
+        LDA difficultyLevels,X
+        STA currentDifficultyLevel
         INX 
-        STX a2C31
-        LDA a2ABE
+        STX offsetToDifficultyText
+        LDA currentDifficultyLevel
         BNE j2D14
-        STA a2C31
-j2D14   LDY #$60
+        STA offsetToDifficultyText
+
+j2D14
+        LDY #$60
 b2D16   DEX 
         BNE b2D16
         DEY 
         BNE b2D16
-        JMP b2CB6
+        JMP TitleScreenInputLoop
 
-j2D1F   INC a14EB
-        LDA a14EB
+;-------------------------------------------------------------------------
+; UpdateBulletStrength
+;-------------------------------------------------------------------------
+UpdateBulletStrength
+        INC bulletStrengthText
+        LDA bulletStrengthText
         CMP #$19
         BNE b2D2E
         LDA #$11
-        STA a14EB
+        STA bulletStrengthText
 b2D2E   AND #$0F
         STA a2C30
         JMP j2D14
 
-j2D36   LDA a2ABE
+;-------------------------------------------------------------------------
+; j2D36
+;-------------------------------------------------------------------------
+j2D36
+        LDA currentDifficultyLevel
         BNE b2D3C
         RTS 
 
@@ -2912,49 +3529,63 @@ b2D40   CLC
         STA a2A9A
         RTS 
 
-j2D4A   LDX #$00
-b2D4C   LDA f2D6D,X
-        STA f1279,X
+;-------------------------------------------------------------------------
+; WriteYouAreOverrunText
+;-------------------------------------------------------------------------
+WriteYouAreOverrunText
+        LDX #$00
+b2D4C   LDA youAreOverrunText,X
+        STA messageLine + $12,X
         INX 
         CPX #$0F
         BNE b2D4C
-        LDA aFA
+
+        LDA currentPlayerOffset
         CMP #$0E
         BNE b2D65
         LDA #$11
-        STA a13BE
+        STA player1LivesText
         JMP j1FF4
 
 b2D65   LDA #$11
-        STA a13DF
+        STA player2LivesText
         JMP j1FF4
 
-f2D6D   .BYTE $39,$2F,$35,$00,$21,$32,$25,$00
-        .BYTE $2F,$36,$25,$32,$32,$35,$2E
-j2D7C   LDX #$00
+.enc "atascii" 
+youAreOverrunText   
+        .TEXT 'YOU ARE OVERRUN'
+.enc "none"
+;-------------------------------------------------------------------------
+; WriteGameOverTextAndRestart
+;-------------------------------------------------------------------------
+WriteGameOverTextAndRestart
+        LDX #$00
         TXA 
 b2D7F   STA $D000,X  ;HPOSP0
         STA $D004,X  ;HPOSM0
         INX 
         CPX #$04
         BNE b2D7F
-        JSR s28C1
+        JSR ClearMessageAndRadarLine
         LDA #$00
         TAX 
-b2D90   LDA f2DDC,X
-        STA f127B,X
+b2D90   LDA gameOverText,X
+        STA messageLine + $14,X
         INX 
         CPX #$09
         BNE b2D90
-        JSR s271A
+
+        JSR ResetSoundChannels
+
         LDA #$A7
         STA $D201    ;POT1
         STA $D203    ;POT3
         STA $D205    ;POT5
         STA $D207    ;POT7
+
         LDA #$60
         STA aEF
-b2DB0   JSR s25E4
+b2DB0   JSR GetAPseudoRandomValue
         TAX 
         STX $D200    ;POT0
         INX 
@@ -2973,16 +3604,23 @@ b2DC5   DEY
         STA $D208    ;AUDCTL
         DEC aEF
         BNE b2DB0
+
         LDX #$F8
         TXS 
         JMP WARMSV   ;$E474 (jmp) WARMSV
 
-f2DDC   .BYTE $27,$21,$2D,$25,$00,$2F,$36,$25
-        .BYTE $32
-s2DE5   LDY #$00
-        LDX aFA
-b2DE9   LDA f150F,Y
-        CMP f104D,X
+.enc "atascii" 
+gameOverText   
+        .TEXT 'GAME OVER'
+.enc "none"
+;-------------------------------------------------------------------------
+; UpdateHighScore
+;-------------------------------------------------------------------------
+UpdateHighScore
+        LDY #$00
+        LDX currentPlayerOffset
+b2DE9   LDA highScoreText,Y
+        CMP score1Label,X
         BEQ b2DF6
         BMI b2DFD
         JMP j2DFC
@@ -2991,12 +3629,16 @@ b2DF6   INX
         INY 
         CPY #$07
         BNE b2DE9
-j2DFC   RTS 
+;-------------------------------------------------------------------------
+; j2DFC
+;-------------------------------------------------------------------------
+j2DFC
+        RTS 
 
-b2DFD   LDX aFA
+b2DFD   LDX currentPlayerOffset
         LDY #$00
-b2E01   LDA f104D,X
-        STA f150F,Y
+b2E01   LDA score1Label,X
+        STA highScoreText,Y
         INX 
         INY 
         CPY #$07
@@ -3006,20 +3648,24 @@ b2E01   LDA f104D,X
 f2E0E   .BYTE $00,$00,$00,$00,$00,$00
 a2E14   .BYTE $00
 a2E15   .BYTE $00
-s2E16   JSR s2DE5
+;-------------------------------------------------------------------------
+; MaybeSwitchCurrentPlayer
+;-------------------------------------------------------------------------
+MaybeSwitchCurrentPlayer
+        JSR UpdateHighScore
         LDA a2C2F
         CMP #$01
         BNE b2E27
-        LDA a13BE
+        LDA player1LivesText
         AND #$07
         RTS 
 
         RTS 
 
-b2E27   LDA a2ABE
+b2E27   LDA currentDifficultyLevel
         PHA 
         LDA a2E14
-        STA a2ABE
+        STA currentDifficultyLevel
         PLA 
         STA a2E14
         LDA aFD
@@ -3035,20 +3681,20 @@ b2E43   LDA f1F38,X
         STA f1F38,X
         PLA 
         STA f2E0E,X
-        LDA f1F4A,X
+        LDA currentCamelPositionOnRadarArray,X
         PHA 
         TAY 
         CMP #$FF
         BEQ b2E5F
         LDA #$00
-        STA f1080,Y
+        STA radarLine,Y
 b2E5F   LDA f2EA4,X
-        STA f1F4A,X
+        STA currentCamelPositionOnRadarArray,X
         TAY 
         CMP #$FF
         BEQ b2E6F
         LDA #$44
-        STA f1080,Y
+        STA radarLine,Y
 b2E6F   PLA 
         STA f2EA4,X
         LDA #$F0
@@ -3076,18 +3722,26 @@ b2E6F   PLA
 a2EA2   .BYTE $00
 a2EA3   .BYTE $00
 f2EA4   .BYTE $00,$00,$00,$00,$00,$00
-j2EAA   LDA aFA
+;-------------------------------------------------------------------------
+; j2EAA
+;-------------------------------------------------------------------------
+j2EAA
+        LDA currentPlayerOffset
         CMP #$0E
         BNE b2EB7
         LDA #$26
-        STA aFA
+        STA currentPlayerOffset
         JMP j2EEC
 
 b2EB7   LDA #$0E
-        STA aFA
+        STA currentPlayerOffset
         JMP j2EEC
 
-s2EBE   LDA a2ABE
+;-------------------------------------------------------------------------
+; s2EBE
+;-------------------------------------------------------------------------
+s2EBE
+        LDA currentDifficultyLevel
         STA a2E14
         LDA CIX      ;CIX     
         STA a2EA3
@@ -3095,72 +3749,98 @@ s2EBE   LDA a2ABE
         STA a2EA2
         LDA aFD
         STA a2E15
+
         LDX #$00
-b2ED6   LDA f1F4A,X
+b2ED6   LDA currentCamelPositionOnRadarArray,X
         STA f2EA4,X
         LDA f1F38,X
         STA f2E0E,X
         INX 
         CPX #$06
         BNE b2ED6
+
         LDA #$0E
-        STA aFA
+        STA currentPlayerOffset
         RTS 
 
-j2EEC   LDA aFA
+;-------------------------------------------------------------------------
+; j2EEC
+;-------------------------------------------------------------------------
+j2EEC
+        LDA currentPlayerOffset
         CMP #$0E
         BNE b2EF8
-        LDA a13BE
+        LDA player1LivesText
         JMP j2EFB
 
-b2EF8   LDA a13DF
-j2EFB   AND #$07
+b2EF8   LDA player2LivesText
+;-------------------------------------------------------------------------
+; j2EFB
+;-------------------------------------------------------------------------
+j2EFB
+        AND #$07
         BEQ b2F00
         RTS 
 
-b2F00   LDA a13BE
-        CMP a13DF
+b2F00   LDA player1LivesText
+        CMP player2LivesText
         BEQ b2F0B
-        JMP s2E16
+        JMP MaybeSwitchCurrentPlayer
 
 b2F0B   LDA #$00
         RTS 
 
 a2F0E   .BYTE $00
-s2F0F   LDX #$00
-b2F11   LDA f2F3A,X
-        STA f127C,X
+;-------------------------------------------------------------------------
+; UpdateCurrentPlayerText
+;-------------------------------------------------------------------------
+UpdateCurrentPlayerText
+        LDX #$00
+b2F11   LDA currentPlayerText,X
+        STA messageLine + $15,X
         INX 
         CPX #$06
         BNE b2F11
-        LDA aFA
+        LDA currentPlayerOffset
         CMP #$0E
         BNE b2F28
         LDA #$11
-        STA a1283
+        STA messageLine + $1C
         RTS 
 
 b2F28   LDA #$12
-        STA a1283
+        STA messageLine + $1C
         RTS 
 
-s2F2E   LDA #$00
+;-------------------------------------------------------------------------
+; ClearMessageLine
+;-------------------------------------------------------------------------
+ClearMessageLine
+        LDA #$00
         TAX 
-b2F31   STA f1267,X
+b2F31   STA messageLine,X
         INX 
         CPX #$2F
         BNE b2F31
         RTS 
 
-f2F3A   .BYTE $30,$2C,$21,$39,$25,$32,$8D,$00
+.enc "atascii"  ;define an ascii->atascii encoding
+currentPlayerText   
+        .TEXT 'PLAYER'
+        .BYTE $8D,$00
         .BYTE $00
-s2F43   LDX #$00
-b2F45   LDA f1F4A,X
+.enc "none"
+;-------------------------------------------------------------------------
+; s2F43
+;-------------------------------------------------------------------------
+s2F43
+        LDX #$00
+b2F45   LDA currentCamelPositionOnRadarArray,X
         CMP #$FF
         BEQ b2F52
         TAY 
         LDA #$44
-        STA f1080,Y
+        STA radarLine,Y
 b2F52   INX 
         CPX #$06
         BNE b2F45
@@ -3215,7 +3895,9 @@ f3000   .BYTE $42,$2E,$C0,$6A,$16,$45,$58,$58
         .BYTE $00,$00,$01,$0A,$FF,$46,$55,$43
         .BYTE $4B,$4D,$45,$0B,$42,$2F,$C0,$EE
         .BYTE $16,$44,$45,$43,$41,$30,$0B,$4F
-        .BYTE $2F,$C0,$4C,$FF,$44,$45,$43,$41
+        .BYTE $2F
+f30E1
+        .BYTE $C0,$4C,$FF,$44,$45,$43,$41
         .BYTE $31,$55,$4C,$58,$2A,$26,$0B,$50
         .BYTE $86,$48,$50,$4F,$53,$4D,$33,$34
         .BYTE $26,$04,$2C,$3E,$26,$07,$4F,$3E
@@ -3315,147 +3997,10 @@ f3000   .BYTE $42,$2E,$C0,$6A,$16,$45,$58,$58
         .BYTE $44,$44,$51,$88,$43,$42,$55,$4C
         .BYTE $59,$50,$49,$58,$2C,$29,$04,$2C
         .BYTE $36,$29,$0A,$4F,$85,$43,$42,$55
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $18,$18,$38,$38,$38,$00,$18,$00
-        .BYTE $66,$66,$44,$00,$00,$00,$00,$00
-        .BYTE $00,$66,$FF,$66,$66,$FF,$66,$00
-        .BYTE $18,$3E,$60,$3C,$06,$7C,$18,$00
-        .BYTE $00,$66,$6C,$18,$30,$66,$46,$00
-        .BYTE $1C,$36,$1C,$38,$6F,$66,$3B,$00
-        .BYTE $18,$18,$10,$00,$00,$00,$00,$00
-        .BYTE $1E,$18,$18,$18,$38,$38,$3E,$00
-        .BYTE $78,$18,$18,$18,$1C,$1C,$7C,$00
-        .BYTE $00,$66,$3C,$FF,$3C,$66,$00,$00
-        .BYTE $00,$18,$18,$7E,$18,$18,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$18,$18,$10
-        .BYTE $00,$00,$00,$3E,$38,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$18,$18,$00
-        .BYTE $00,$06,$0C,$18,$30,$60,$40,$00
-        .BYTE $7E,$66,$6E,$76,$E6,$E6,$FE,$00
-        .BYTE $18,$18,$18,$18,$38,$38,$38,$00
-        .BYTE $F8,$CC,$0C,$18,$70,$C6,$FE,$00
-        .BYTE $FE,$C6,$06,$1C,$06,$C6,$FE,$00
-        .BYTE $60,$6C,$6C,$EC,$FE,$0C,$0C,$00
-        .BYTE $7E,$66,$60,$7C,$06,$C6,$FC,$00
-        .BYTE $7E,$66,$60,$7E,$E6,$E6,$FE,$00
-        .BYTE $FE,$C6,$0C,$18,$38,$38,$38,$00
-        .BYTE $7E,$66,$66,$7E,$E6,$E6,$FE,$00
-        .BYTE $FC,$CC,$CC,$FC,$0E,$CE,$FE,$00
-        .BYTE $00,$00,$18,$38,$00,$18,$38,$00
-        .BYTE $00,$00,$18,$38,$00,$18,$18,$10
-        .BYTE $06,$0C,$18,$30,$18,$0C,$06,$00
-        .BYTE $00,$00,$7E,$00,$00,$7E,$00,$00
-        .BYTE $60,$30,$18,$0C,$18,$30,$60,$00
-        .BYTE $FE,$C6,$06,$0C,$18,$00,$18,$00
-        .BYTE $00,$3C,$66,$6E,$6E,$60,$3E,$00
-        .BYTE $7E,$66,$66,$7E,$E6,$E6,$E6,$00
-        .BYTE $7C,$66,$66,$7C,$E6,$E6,$FC,$00
-        .BYTE $7E,$66,$60,$60,$E0,$E6,$FE,$00
-        .BYTE $78,$6C,$66,$66,$E6,$E6,$FE,$00
-        .BYTE $7E,$66,$60,$78,$E0,$E6,$FE,$00
-        .BYTE $7E,$66,$60,$78,$E0,$E0,$E0,$00
-        .BYTE $7E,$66,$60,$60,$EE,$E6,$FE,$00
-        .BYTE $66,$66,$66,$7E,$E6,$E6,$E6,$00
-        .BYTE $7E,$18,$18,$18,$38,$38,$7E,$00
-        .BYTE $0C,$0C,$0C,$0C,$0E,$CE,$FE,$00
-        .BYTE $66,$66,$6C,$78,$EC,$E6,$E6,$00
-        .BYTE $60,$60,$60,$60,$E0,$E6,$FE,$00
-        .BYTE $63,$77,$7F,$6B,$E3,$E3,$E3,$00
-        .BYTE $66,$76,$7E,$7E,$EE,$E6,$E6,$00
-        .BYTE $7E,$66,$66,$66,$E6,$E6,$FE,$00
-        .BYTE $7C,$66,$66,$7C,$E0,$E0,$E0,$00
-        .BYTE $7E,$66,$66,$66,$E6,$EE,$FE,$03
-        .BYTE $7C,$66,$66,$7C,$F8,$EC,$E6,$00
-        .BYTE $7E,$66,$60,$7E,$06,$C6,$FE,$00
-        .BYTE $7E,$18,$18,$18,$38,$38,$38,$00
-        .BYTE $66,$66,$66,$66,$E6,$E6,$FE,$00
-        .BYTE $66,$66,$66,$66,$EC,$F8,$F0,$00
-        .BYTE $63,$63,$63,$6B,$FF,$F7,$E3,$00
-        .BYTE $C6,$E6,$7E,$3C,$7C,$CE,$C6,$00
-        .BYTE $66,$66,$7E,$18,$38,$38,$38,$00
-        .BYTE $FC,$CC,$18,$30,$60,$C6,$FE,$00
-        .BYTE $00,$1E,$18,$18,$18,$18,$1E,$00
-        .BYTE $00,$40,$60,$30,$18,$0C,$06,$00
-        .BYTE $00,$78,$18,$18,$18,$18,$78,$00
-        .BYTE $00,$08,$1C,$36,$63,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$FF,$00
-        .BYTE $01,$01,$09,$09,$25,$25,$A5,$A5
-        .BYTE $40,$40,$50,$50,$54,$54,$55,$55
-        .BYTE $A9,$A9,$A9,$A9,$A5,$A5,$A5,$A5
-        .BYTE $95,$95,$95,$95,$55,$55,$55,$55
-        .BYTE $02,$33,$7A,$FA,$BC,$88,$88,$CC
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $55,$55,$55,$55,$55,$55,$55,$55
-        .BYTE $02,$02,$0A,$0A,$2A,$2A,$AA,$AA
-        .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
-        .BYTE $69,$69,$59,$59,$55,$55,$55,$55
-        .BYTE $80,$C0,$E0,$F0,$F8,$FC,$FE,$FF
-        .BYTE $0F,$0F,$0F,$0F,$00,$00,$00,$00
-        .BYTE $F0,$F0,$F0,$F0,$00,$00,$00,$00
-        .BYTE $FF,$FF,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$FF,$FF
-        .BYTE $00,$00,$00,$00,$F0,$F0,$F0,$F0
-f3680   .BYTE $00,$1C,$1C,$77,$77,$08,$1C,$00
-        .BYTE $00,$00,$00,$1F,$1F,$18,$18,$18
-        .BYTE $00,$00,$00,$FF,$FF,$00,$00,$00
-        .BYTE $18,$18,$18,$FF,$FF,$18,$18,$18
-        .BYTE $00,$00,$3C,$7E,$7E,$7E,$3C,$00
-        .BYTE $00,$00,$00,$00,$FF,$FF,$FF,$FF
-        .BYTE $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
-        .BYTE $00,$00,$00,$FF,$FF,$18,$18,$18
-        .BYTE $18,$18,$18,$FF,$FF,$00,$00,$00
-        .BYTE $F0,$F0,$F0,$F0,$F0,$F0,$F0,$F0
-        .BYTE $18,$18,$18,$1F,$1F,$00,$00,$00
-        .BYTE $78,$60,$78,$60,$7E,$18,$1E,$00
-        .BYTE $00,$18,$3C,$7E,$18,$18,$18,$00
-        .BYTE $00,$18,$18,$18,$7E,$3C,$18,$00
-        .BYTE $00,$18,$30,$7E,$30,$18,$00,$00
-        .BYTE $00,$18,$0C,$7E,$0C,$18,$00,$00
-        .BYTE $00,$18,$3C,$7E,$7E,$3C,$18,$00
-        .BYTE $00,$00,$3C,$06,$3E,$66,$3E,$00
-        .BYTE $00,$60,$60,$7C,$66,$66,$7C,$00
-        .BYTE $00,$00,$3C,$60,$60,$60,$3C,$00
-        .BYTE $00,$06,$06,$3E,$66,$66,$3E,$00
-        .BYTE $00,$00,$3C,$66,$7E,$60,$3C,$00
-        .BYTE $00,$0E,$18,$3E,$18,$18,$18,$00
-        .BYTE $00,$00,$3E,$66,$66,$3E,$06,$7C
-        .BYTE $00,$60,$60,$7C,$66,$66,$66,$00
-        .BYTE $00,$18,$00,$38,$18,$18,$3C,$00
-        .BYTE $00,$06,$00,$06,$06,$06,$06,$3C
-        .BYTE $00,$60,$60,$6C,$78,$6C,$66,$00
-        .BYTE $00,$38,$18,$18,$18,$18,$3C,$00
-        .BYTE $2C,$13,$66,$7F,$7F,$6B,$63,$00
-        .BYTE $00,$00,$7C,$66,$66,$66,$66,$00
-        .BYTE $00,$00,$3C,$66,$66,$66,$3C,$00
-        .BYTE $00,$00,$7C,$66,$66,$7C,$60,$60
-        .BYTE $00,$00,$3E,$66,$66,$3E,$06,$06
-        .BYTE $00,$00,$7C,$66,$60,$60,$60,$00
-        .BYTE $00,$00,$3E,$60,$3C,$06,$7C,$00
-        .BYTE $00,$18,$7E,$18,$18,$18,$0E,$00
-        .BYTE $00,$00,$66,$66,$66,$66,$3E,$00
-        .BYTE $00,$00,$66,$66,$66,$3C,$18,$00
-        .BYTE $00,$00,$63,$6B,$7F,$3E,$36,$00
-        .BYTE $00,$00,$66,$3C,$18,$3C,$66,$00
-        .BYTE $00,$00,$66,$66,$66,$3E,$0C,$78
-        .BYTE $00,$00,$7E,$0C,$18,$30,$7E,$00
-        .BYTE $00,$18,$3C,$7E,$7E,$18,$3C,$00
-        .BYTE $18,$18,$18,$18,$18,$18,$18,$18
-        .BYTE $00,$7E,$78,$7C,$6E,$66,$06,$00
-        .BYTE $08,$18,$38,$78,$38,$18,$08,$00
-        .BYTE $10,$18,$1C,$1E,$1C,$18,$10,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00
+
+.include "charset.asm"
+
+s3861
         LDX #$28
 b3863   LDY #$00
 b3865   LDA f3000,Y
@@ -3469,14 +4014,15 @@ b3865   LDA f3000,Y
         BNE b3863
         LDA #$80
         BNE b3865
+
 b387D   LDA #$22
         STA CASINI   ;CASINI  cassette initialization vector
         STA DOSINI   ;DOSINI  
         LDA #$18
         STA a03
         STA a0D
-        JSR s0FE7
-        JSR s1822
+        JSR SomeKindOfSetup
+        JSR LaunchGame
         JMP (DOSVEC) ;DOSVEC  
 
 

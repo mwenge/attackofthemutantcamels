@@ -17,7 +17,7 @@ amc.prg: src/c64/amc.asm
 
 aomc.xex: src/atari800/aomc.asm
 	64tass -Wall -Wno-implied-reg --atari-xex -o bin/aomc.xex -L bin/list-co1.txt -l bin/labels.txt src/atari800/aomc.asm
-	md5sum bin/aomc.xex bin/aomc-bench.xex
+	echo "af0a7345899b44da7cc3c9a3dbaf3e8f  bin/aomc.xex" | md5sum -c
 
 runatari: aomc.xex
 	$(ATARI800) -win-height 800 -win-width 1200 $(XEX_IMAGE)

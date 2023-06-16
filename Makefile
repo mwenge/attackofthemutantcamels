@@ -13,7 +13,8 @@ all: clean run
 
 amc.prg: src/c64/amc.asm
 	64tass -Wall -Wno-implied-reg --cbm-prg -o bin/amc.prg -L bin/list-co1.txt -l bin/labels.txt src/c64/amc.asm
-	md5sum bin/amc.prg orig/amc.prg
+	echo "cf8ce2dc7822d0657e264097be48f711  bin/amc.prg" | md5sum -c
+
 
 aomc.xex: src/atari800/aomc.asm
 	64tass -Wall -Wno-implied-reg --atari-xex -o bin/aomc.xex -L bin/list-co1.txt -l bin/labels.txt src/atari800/aomc.asm

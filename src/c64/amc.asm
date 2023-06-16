@@ -27,103 +27,101 @@ currentYPosition = $03
 currentCharacter = $04
 colorForCurrentCharacter = $05
 a06 = $06
-a07 = $07
+scoreScreenLoPtr = $07
 screenLineLoPtr = $08
 screenLineHiPtr = $09
 landscapePosition = $10
 shipDirection = $11
 shipMoveCounter = $13
 shipXOffset = $14
-initialCamelUpdateFrameRate = $15
-a16 = $16
-camelUpdateFrameRate = $17
+shipSpeed = $15
+shipSpriteFrame = $16
+shipSpeedCounter = $17
 shipXPosition = $18
 shipYPosition = $19
 lastJoystickInput = $1A
 a1B = $1B
-a1C = $1C
+shipState = $1C
 gameTimer = $1D
-a1E = $1E
-a1F = $1F
-a20 = $20
-a21 = $21
-a22 = $22
-a23 = $23
-a24 = $24
-a25 = $25
-a26 = $26
-a27 = $27
-a28 = $28
-a2B = $2B
-a2C = $2C
-a2D = $2D
-a2E = $2E
-a2F = $2F
-a30 = $30
-a31 = $31
-a32 = $32
-a33 = $33
-a34 = $34
-a36 = $36
-a38 = $38
-a3A = $3A
-a3C = $3C
-a3D = $3D
-a3E = $3E
-a3F = $3F
-a40 = $40
-a41 = $41
-a42 = $42
-a43 = $43
+shipOffsetChangeCounter = $1E
+shipTurnSoundFlag = $1F
+camelMarkerX = $20
+unknownPurpose1 = $21
+hyperdriveShipMoveCounter = $22
+currentEnemyID = $23
+hyperdriveLanscapeMoveCOunter = $24
+hyperdriveLanscapeMoveRate = $25
+camelMarkerUpdateCounter = $26
+neverUsed2 = $27
+camelSpeedCounter = $28
+camelSpeed = $2B
+tempXStorage = $2C
+camelAnimationFrame = $2D
+enemyMoveCounterMinor = $2E
+enemyMoveCounterMajor = $2F
+enableBullets = $30
+bulletDirection = $31
+bulletX = $32
+bulletY = $33
+starTwinkleCounter = $34
+bulletSoundFrequency = $36
+camelHeadFrame = $38
+camelState = $3A
+landPositionMinor = $3C
+landPositionMajor = $3D
+camelPositionMinor = $3E
+camelPositionMajor = $3F
+camelMarkerOffset = $40
+shipX = $41
+camelX = $42
+camelLandPositionCounter = $43
 a44 = $44
-a45 = $45
-a46 = $46
-a47 = $47
+camelFrameRate = $45
+camelKilledID = $46
+currentStar = $47
 a48 = $48
-a51 = $51
-a52 = $52
+camelSpitSoundFrequency = $51
+camelSpitRate = $52
 a53 = $53
 a54 = $54
-a55 = $55
-a56 = $56
-a57 = $57
+camelSPitState = $55
+camelSpitX = $56
+camelSpitFrame = $57
 a58 = $58
-a59 = $59
+camelSpitDirection = $59
 a5A = $5A
-a5B = $5B
-a5C = $5C
-a5D = $5D
-a5E = $5E
-a5F = $5F
-a60 = $60
-a61 = $61
-a62 = $62
-a63 = $63
+camelSpitBombRateCounter = $5B
+a5CRedundant = $5C
+camelSpitSpeedCounter = $5D
+camelSPitSpeed = $5E
+camelSPitRateCounter = $5F
+camelSpitShipDifference = $60
+playerHealth = $61
+damageFlashFlag = $62
+storeColourCounter = $63
 a64 = $64
-a65 = $65
-a66 = $66
-a67 = $67
-a68 = $68
-a69 = $69
-a6A = $6A
+scoreScreenHi = $65
+scoreColorLo = $66
+storeColorHi = $67
+scoreBonus = $68
+camelsRemaining = $69
+rocketMoveRate = $6A
 a6B = $6B
-a6C = $6C
-a6D = $6D
-a6E = $6E
-a6F = $6F
-a70 = $70
+player1Lives = $6C
+player2Lives = $6D
+playerTUrn = $6E
+playerSector = $6F
+bottomRowFlag = $70
 collisionDetectedBits = $95
 aC5 = $C5
 aFD = $FD
 CollisionDetectionRate = $FE
-aFF = $FF
+aFFRedundant = $FF
 ;
 ; **** ZP POINTERS **** 
 ;
-p07 = $07
 p60 = $60
 p64 = $64
-p66 = $66
 ;
 ; **** FIELDS **** 
 ;
@@ -135,6 +133,12 @@ SCREEN_RAM = $0400
 fCFFE = $CFFE
 fCFFF = $CFFF
 COLOR_RAM = $D800
+
+JOYSTICK_FIRE = $10
+JOYSTICK_RIGHT = $08
+JOYSTICK_LEFT = $04
+JOYSTICK_DOWN = $02
+JOYSTICK_UP = $01
 ;
 ; **** ABSOLUTE ADRESSES **** 
 ;
@@ -144,12 +148,12 @@ a0046 = $0046
 a0095 = $0095
 a00A2 = $00A2
 a028D = $028D
-a0314 = $0314
-a0315 = $0315
-a38F1 = $38F1
-a38F2 = $38F2
-a38F3 = $38F3
-a38F4 = $38F4
+IRQ_LO = $0314
+IRQ_HI = $0315
+camelHeadFrameF1 = $38F1
+camelHeadFrameF2 = $38F2
+camelHeadFrameF3 = $38F3
+camelHeadFrameF4 = $38F4
 joystickInput = $DC11
 ;
 ; **** POINTERS **** 
@@ -165,24 +169,30 @@ p70A0 = $70A0
 pC1C0 = $C1C0
 pC6C2 = $C6C2
 pCA20 = $CA20
-pD000 = $D000
+SpriteXPos = $D000
 pE0DF = $E0DF
 pE2E1 = $E2E1
+
+pD018 = $D018
+
+Sprite0Ptr                              = $07F8
+Sprite1Ptr                              = $07F9
+Sprite2Ptr                              = $07FA
+Sprite3Ptr                              = $07FB
+Sprite4Ptr                              = $07FC
+Sprite5Ptr                              = $07FD
+Sprite6Ptr                              = $07FE
+Sprite7Ptr                              = $07FF
 ;
 ; **** EXTERNAL JUMPS **** 
 ;
-eEA31 = $EA31
+KERNEL_INTERRUPT = $EA31
 ;
 ; **** PREDEFINED LABELS **** 
 ;
 ROM_CHKOUT = $FFC9
 
-.enc "petscii"  ;define an ascii->petscii encoding
-        .cdef "  ", $a0  ;characters
-        .cdef "--", $ad  ;characters
-        .cdef "..", $ae  ;characters
-        .cdef "AZ", $c1
-        .cdef "az", $41
+.include "constants.asm"
 
         * = $0801
 
@@ -446,13 +456,14 @@ p0E20   .BYTE $00,$00,$FF,$FF,$00,$FF,$FF,$FF
 ;-------------------------------------------------------------------------
 ; StartGame
 ;-------------------------------------------------------------------------
-        LDA #>pD000
-        STA a07
-        LDA #<pD000
+        LDA #>pD018
+        STA scoreScreenLoPtr
+        LDA #0
         STA a06
         STA $D020    ;Border Color
         STA $D021    ;Background Color 0
-        LDA #$18
+
+        LDA #<pD018
         TAY 
         STA (a06),Y
         JSR InitializeScreenPointerArray
@@ -461,7 +472,7 @@ p0E20   .BYTE $00,$00,$FF,$FF,$00,$FF,$FF,$FF
 ;-------------------------------------------------------------------------
 RestartGame
         JSR DisplayMenu
-        JMP j27D8
+        JMP InitializePlayerStats
 
         RTS 
 
@@ -505,38 +516,29 @@ b1056   STA (currentXPosition),Y
         BNE b1048
         JMP WriteScreenHeaderText
 
+.enc "petscii"  ;define an ascii->petscii encoding
+        .cdef "  ", $20  ;characters
+        .cdef "--", $ad  ;characters
+        .cdef "$$", $24  ;characters
+        .cdef ">>", $3E  ;characters
+        .cdef "<<", $3C  ;characters
+        .cdef "::", $3A  ;characters
+        .cdef "..", $2E  ;characters
+        .cdef "AZ", $01
+        .cdef "09", $30
+        .cdef "@@", $00
+.enc "none"
+
+gameHiScore = txtScreenHeader + $13
 txtScreenHeader   =*-$01
-        .BYTE $13,$03,$0F,$12,$05,$20,$10,$0C
-        .BYTE $2E,$20,$31,$20,$3E,$20,$20,$08
-        .BYTE $09,$3A
-f1077   .BYTE $20,$20,$0C,$0C,$01,$0D,$01,$20
-        .BYTE $20,$20,$3E,$20,$13,$03,$0F,$12
-        .BYTE $05,$20,$10,$0C,$2E,$32,$20,$20
-        .BYTE $20,$20,$20,$20,$20,$20,$20,$20
-        .BYTE $20,$20,$3E,$20,$20,$20,$20,$20
-        .BYTE $20,$20,$20,$20,$20,$20,$20,$20
-        .BYTE $20,$20,$3E,$20,$20,$20,$20,$20
-        .BYTE $20,$20,$20,$20,$20,$20,$30,$30
-        .BYTE $30,$30,$30,$30,$30,$20,$20,$20
-        .BYTE $20,$20,$3E,$20,$20,$20,$24,$20
-        .BYTE $3A,$20,$20,$31,$30,$30,$20,$20
-        .BYTE $20,$20,$3E,$20,$20,$20,$20,$30
-        .BYTE $30,$30,$30,$30,$30,$30,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$3C,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$3C,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$20,$20
-        .BYTE $20,$24,$20,$20,$20,$24,$20,$20
-        .BYTE $20,$24,$20,$20,$20,$24,$20,$20
-        .BYTE $20,$24,$20,$20,$20,$24,$20,$20
-        .BYTE $20,$20,$20,$20,$20,$20,$20,$20
-        .BYTE $20,$20,$20,$20,$20,$20,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00,$00,$00
-        .BYTE $00,$00,$00,$00,$00,$00
+.enc "petscii"
+                        .TEXT 'SCORE PL. 1 >  HI:  LLAMA   > SCORE PL.2'
+                        .TEXT '            >               >           '
+                        .TEXT '0000000     >   $ :  100    >    0000000'
+                        .TEXT '@@@@@@@@@@@@<@@@@@@@@@@@@@@@<@@@@@@@@@@@'
+                        .TEXT '   $   $   $   $   $   $                '
+                        .TEXT '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+.enc "none"
 ;-------------------------------------------------------------------------
 ; WriteScreenHeaderText
 ;-------------------------------------------------------------------------
@@ -597,7 +599,7 @@ GetCharacterAtCurrentXYPos
 DrawLandscape   
         LDX landscapePosition
         LDY #$28
-b119A   LDA f21FF,X
+b119A   LDA landscapeRow0,X
         STA SCREEN_RAM + $01B7,Y
         LDA landscapeRow1,X
         STA SCREEN_RAM + $01DF,Y
@@ -654,53 +656,57 @@ b11F2   LDA #$08
         NOP 
         NOP 
         NOP 
-        LDA a16
-        STA SCREEN_RAM + $03F8
+        LDA shipSpriteFrame
+        STA Sprite0Ptr
         INC $D025    ;Sprite Multi-Color Register 0
         LDA shipYPosition
         STA $D001    ;Sprite 0 Y Pos
         LDA shipXPosition
         CLC 
         ASL 
-        STA pD000    ;Sprite 0 X Pos
+        STA SpriteXPos    ;Sprite 0 X Pos
         BCS b121B
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
         AND #$FE
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-        JMP j1223
+        JMP b121B._Return
 
 b121B   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         ORA #$01
         STA $D010    ;Sprites 0-7 MSB of X coordinate
 
-j1223
-        JMP j12F9
+_Return
+        JMP UpdateShipSpeedCounter
 
 ;-------------------------------------------------------------------------
-; MaybeUpdateCamelAndShipPosition
+; DecreaseShipSpeed
 ;-------------------------------------------------------------------------
-MaybeUpdateCamelAndShipPosition
-        DEC camelUpdateFrameRate
+DecreaseShipSpeed
+        DEC shipSpeedCounter
         BEQ b122B
         RTS 
 
-b122B   LDA initialCamelUpdateFrameRate
-        STA camelUpdateFrameRate
-        JMP j1750
+b122B   LDA shipSpeed
+        STA shipSpeedCounter
+        JMP CamelCheckMarkerUpdate
 
 ;-------------------------------------------------------------------------
-; CheckJoystickInput
+; MaybeCheckJoystickInput
 ;-------------------------------------------------------------------------
-CheckJoystickInput
+MaybeCheckJoystickInput
         LDA gameTimer
         CMP #$02
-        BEQ b1239
+        BEQ CheckJoystickInput
         RTS 
 
-b1239   LDA joystickInput
+;-------------------------------------------------------------------------
+; CheckJoystickInput   
+;-------------------------------------------------------------------------
+CheckJoystickInput   
+        LDA joystickInput
         EOR #$FF
         STA lastJoystickInput
-        AND #$01
+        AND #JOYSTICK_UP
         BEQ b1250
         DEC shipYPosition
         LDA shipYPosition
@@ -709,7 +715,7 @@ b1239   LDA joystickInput
         LDA #$61
         STA shipYPosition
 b1250   LDA lastJoystickInput
-        AND #$02
+        AND #JOYSTICK_DOWN
         BEQ b1262
         INC shipYPosition
         LDA shipYPosition
@@ -727,28 +733,28 @@ CheckJoystickLeftOrRight
         STA a1B
         LDA shipDirection
         BEQ b126E
-        LDA #$08
+        LDA #JOYSTICK_RIGHT
         STA a1B
 b126E   LDA lastJoystickInput
         AND a1B
         BNE b1291
         LDA lastJoystickInput
-        AND #$0C
+        AND #JOYSTICK_RIGHT | JOYSTICK_LEFT
         BNE b127D
         RTS 
 
         .BYTE $7A,$12
-b127D   LDA #$FF
-        STA a1C
-        LDA a16
-        CMP #$CA
+b127D   LDA #SHIP_STATE_TURN
+        STA shipState
+        LDA shipSpriteFrame
+        CMP #SHIP_LEFT_FRAME
         BEQ b128C
-        LDA #$CA
-        STA a16
+        LDA #SHIP_LEFT_FRAME
+        STA shipSpriteFrame
         RTS 
 
-b128C   LDA #$CB
-        STA a16
+b128C   LDA #SHIP_RIGHT_FRAME
+        STA shipSpriteFrame
         RTS 
 
 b1291   INC shipXOffset
@@ -757,27 +763,30 @@ b1291   INC shipXOffset
         BNE UpdateShipSpeed
         LDA #$47
         STA shipXOffset
-UpdateShipSpeed   LDA shipDirection
+
+UpdateShipSpeed   
+        LDA shipDirection
         BNE b12AA
         LDA #$A0
         SBC shipXOffset
         STA shipXPosition
-        JMP j12B0
+        JMP SetShipSpeed
 
 b12AA   LDA #$0A
         ADC shipXOffset
         STA shipXPosition
 
-j12B0
+SetShipSpeed
         LDA shipXOffset
         LDY #$03
-b12B4   CLC 
+DivideXOffset   
+        CLC 
         ROR 
         DEY 
-        BNE b12B4
+        BNE DivideXOffset
         TAX 
-        LDA f22A8,X
-        STA initialCamelUpdateFrameRate
+        LDA shipSpeedsArray,X
+        STA shipSpeed
         RTS 
 
 ;-------------------------------------------------------------------------
@@ -793,49 +802,51 @@ b12C5   LDA #$08
         RTS 
 
 ;-------------------------------------------------------------------------
-; CheckJoystickInputLeftOrRight
+; MaybeCheckJoystickInputLeftOrRight
 ;-------------------------------------------------------------------------
-CheckJoystickInputLeftOrRight
+MaybeCheckJoystickInputLeftOrRight
         LDA gameTimer
         CMP #$01
         BEQ b12D1
 b12D0   RTS 
 
-b12D1   DEC a1E
+b12D1   DEC shipOffsetChangeCounter
         BNE b12D0
         LDA #$04
-        STA a1E
+        STA shipOffsetChangeCounter
         LDA lastJoystickInput
-        AND #$0C
-        BEQ b12EE
-        LDA #$00
+        AND #JOYSTICK_RIGHT | JOYSTICK_LEFT
+        BEQ DecreaseTurnOffset
+
+        LDA #VOICE_OFF
         STA $D404    ;Voice 1: Control Register
-        LDA #$81
+        LDA #VOICE_ON_NOISE
         STA $D404    ;Voice 1: Control Register
-        LDA #$04
+        LDA #JOYSTICK_LEFT
         JMP CheckJoystickLeftOrRight
 
-b12EE   DEC shipXOffset
+DecreaseTurnOffset   
+        DEC shipXOffset
         BNE b12F6
         LDA #$01
         STA shipXOffset
 b12F6   JMP UpdateShipSpeed
 
 ;-------------------------------------------------------------------------
-; j12F9
+; UpdateShipSpeedCounter
 ;-------------------------------------------------------------------------
-j12F9
+UpdateShipSpeedCounter
         NOP 
         NOP 
         NOP 
-        LDA initialCamelUpdateFrameRate
+        LDA shipSpeed
         CMP #$FF
         BNE b1307
         LDA #$10
-        STA camelUpdateFrameRate
+        STA shipSpeedCounter
         RTS 
 
-b1307   JMP MaybeUpdateCamelAndShipPosition
+b1307   JMP DecreaseShipSpeed
 
 ;-------------------------------------------------------------------------
 ; ChangeShipDirection
@@ -846,78 +857,79 @@ ChangeShipDirection
         BEQ b1311
         RTS 
 
-b1311   LDA a1C
+b1311   LDA shipState
         BNE b1316
         RTS 
 
-b1316   CMP #$80
+b1316   CMP #SHIP_STATE_TURNING
         BEQ b1329
         LDA shipDirection
         BEQ b1325
-        LDA #$00
+        LDA #SHIP_FACE_LEFT
         STA shipDirection
         JMP b1329
 
-b1325   LDA #$01
+b1325   LDA #SHIP_FACE_RIGHT
         STA shipDirection
-b1329   JMP j135D
+b1329   JMP UpdateShipOffset
 
 ;-------------------------------------------------------------------------
-; j132C
+; TurnShip
 ;-------------------------------------------------------------------------
-j132C
+TurnShip
         BEQ b1338
-        LDA #$00
+        LDA #VOICE_OFF
         STA $D404    ;Voice 1: Control Register
-        STA a1F
-        JMP j133F
+        STA shipTurnSoundFlag
+        JMP CheckTurnOffset
 
-b1338   LDA #$21
+b1338   LDA #VOICE_ON_SAW
         STA $D404    ;Voice 1: Control Register
-        STA a1F
-;-------------------------------------------------------------------------
-; j133F
-;-------------------------------------------------------------------------
-j133F
+        STA shipTurnSoundFlag
+
+CheckTurnOffset
         LDA shipXOffset
         CMP #$06
         BNE b1349
-        LDA #$00
-        STA a1C
+        LDA #SHIP_STATE_READY
+        STA shipState
 b1349   LDA gameTimer
         STA gameTimer
         LDA #$04
-        STA a1E
-        JMP b12EE
+        STA shipOffsetChangeCounter
+        JMP DecreaseTurnOffset
 
-b1354   LDA #$80
-        STA a1C
-        LDA a1F
-        JMP j132C
+UpdateShipState   
+        LDA #SHIP_STATE_TURNING
+        STA shipState
+        LDA shipTurnSoundFlag
+        JMP TurnShip
 
 ;-------------------------------------------------------------------------
-; j135D
+; UpdateShipOffset
 ;-------------------------------------------------------------------------
-j135D
-        LDA a1C
-        CMP #$FF
-        BNE b1354
+UpdateShipOffset
+        LDA shipState
+        CMP #SHIP_STATE_TURN
+        BNE UpdateShipState
         LDA #$90
         SBC shipXOffset
         STA shipXOffset
-        JMP b1354
+        JMP UpdateShipState
 
+PLAYAREA_WIDTH = $28
+PLAYAREA_HEIGHT = $17
 ;-------------------------------------------------------------------------
-; s136C
+; DisplayGround
 ;-------------------------------------------------------------------------
-s136C
+DisplayGround
         LDX #$0F
 b136E   LDA screenLinesLoPtrArray,X
         STA screenLineLoPtr
         LDA screenLinesHiPtrArray,X
         STA screenLineHiPtr
         LDY #$00
-b137A   LDA #$2B
+b137A   LDA #CHAR_BLOCK
         STA (screenLineLoPtr),Y
         LDA screenLineHiPtr
         STA currentXPosition
@@ -929,10 +941,10 @@ b137A   LDA #$2B
         LDA currentXPosition
         STA screenLineHiPtr
         INY 
-        CPY #$28
+        CPY #PLAYAREA_WIDTH
         BNE b137A
         INX 
-        CPX #$17
+        CPX #PLAYAREA_HEIGHT
         BNE b136E
         RTS 
 
@@ -940,30 +952,33 @@ b137A   LDA #$2B
 ; s139A
 ;-------------------------------------------------------------------------
 s139A
-        DEC a21
-        BEQ b139F
+        DEC unknownPurpose1
+        BEQ UpdateCamelDirectionMarker
         RTS 
 
-b139F   LDA #$13
-        STA a21
+UpdateCamelDirectionMarker   
+        LDA #$13
+        STA unknownPurpose1
 b13A4   =*+$01
         LDA shipDirection
-        BEQ b13B0
-        JMP j13E4
+        BEQ MoveCamelMarkerLeft
+        JMP MoveCamelMarkerRight
 
         BEQ b13A4
         DEC $D00E    ;Sprite 7 X Pos
         RTS 
 
-b13B0   LDA #$13
-        STA a21
-        DEC a20
-        LDA a20
+MoveCamelMarkerLeft   
+        LDA #$13
+        STA unknownPurpose1
+        DEC camelMarkerX
+        LDA camelMarkerX
         CMP #$00
-        BNE b13C0
+        BNE SetMarkerSpriteX
         LDA #$9F
-        STA a20
-b13C0   LDA a20
+        STA camelMarkerX
+SetMarkerSpriteX   
+        LDA camelMarkerX
         ASL 
         STA $D00E    ;Sprite 7 X Pos
         BCC b13D1
@@ -983,40 +998,44 @@ b13D1   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         JMP b119A
 
 ;-------------------------------------------------------------------------
-; j13E4
+; MoveCamelMarkerRight
 ;-------------------------------------------------------------------------
-j13E4
-        INC a20
-        LDA a20
+MoveCamelMarkerRight
+        INC camelMarkerX
+        LDA camelMarkerX
         CMP #$A0
-        BNE b13C0
+        BNE SetMarkerSpriteX
         LDA #$01
-        STA a20
-        JMP b13C0
+        STA camelMarkerX
+        JMP SetMarkerSpriteX
 
         .FILL 13, $EA
 ;-------------------------------------------------------------------------
-; j1400
+; InitializeSPrites
 ;-------------------------------------------------------------------------
-j1400
-        LDA #$81
+InitializeSPrites
+        LDA #SPR_SHIP_AND_RADAR_MASK_ON
         STA $D015    ;Sprite display Enable
+
         LDA #$01
         STA shipXOffset
-        LDA #>pCA20
-        STA a16
-        LDA #<pCA20
-        STA initialCamelUpdateFrameRate
-        STA camelUpdateFrameRate
-        LDA #<p70A0
+        LDA #SHIP_LEFT_FRAME
+        STA shipSpriteFrame
+        LDA #$20
+        STA shipSpeed
+        STA shipSpeedCounter
+
+        LDA #$A0
         STA shipXPosition
-        LDA #>p70A0
+        LDA #$70
         STA shipYPosition
         LDA #$78
         STA $D017    ;Sprites Expand 2x Vertical (Y)
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
-        LDA a28
-        STA a28
+
+        LDA camelSpeedCounter
+        STA camelSpeedCounter
+
         LDA #$07
         STA $D025    ;Sprite Multi-Color Register 0
         LDA #$0E
@@ -1027,75 +1046,93 @@ j1400
         STA shipDirection
         LDA #<currentXPosition
         STA landscapePosition
+
         LDA #$00
         STA $D01B    ;Sprite to Background Display Priority
         LDA #$03
         STA $D01C    ;Sprites Multi-Color Mode Select
+
         JSR DrawLandscape
+
         LDA #$01
         STA gameTimer
-        STA a1E
+        STA shipOffsetChangeCounter
+
         LDA #$00
         STA $D404    ;Voice 1: Control Register
         STA $D40B    ;Voice 2: Control Register
         STA $D413    ;Voice 3: Attack / Decay Cycle Control
+
         LDA #$0F
         STA $D418    ;Select Filter Mode and Volume
+
         LDA #$0A
         STA $D405    ;Voice 1: Attack / Decay Cycle Control
         STA $D40C    ;Voice 2: Attack / Decay Cycle Control
+
         LDA #$00
         STA $D406    ;Voice 1: Sustain / Release Cycle Control
         STA $D40D    ;Voice 2: Sustain / Release Cycle Control
+
         LDA #$19
         STA $D401    ;Voice 1: Frequency Control - High-Byte
-        JSR s136C
+
+        JSR DisplayGround
+
         LDA #$9F
-        STA a20
+        STA camelMarkerX
+
         LDA #$52
         STA $D00F    ;Sprite 7 Y Pos
+
         LDA #$D1
-        STA SCREEN_RAM + $03FF
+        STA Sprite7Ptr
         LDA #$01
         STA $D02E    ;Sprite 7 Color
+
         LDA #$0A
-        STA a21
+        STA unknownPurpose1
         LDA #$00
-        STA a1C
-        JSR b139F
+        STA shipState
+
+        JSR UpdateCamelDirectionMarker
+
         LDA #$84
         STA $D007    ;Sprite 3 Y Pos
         STA $D009    ;Sprite 4 Y Pos
+
         LDA #$AE
         STA $D00B    ;Sprite 5 Y Pos
         STA $D00D    ;Sprite 6 Y Pos
-        LDA #<pC1C0
-        STA SCREEN_RAM + $03FB
-        LDA #>pC1C0
-        STA SCREEN_RAM + $03FC
-        LDA #<pC6C2
-        STA SCREEN_RAM + $03FD
-        LDA #>pC6C2
-        STA SCREEN_RAM + $03FE
+
+        LDA #CAMEL_REAR_FRAME
+        STA Sprite3Ptr
+        LDA #CAMEL_HEAD_FRAME1
+        STA Sprite4Ptr
+        LDA #CAMEL_REAR_LEGS_FRAME1
+        STA Sprite5Ptr
+        LDA #CAMEL_FRONT_LEGS_FRAME1
+        STA Sprite6Ptr
+
         LDA #$FF
-        STA a23
+        STA currentEnemyID
         LDA $D01F    ;Sprite to Background Collision Detect
-        LDA #<p0A08
-        STA a26
-        LDA #>p0A08
-        STA a27
-        LDA #<p0104
-        STA a2D
-        LDA #>p0104
-        STA a2E
+        LDA #$08
+        STA camelMarkerUpdateCounter
+        LDA #$0A
+        STA neverUsed2
+        LDA #$04
+        STA camelAnimationFrame
+        LDA #$01
+        STA enemyMoveCounterMinor
         LDA #$02
         STA $D408    ;Voice 2: Frequency Control - High-Byte
         LDA #$40
-        STA a2F
+        STA enemyMoveCounterMajor
 
         .FILL 21, $EA
 
-        JMP j1F00
+        JMP InitializeGameVariables
 
         .FILL 13, $EA
 ;-------------------------------------------------------------------------
@@ -1103,9 +1140,9 @@ j1400
 ;-------------------------------------------------------------------------
 MainGameLoop
         JSR UpdateShipPosition
-        JSR CheckJoystickInput
+        JSR MaybeCheckJoystickInput
         JSR UpdateGameTimer
-        JSR CheckJoystickInputLeftOrRight
+        JSR MaybeCheckJoystickInputLeftOrRight
         JSR ChangeShipDirection
         JSR AnimateCamels
         JSR MoveCamels
@@ -1115,7 +1152,7 @@ MainGameLoop
         JSR AnimateCamelHeads
         JSR AnimateCamelSpitting
         JSR AnimateShipDamage
-        JSR CheckForCollisions
+        JSR UpdateCollisionRegister
         JSR DetectShipAndCamelCollisions
         JSR CheckSectorDefences
         JSR CheckPausePressed
@@ -1125,12 +1162,12 @@ MainGameLoop
         JMP MainGameLoop
 
 ;-------------------------------------------------------------------------
-; j1563
+; DisableExplosionSprites
 ;-------------------------------------------------------------------------
-j1563
+DisableExplosionSprites
         LDA #$80
         STA $D015    ;Sprite display Enable
-        JMP j28AC
+        JMP ExplosionEnded
 
         .FILL 149, $EA
 ;-------------------------------------------------------------------------
@@ -1142,47 +1179,48 @@ AnimateCamels
         BEQ b1607
         RTS 
 
-b1607   LDX a23
+b1607   LDX currentEnemyID
         CPX #$FF
         BNE b1610
         RTS 
 
-        LDY a16
-b1610   LDA f22C7,X
-;-------------------------------------------------------------------------
-; j1613
-;-------------------------------------------------------------------------
+        LDY shipSpriteFrame
+b1610   LDA camelCurrentColorArray,X
+
 j1613
         STA $D02D    ;Sprite 6 Color
         STA $D02A    ;Sprite 3 Color
         STA $D02B    ;Sprite 4 Color
         STA $D02C    ;Sprite 5 Color
+
         LDA $D015    ;Sprite display Enable
-        ORA #$78
+        ORA #SPR_CAMEL_MASK_ON
         STA $D015    ;Sprite display Enable
+
         LDA @wa0042
         ASL 
         STA $D008    ;Sprite 4 X Pos
         STA $D00C    ;Sprite 6 X Pos
+
         BCS b163E
+
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
-        AND #$AF
+        AND #SPR_CAMEL_FRONT_MASK_OFF
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-        JMP j1646
+        JMP UpdateCamelRear
 
 b163E   LDA $D010    ;Sprites 0-7 MSB of X coordinate
-        ORA #$50
+        ORA #SPR_CAMEL_FRONT_MASK_ON
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-;-------------------------------------------------------------------------
-; j1646
-;-------------------------------------------------------------------------
-j1646
+
+UpdateCamelRear
         LDA @wa0042
         SBC #$17
         ASL 
         STA $D006    ;Sprite 3 X Pos
         STA $D00A    ;Sprite 5 X Pos
         BCS b165D
+
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
         AND #$D7
         STA $D010    ;Sprites 0-7 MSB of X coordinate
@@ -1203,7 +1241,7 @@ b165D   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         STA $D010    ;Sprites 0-7 MSB of X coordinate
         RTS 
 
-        LDA camelUpdateFrameRate
+        LDA shipSpeedCounter
         CMP #$01
         BNE b169E
         LDA shipDirection
@@ -1213,7 +1251,7 @@ b165D   LDA $D010    ;Sprites 0-7 MSB of X coordinate
 
         CMP #$FF
         BNE b169E
-        STA a23
+        STA currentEnemyID
 ;-------------------------------------------------------------------------
 ; j168C
 ;-------------------------------------------------------------------------
@@ -1246,24 +1284,24 @@ b16AE   JSR s1982
         STA currentXPosition
         LDA #$04
         STA currentYPosition
-        STX a2C
+        STX tempXStorage
         JSR GetCharacterAtCurrentXYPos
-        STA a24
+        STA hyperdriveLanscapeMoveCOunter
         LDA #$A0
-        STA a25
+        STA hyperdriveLanscapeMoveRate
 b16C2   LDA #<p0120
         STA currentCharacter
         LDA #>p0120
         STA colorForCurrentCharacter
         JSR WriteCurrentCharacterToCurrentXYPos
-        DEC a25
+        DEC hyperdriveLanscapeMoveRate
         BNE b16C2
         LDA $D01F    ;Sprite to Background Collision Detect
         AND #$80
         BEQ b16E3
-        LDA a24
+        LDA hyperdriveLanscapeMoveCOunter
         JSR s16FC
-        LDX a2C
+        LDX tempXStorage
 ;-------------------------------------------------------------------------
 ; j16DF
 ;-------------------------------------------------------------------------
@@ -1272,10 +1310,10 @@ j16DF
         BNE b16AE
         RTS 
 
-b16E3   LDA a24
+b16E3   LDA hyperdriveLanscapeMoveCOunter
         JSR s16FC
-        LDX a2C
-        STX a23
+        LDX tempXStorage
+        STX currentEnemyID
         LDA shipDirection
         BEQ b16F6
         LDA #$D5
@@ -1298,44 +1336,49 @@ s16FC
         STA currentCharacter
         JMP WriteCurrentCharacterToCurrentXYPos
 
-        DEC a26
+        DEC camelMarkerUpdateCounter
 b1703   BEQ b1703
         RTS 
 
         LDA #$08
-        STA a26
+        STA camelMarkerUpdateCounter
         JMP MoveLandscape
 
-        LDA camelUpdateFrameRate
+        LDA shipSpeedCounter
         CMP #$01
         BEQ b1714
         RTS 
 
-b1714   LDA initialCamelUpdateFrameRate
+b1714   LDA shipSpeed
         CMP #$FF
         BNE b171B
         RTS 
 
 b171B   JMP s139A
 
-b171E   DEC a26
+;-------------------------------------------------------------------------
+; CamelUpdateMarker   
+;-------------------------------------------------------------------------
+CamelUpdateMarker   
+        DEC camelMarkerUpdateCounter
         BNE b1729
-        JSR s19E3
+
+        JSR MoveCamelMarker
         LDA #$08
-        STA a26
-b1729   JMP j19B3
+        STA camelMarkerUpdateCounter
+b1729   JMP UpdatePlayerLandPosition
 
         .BYTE $3C,$C9,$FF ;NOP ROM_CHKOUT,X
         BEQ b1735
 b1731   RTS 
 
-        DEC a3D
+        DEC landPositionMajor
 b1735   =*+$01
-        LDA a3D
+        LDA landPositionMajor
         CMP #$FF
         BNE b1731
         LDA #$09
-        STA a3E
+        STA camelPositionMinor
 ;-------------------------------------------------------------------------
 ; j173E
 ;-------------------------------------------------------------------------
@@ -1347,106 +1390,101 @@ j173E
         ORA (p60,X)
         LDA $D01F    ;Sprite to Background Collision Detect
         LDA #$FF
-        STA a23
+        STA currentEnemyID
         JMP j168C
 
 ;-------------------------------------------------------------------------
-; j1750
+; CamelCheckMarkerUpdate
 ;-------------------------------------------------------------------------
-j1750
-        LDA a1C
-        BEQ b171E
+CamelCheckMarkerUpdate
+        LDA shipState
+        BEQ CamelUpdateMarker
         RTS 
 
         STA f1A,X
-        LDA a1C
+        LDA shipState
         BNE b175E
         JMP j16A4
 
 b175E   RTS 
 
-        LDA a1E
+        LDA shipOffsetChangeCounter
         CMP #$01
-        BEQ b1766
+        BEQ MoveCamelBackLegs
         RTS 
 
-b1766   JSR s2449
+MoveCamelBackLegs   JSR FlashPlayerScore
         NOP 
-        INC a2D
-        LDA a2D
+        INC camelAnimationFrame
+        LDA camelAnimationFrame
         CMP #$05
         BEQ b1781
         LDA #$C1
         CLC 
-        ADC a2D
-        STA SCREEN_RAM + $03FD
+        ADC camelAnimationFrame
+        STA Sprite5Ptr
         CLC 
         ADC #$04
-        JMP j1B4A
+        JMP GetCamelHeadFrame
 
         RTS 
 
 b1781   LDA #$00
-        JMP j1CC2
+        JMP CheckCamelFrameSound
 
 ;-------------------------------------------------------------------------
-; j1786
+; ResetCamelAnimationFrame
 ;-------------------------------------------------------------------------
-j1786
-        LDA #$81
+ResetCamelAnimationFrame
+        LDA #VOICE_ON_NOISE
         STA $D40B    ;Voice 2: Control Register
-;-------------------------------------------------------------------------
-; j178B
-;-------------------------------------------------------------------------
-j178B
-        LDA #$C2
-        STA SCREEN_RAM + $03FD
-        LDA #$C6
-        JSR s1B5B
+
+SetBackLegsFrame
+        LDA #CAMEL_REAR_LEGS_FRAME1
+        STA Sprite5Ptr
+        LDA #CAMEL_FRONT_LEGS_FRAME1
+        JSR SetCamelHeadFrame
         LDA #$01
-        STA a2D
+        STA camelAnimationFrame
 b1799   RTS 
 
 ;-------------------------------------------------------------------------
 ; MoveCamels
 ;-------------------------------------------------------------------------
 MoveCamels
-        DEC a28
+        DEC camelSpeedCounter
         BNE b1799
-        JSR s27C2
+        JSR ResetCamelSpeedCounter
         BNE b17A7
         LDA #$03
-        STA a2E
-b17A7   JSR s17B7
-        LDX a23
-        INC a3E
+        STA enemyMoveCounterMinor
+b17A7   JSR MoveCamelMarker2
+        LDX currentEnemyID
+        INC camelPositionMinor
         BNE b17B3
-        INC a3F
+        INC camelPositionMajor
         NOP 
 b17B3   NOP 
-        JMP j1A23
+        JMP CheckLandPosition
 
-;-------------------------------------------------------------------------
-; s17B7
-;-------------------------------------------------------------------------
-s17B7
-        DEC a2F
+MoveCamelMarker2
+        DEC enemyMoveCounterMajor
         BNE b17ED
         LDA #$40
-        STA a2F
+        STA enemyMoveCounterMajor
         LDX #$06
-b17C1   JSR s1990
+b17C1   JSR FetchCamelMarkerPosition
         STA currentXPosition
-        LDA #<p2004
+        LDA #$04
         STA currentYPosition
-        LDA #>p2004
+        LDA #CHAR_SPACE
         STA currentCharacter
-        LDA #$01
+        LDA #WHITE
         STA colorForCurrentCharacter
-        STX a2C
+        STX tempXStorage
         JSR WriteCurrentCharacterToCurrentXYPos
-        LDX a2C
-        INC f22D7,X
+        LDX tempXStorage
+        INC camelMarkerScreenLoPtrArray,X
         NOP 
         NOP 
         NOP 
@@ -1454,16 +1492,13 @@ b17C1   JSR s1990
         LDA #$24
         STA currentCharacter
         JSR WriteCurrentCharacterToCurrentXYPos
-        LDX a2C
-;-------------------------------------------------------------------------
-; j17EA
-;-------------------------------------------------------------------------
-j17EA
+        LDX tempXStorage
+SelectNextCamelToMove
         DEX 
         BNE b17C1
 b17ED   RTS 
 
-        ROR camelUpdateFrameRate
+        ROR shipSpeedCounter
 ;-------------------------------------------------------------------------
 ; j17F0
 ;-------------------------------------------------------------------------
@@ -1482,7 +1517,7 @@ b17FB   JMP b16F6
 ; CheckFirePressed
 ;-------------------------------------------------------------------------
 CheckFirePressed
-        LDA a34
+        LDA starTwinkleCounter
         CMP #$02
         BEQ b1807
         RTS 
@@ -1491,129 +1526,134 @@ b1807   LDA lastJoystickInput
         AND #$10
         BNE b1812
         LDA #$00
-        STA a30
+        STA enableBullets
         RTS 
 
-b1812   LDA a31
+b1812   LDA bulletDirection
         BEQ b1817
         RTS 
 
-b1817   JMP j1B39
+b1817   JMP UnusedBulletRoutine
 
 ;-------------------------------------------------------------------------
-; j181A
+; SetBulletDirection
 ;-------------------------------------------------------------------------
-j181A
+SetBulletDirection
         NOP 
-        JSR s18D4
+        JSR SetBulletY
         NOP 
         LDA #$A5
-        STA a36
-        LDA #<p0100
-        STA a30
-        LDA #>p0100
-        STA a31
+        STA bulletSoundFrequency
+        LDA #$00
+        STA enableBullets
+        LDA #BULLET_DIR_LEFT
+        STA bulletDirection
+
         LDA $D015    ;Sprite display Enable
         ORA #$02
         STA $D015    ;Sprite display Enable
+
         LDA shipDirection
         BEQ b183B
-        LDA #$02
-        STA a31
+        LDA #BULLET_DIR_RIGHT
+        STA bulletDirection
 b183B   RTS 
 
 ;-------------------------------------------------------------------------
-; j183C
+; MoveBullet
 ;-------------------------------------------------------------------------
-j183C
-        LDA a31
-        CMP #$00
+MoveBullet
+        LDA bulletDirection
+        CMP #BULLET_NOT_ACTIVE
         NOP 
         NOP 
         BEQ b183B
-        LDA a31
-        CMP #$01
+        LDA bulletDirection
+        CMP #BULLET_DIR_LEFT
         BEQ b1855
-        INC a32
-        LDA a32
+        INC bulletX
+        LDA bulletX
         CMP #$A5
         BEQ b1894
-        JMP j185D
+        JMP SetBulletX
 
-b1855   DEC a32
-        LDA a32
+b1855   DEC bulletX
+        LDA bulletX
         CMP #$F5
         BEQ b1894
+
 ;-------------------------------------------------------------------------
-; j185D
+; SetBulletX
 ;-------------------------------------------------------------------------
-j185D
-        LDA a32
+SetBulletX
+        LDA bulletX
         ASL 
         STA $D002    ;Sprite 1 X Pos
         BCS b1870
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
-        AND #$FD
+        AND #SPR_BULLET_MASK_OFF
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-        JMP j1878
+        JMP NowSetBulletY
 
 b1870   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         ORA #$02
         STA $D010    ;Sprites 0-7 MSB of X coordinate
 ;-------------------------------------------------------------------------
-; j1878
+; SetBulletY
 ;-------------------------------------------------------------------------
-j1878
-        LDA a33
+NowSetBulletY
+        LDA bulletY
         STA $D003    ;Sprite 1 Y Pos
         JSR s24E6
-        AND #$7A
-        CMP #$0A
-        BEQ b188E
-        CMP #$12
-        BEQ b188E
-        JSR s18B2
+        AND #SPRCOL_BULLET_CAMEL
+        CMP #SPRCOL_BULLET_CAMELREAR
+        BEQ BulletHitCamel
+        CMP #SPRCOL_BULLET_CAMELHEAD
+        BEQ BulletHitCamel
+        JSR ChangeBulletSound
         RTS 
 
-b188E   JSR s247D
-        JSR s18C4
+BulletHitCamel   
+        JSR Add1PointToScore
+        JSR BulletHitSound
+
 b1894   LDA #$00
         STA $D003    ;Sprite 1 Y Pos
         LDA $D015    ;Sprite display Enable
-        AND #$FD
+        AND #SPR_BULLET_MASK_OFF
         STA $D015    ;Sprite display Enable
-        LDA #$00
-        JMP j18DD
+        LDA #BULLET_NOT_ACTIVE
+        JMP BulletDisable
 
 ;-------------------------------------------------------------------------
 ; AnimateSky
 ;-------------------------------------------------------------------------
 AnimateSky
-        DEC a34
+        DEC starTwinkleCounter
         BEQ b18AB
         RTS 
 
 b18AB   LDA #$04
-        STA a34
-        JMP j1B28
+        STA starTwinkleCounter
+        JMP SelectStarToTwinkle
 
 ;-------------------------------------------------------------------------
-; s18B2
+; ChangeBulletSound
 ;-------------------------------------------------------------------------
-s18B2
-        DEC a36
-        LDA a36
+ChangeBulletSound
+        DEC bulletSoundFrequency
+        LDA bulletSoundFrequency
         STA $D401    ;Voice 1: Frequency Control - High-Byte
-        LDA #$00
+        LDA #VOICE_OFF
         STA $D404    ;Voice 1: Control Register
-        LDA #$81
+        LDA #VOICE_ON_NOISE
         STA $D404    ;Voice 1: Control Register
         RTS 
 
 ;-------------------------------------------------------------------------
-; s18C4
+; BulletHitSound
 ;-------------------------------------------------------------------------
-s18C4
+BulletHitSound
         LDA #$06
         JSR s2E93
         LDA #$00
@@ -1622,113 +1662,115 @@ s18C4
         STA $D412    ;Voice 3: Control Register
         NOP 
 ;-------------------------------------------------------------------------
-; s18D4
+; SetBulletY
 ;-------------------------------------------------------------------------
-s18D4
+SetBulletY
         LDA shipYPosition
-        STA a33
+        STA bulletY
         LDA #$40
-        STA a21
+        STA unknownPurpose1
         RTS 
 
 ;-------------------------------------------------------------------------
-; j18DD
+; BulletDisable
 ;-------------------------------------------------------------------------
-j18DD
-        STA a31
+BulletDisable
+        STA bulletDirection
         LDA #$19
         STA $D401    ;Voice 1: Frequency Control - High-Byte
-        LDA a30
-        STA a30
+        LDA enableBullets
+        STA enableBullets
 b18E8   RTS 
 
 ;-------------------------------------------------------------------------
-; j18E9
+; SetBulletX2
 ;-------------------------------------------------------------------------
-j18E9
-        LDA a30
+SetBulletX2
+        LDA enableBullets
         BNE b18E8
         LDA shipXPosition
-        STA a32
-        JMP j181A
+        STA bulletX
+        JMP SetBulletDirection
 
 ;-------------------------------------------------------------------------
-; s18F4
+; DecreaseCamelHealth
 ;-------------------------------------------------------------------------
-s18F4
-        LDX a23
-        DEC f22DF,X
-        LDA f22DF,X
+DecreaseCamelHealth
+        LDX currentEnemyID
+        DEC camelHealthMinorArray,X
+        LDA camelHealthMinorArray,X
         BEQ b18FF
         RTS 
 
 b18FF   LDA #$10
-        STA f22DF,X
-        DEC f22E7,X
-        LDA f22E7,X
+        STA camelHealthMinorArray,X
+        DEC camelHealthArray,X
+        LDA camelHealthArray,X
         BEQ b1914
         TAY 
-        LDA f242F,Y
-        STA f22C7,X
+        LDA camelColorsArray,Y
+        STA camelCurrentColorArray,X
         RTS 
 
-b1914   LDA a23
-        JSR s2487
-        LDA #$D5
-        STA a38
-        LDA #$FF
-        STA a3A
+b1914   LDA currentEnemyID
+        JSR AddBonusPoints
+        LDA #CAMEL_HEAD_DYING_FRAME1
+        STA camelHeadFrame
+        LDA #CAMEL_STATE_DEAD
+        STA camelState
         RTS 
 
 ;-------------------------------------------------------------------------
 ; AnimateDyingCamel
 ;-------------------------------------------------------------------------
 AnimateDyingCamel
-        LDA a3A
+        LDA camelState
         BNE b1927
         RTS 
 
 b1927   STA $D401    ;Voice 1: Frequency Control - High-Byte
-        LDX a46
-        STA f22C7,X
-        CMP #$80
+        LDX camelKilledID
+        STA camelCurrentColorArray,X
+        CMP #CAMEL_STATE_DYING
         BNE b1937
-        LDA #$D6
-        STA a38
+        LDA #CAMEL_HEAD_DYING_FRAME2
+        STA camelHeadFrame
 b1937   LDA gameTimer
         CMP #$01
-        BEQ b194F
-        LDA #$00
+        BEQ CheckCamelDyingState
+        LDA #VOICE_OFF
         STA $D404    ;Voice 1: Control Register
-        LDA #$15
+        LDA #VOICE_ON_TRIANGLE_RING
         STA $D404    ;Voice 1: Control Register
-        LDA #$FF
-        SBC a3A
+        LDA #CAMEL_STATE_DEAD
+        SBC camelState
         STA $D40F    ;Voice 3: Frequency Control - High-Byte
 b194E   RTS 
 
-b194F   DEC a3A
+CheckCamelDyingState   
+        DEC camelState
         BNE b194E
         LDA #$40
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         NOP 
         NOP 
-        LDA #$07
-        STA f22C7,X
-        JSR s1AB9
+        LDA #YELLOW
+        STA camelCurrentColorArray,X
+        JSR SetCamelInactive
         STA currentXPosition
-        LDA #<p2004
+        LDA #4
         STA currentYPosition
-        LDA #>p2004
+        LDA #CHAR_SPACE
         STA currentCharacter
         JSR WriteCurrentCharacterToCurrentXYPos
         LDA #$FF
-        STA a46
+        STA camelKilledID
+
         LDA $D015    ;Sprite display Enable
         AND #$87
         STA $D015    ;Sprite display Enable
         LDA $D01F    ;Sprite to Background Collision Detect
-        JMP j24E0
+        JMP CheckRemainingCamels
 
         RTS 
 
@@ -1736,9 +1778,9 @@ b194F   DEC a3A
 ; s1982
 ;-------------------------------------------------------------------------
 s1982
-        LDA f22E7,X
+        LDA camelHealthArray,X
         BEQ b198B
-        LDA f22D7,X
+        LDA camelMarkerScreenLoPtrArray,X
         RTS 
 
 b198B   PLA 
@@ -1746,17 +1788,17 @@ b198B   PLA
         JMP j16DF
 
 ;-------------------------------------------------------------------------
-; s1990
+; FetchCamelMarkerPosition
 ;-------------------------------------------------------------------------
-s1990
-        JSR s1AC3
+FetchCamelMarkerPosition
+        JSR CheckCamelActive
         BEQ b1999
-        LDA f22D7,X
+        LDA camelMarkerScreenLoPtrArray,X
         RTS 
 
 b1999   PLA 
         PLA 
-        JMP j17EA
+        JMP SelectNextCamelToMove
 
 ;-------------------------------------------------------------------------
 ; AnimateCamelHeads
@@ -1767,65 +1809,65 @@ AnimateCamelHeads
         BEQ b19A5
         RTS 
 
-b19A5   LDA a38
-        STA SCREEN_RAM + $03FC
+b19A5   LDA camelHeadFrame
+        STA Sprite4Ptr
         RTS 
 
 ;-------------------------------------------------------------------------
-; j19AB
+; ResetCamelHeadSprite
 ;-------------------------------------------------------------------------
-j19AB
+ResetCamelHeadSprite
         NOP 
         NOP 
         NOP 
-        LDA #$C1
-        STA a38
+        LDA #CAMEL_HEAD_FRAME1
+        STA camelHeadFrame
         RTS 
 
 ;-------------------------------------------------------------------------
-; j19B3
+; UpdatePlayerLandPosition
 ;-------------------------------------------------------------------------
-j19B3
+UpdatePlayerLandPosition
         LDA shipDirection
         CMP #$00
         BEQ b19CC
-        INC a3C
+        INC landPositionMinor
         BNE b19C9
-        INC a3D
-        LDA a3D
+        INC landPositionMajor
+        LDA landPositionMajor
         CMP #$0A
         BNE b19E0
         LDA #$00
-        STA a3D
+        STA landPositionMajor
 b19C9   JMP b19E0
 
-b19CC   DEC a3C
-        LDA a3C
+b19CC   DEC landPositionMinor
+        LDA landPositionMinor
         CMP #$FF
         BNE b19E0
-        DEC a3D
-        LDA a3D
+        DEC landPositionMajor
+        LDA landPositionMajor
         CMP #$FF
         BNE b19E0
         LDA #$09
-        STA a3D
-b19E0   JMP j1A57
+        STA landPositionMajor
+b19E0   JMP CheckLandPositionDelay
 
 ;-------------------------------------------------------------------------
-; s19E3
+; MoveCamelMarker
 ;-------------------------------------------------------------------------
-s19E3
+MoveCamelMarker
         JSR MoveLandscape
         LDA #$05
-        STA a40
-        LDX a3D
+        STA camelMarkerOffset
+        LDX landPositionMajor
 b19EC   CLC 
-        LDA a40
+        LDA camelMarkerOffset
         ADC #$10
-        STA a40
+        STA camelMarkerOffset
         DEX 
         BNE b19EC
-        LDA a3C
+        LDA landPositionMinor
         CLC 
         ROR 
         CLC 
@@ -1837,83 +1879,80 @@ b19EC   CLC
         CLC 
         NOP 
         CLC 
-        ADC a40
+        ADC camelMarkerOffset
         CLC 
         ASL 
         STA $D00E    ;Sprite 7 X Pos
         BCC b1A17
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
-        ORA #$80
+        ORA #SPR_RADAR_MASK_ON
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-        JMP j1A1F
+        JMP ExitMoveMarker
 
 b1A17   LDA $D010    ;Sprites 0-7 MSB of X coordinate
-        AND #$7F
+        AND #SPR_RADAR_MASK_OFF
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-;-------------------------------------------------------------------------
-; j1A1F
-;-------------------------------------------------------------------------
-j1A1F
+
+ExitMoveMarker
         NOP 
         NOP 
         NOP 
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1A23
+; CheckLandPosition
 ;-------------------------------------------------------------------------
-j1A23
+CheckLandPosition
         LDY #$00
-        LDA a3D
-        STA a40
-        LDA a3C
-        STA a41
-b1A2D   LDA a41
-        CMP a3E
-        BEQ b1A44
-b1A33   INC a41
+        LDA landPositionMajor
+        STA camelMarkerOffset
+        LDA landPositionMinor
+        STA shipX
+b1A2D   LDA shipX
+        CMP camelPositionMinor
+        BEQ CamelInRange
+b1A33   INC shipX
         BNE b1A39
-        INC a40
+        INC camelMarkerOffset
 b1A39   INY 
         CPY #$C0
         BNE b1A2D
-;-------------------------------------------------------------------------
-; j1A3E
-;-------------------------------------------------------------------------
-j1A3E
+
+NoCamelInRange
         LDA #$FF
-        JMP j1A63
+        JMP TurnOffCamelSprites
 
         RTS 
 
-b1A44   LDA a40
+CamelInRange   
+        LDA camelMarkerOffset
         SEC 
-        SBC a3F
-        STA a23
-        LDX a23
-        JSR s1A70
+        SBC camelPositionMajor
+        STA currentEnemyID
+        LDX currentEnemyID
+        JSR CheckCamelID
         CMP #$FF
         BEQ b1A33
-        STY a42
+        STY camelX
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1A57
+; CheckLandPositionDelay
 ;-------------------------------------------------------------------------
-j1A57
-        DEC a43
+CheckLandPositionDelay
+        DEC camelLandPositionCounter
         BEQ b1A5C
         RTS 
 
 b1A5C   LDA #$03
-        STA a43
-        JMP j1A23
+        STA camelLandPositionCounter
+        JMP CheckLandPosition
 
 ;-------------------------------------------------------------------------
-; j1A63
+; TurnOffCamelSprites
 ;-------------------------------------------------------------------------
-j1A63
-        STA a23
+TurnOffCamelSprites
+        STA currentEnemyID
         LDA $D015    ;Sprite display Enable
         AND #$87
         STA $D015    ;Sprite display Enable
@@ -1922,23 +1961,23 @@ j1A63
         RTS 
 
 ;-------------------------------------------------------------------------
-; s1A70
+; CheckCamelID
 ;-------------------------------------------------------------------------
-s1A70
+CheckCamelID
         NOP 
         CPX #$07
         BPL b1A79
-        JMP j1AC9
+        JMP CheckCamelPositionMajor
 
         RTS 
 
 b1A79   PLA 
         PLA 
-        JMP j1A3E
+        JMP NoCamelInRange
 
-        LDA a3D
-        STA a40
-        INC a40
+        LDA landPositionMajor
+        STA camelMarkerOffset
+        INC camelMarkerOffset
         NOP 
         NOP 
         NOP 
@@ -1946,16 +1985,16 @@ b1A79   PLA
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1A89
+; CHeckCurrentCamelHealth
 ;-------------------------------------------------------------------------
-j1A89
+CHeckCurrentCamelHealth
         CPX #$00
         BEQ b1A79
-        LDA f22E7,X
+        LDA camelHealthArray,X
         RTS 
 
-        LDA a3D
-        STA a40
+        LDA landPositionMajor
+        STA camelMarkerOffset
         LDX #$10
 b1A97   LDY #$10
 b1A99   LDA #$20
@@ -1968,254 +2007,256 @@ b1A9D   DEC a44
         BNE b1A97
         RTS 
 
-p1AA8   DEC a45
+;-------------------------------------------------------------------------
+; IRQInterruptHandler   
+;-------------------------------------------------------------------------
+IRQInterruptHandler   
+        DEC camelFrameRate
         BEQ b1AAF
-        JMP eEA31
+        JMP KERNEL_INTERRUPT
 
 b1AAF   LDA #$10
-        STA a45
-        JSR b1766
-        JMP eEA31
+        STA camelFrameRate
+        JSR MoveCamelBackLegs
+        JMP KERNEL_INTERRUPT
 
 ;-------------------------------------------------------------------------
-; s1AB9
+; SetCamelInactive
 ;-------------------------------------------------------------------------
-s1AB9
+SetCamelInactive
         LDA #$FF
-        STA f22E7,X
-        LDA f22D7,X
+        STA camelHealthArray,X
+        LDA camelMarkerScreenLoPtrArray,X
         RTS 
 
         NOP 
 ;-------------------------------------------------------------------------
-; s1AC3
+; CheckCamelActive
 ;-------------------------------------------------------------------------
-s1AC3
-        LDA f22E7,X
+CheckCamelActive
+        LDA camelHealthArray,X
         CMP #$FF
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1AC9
+; CheckCamelPositionMajor
 ;-------------------------------------------------------------------------
-j1AC9
-        LDA a3D
-        CMP a3F
+CheckCamelPositionMajor
+        LDA landPositionMajor
+        CMP camelPositionMajor
         BMI b1AD2
-        JMP j1A89
+        JMP CHeckCurrentCamelHealth
 
-b1AD2   JMP j1A3E
+b1AD2   JMP NoCamelInRange
 
 ;-------------------------------------------------------------------------
-; s1AD5
+; DisplayStars
 ;-------------------------------------------------------------------------
-s1AD5
-        LDA #<p012E
+DisplayStars
+        LDA #CHAR_STAR
         STA currentCharacter
-        LDA #>p012E
+        LDA #WHITE
         STA colorForCurrentCharacter
         LDX #$10
-b1ADF   LDA f22FF,X
+b1ADF   LDA starXPositionArray,X
         STA currentXPosition
-        LDA f230F,X
+        LDA starYPositionArray,X
         STA currentYPosition
-        STX a40
+        STX camelMarkerOffset
         JSR WriteCurrentCharacterToCurrentXYPos
-        LDX a40
+        LDX camelMarkerOffset
         DEX 
         BNE b1ADF
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1AF4
+; TwinkleStars
 ;-------------------------------------------------------------------------
-j1AF4
-        LDA #<p012E
+TwinkleStars
+        LDA #CHAR_STAR
         STA currentCharacter
-        LDA #>p012E
+        LDA #WHITE
         STA colorForCurrentCharacter
-        LDX a47
-        LDA f2300,X
+        LDX currentStar
+        LDA starXPositionArray+1,X
         STA currentXPosition
-        LDA f2310,X
+        LDA starYPositionArray+1,X
         STA currentYPosition
         JSR WriteCurrentCharacterToCurrentXYPos
-        INC a47
-        LDA a47
+        INC currentStar
+        LDA currentStar
         AND #$0F
-        STA a47
+        STA currentStar
         TAX 
-        LDA f2300,X
+        LDA starXPositionArray+1,X
         STA currentXPosition
-        LDA f2310,X
+        LDA starYPositionArray+1,X
         STA currentYPosition
-        LDA #$02
+        LDA #RED
         STA colorForCurrentCharacter
         JSR WriteCurrentCharacterToCurrentXYPos
-        JMP j183C
+        JMP MoveBullet
 
 ;-------------------------------------------------------------------------
-; j1B28
+; SelectStarToTwinkle
 ;-------------------------------------------------------------------------
-j1B28
-        JSR s1B41
+SelectStarToTwinkle
+        JSR DecreaseTwinkleCounter
         DEC a48
         BEQ b1B32
-        JMP j183C
+        JMP MoveBullet
 
 b1B32   LDA #$26
         STA a48
-        JMP j1AF4
+        JMP TwinkleStars
 
 ;-------------------------------------------------------------------------
-; j1B39
+; UnusedBulletRoutine
 ;-------------------------------------------------------------------------
-j1B39
+UnusedBulletRoutine
         LDA #$00
         BEQ b1B3E
         RTS 
 
-b1B3E   JMP j18E9
+b1B3E   JMP SetBulletX2
 
+
+starTwinkleCounter2 = unknownPurpose1
 ;-------------------------------------------------------------------------
-; s1B41
+; DecreaseTwinkleCounter
 ;-------------------------------------------------------------------------
-s1B41
-        LDA a21
+DecreaseTwinkleCounter
+        LDA starTwinkleCounter2
         BEQ b1B47
-        DEC a21
+        DEC starTwinkleCounter2
 b1B47   NOP 
         NOP 
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1B4A
+; GetCamelHeadFrame
 ;-------------------------------------------------------------------------
-j1B4A
-        STA SCREEN_RAM + $03FE
-        LDA a3A
+GetCamelHeadFrame
+        STA Sprite6Ptr
+        LDA camelState
         BEQ b1B52
         RTS 
 
-b1B52   LDX a2D
-        LDA f231F,X
-        STA @wa0038
+b1B52   LDX camelAnimationFrame
+        LDA camelHeadFrameArray,X
+        STA @wcamelHeadFrame
         RTS 
 
 ;-------------------------------------------------------------------------
-; s1B5B
+; SetCamelHeadFrame
 ;-------------------------------------------------------------------------
-s1B5B
-        STA SCREEN_RAM + $03FE
-        LDA a3A
+SetCamelHeadFrame
+        STA Sprite6Ptr
+        LDA camelState
         BEQ b1B63
         RTS 
 
-b1B63   LDA #$C1
-        STA a38
+b1B63   LDA #CAMEL_HEAD_FRAME1
+        STA camelHeadFrame
         RTS 
 
 ;-------------------------------------------------------------------------
 ; AnimateCamelSpitting
 ;-------------------------------------------------------------------------
 AnimateCamelSpitting
-        DEC a5D
+        DEC camelSpitSpeedCounter
         BEQ b1B6D
         RTS 
 
-b1B6D   LDA a5E
-        STA a5D
-        LDA a55
-        BNE b1BA0
+b1B6D   LDA camelSPitSpeed
+        STA camelSpitSpeedCounter
+        LDA camelSPitState
+        BNE AnimateCamelSPit
         LDA #$88
         STA $D005    ;Sprite 2 Y Pos
-        JMP j1CD5
+        JMP SetSpitFrequency
 
         NOP 
         NOP 
 ;-------------------------------------------------------------------------
-; j1B7F
+; SetSpitPosition
 ;-------------------------------------------------------------------------
-j1B7F
+SetSpitPosition
         ADC #$10
-        JSR s27C9
+        JSR TestSpitCollisionXPos
         NOP 
         BPL b1B8E
-        LDA #$01
-;-------------------------------------------------------------------------
-; j1B89
-;-------------------------------------------------------------------------
-j1B89
-        STA a59
-        JMP j1B93
+        LDA #SPIT_DIRECTION_RIGHT
+SetCamelSPitDirection
+        STA camelSpitDirection
+        JMP SetSPitActive
 
-b1B8E   LDA #$03
-        JMP j1B89
+b1B8E   LDA #SPIT_DIRECTION_LEFT
+        JMP SetCamelSPitDirection
 
-;-------------------------------------------------------------------------
-; j1B93
-;-------------------------------------------------------------------------
-j1B93
-        LDA #$01
-        STA a55
+SetSPitActive
+        LDA #SPIT_STATE_ACTIVE
+        STA camelSPitState
         LDA $D015    ;Sprite display Enable
         ORA #$04
-        JMP j1CB3
+        JMP EnableSpitSPrite
 
         RTS 
 
-b1BA0   LDA a55
-        CMP #$FF
+;-------------------------------------------------------------------------
+; AnimateCamelSPit   
+;-------------------------------------------------------------------------
+AnimateCamelSPit   
+        LDA camelSPitState
+        CMP #SPIT_STATE_BOMB
         BEQ b1C21
-;-------------------------------------------------------------------------
-; j1BA6
-;-------------------------------------------------------------------------
-j1BA6
-        LDA a23
+
+MoveSPitForCamel
+        LDA currentEnemyID
         JMP j1BAB
 
-;-------------------------------------------------------------------------
-; j1BAB
-;-------------------------------------------------------------------------
 j1BAB
-        LDA a59
+        LDA camelSpitDirection
         CMP #$01
         BNE b1BB5
-        INC a56
-        INC a56
-b1BB5   DEC a56
-        LDA a56
+        INC camelSpitX
+        INC camelSpitX
+b1BB5   DEC camelSpitX
+        LDA camelSpitX
         CMP #$04
         BEQ b1BC4
         CMP #$B0
         BEQ b1BC4
-        JMP j1BD0
+        JMP UpdateSPitY
 
 b1BC4   LDA #$00
-        STA a55
+        STA camelSPitState
         NOP 
         NOP 
         NOP 
         NOP 
-        JMP j1C30
+        JMP DisableSpitSPrite
 
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1BD0
+; UpdateSPitY
 ;-------------------------------------------------------------------------
-j1BD0
-        DEC a5F
-        BNE b1BE8
-        LDA a52
-        STA a5F
+UpdateSPitY
+        DEC camelSPitRateCounter
+        BNE UpdateSPitX
+        LDA camelSpitRate
+        STA camelSPitRateCounter
+
         LDA $D005    ;Sprite 2 Y Pos
         CMP shipYPosition
+
         BPL b1BE5
         INC $D005    ;Sprite 2 Y Pos
         INC $D005    ;Sprite 2 Y Pos
 b1BE5   DEC $D005    ;Sprite 2 Y Pos
-b1BE8   LDA a56
+UpdateSPitX   
+        LDA camelSpitX
         CLC 
         ASL 
         STA $D004    ;Sprite 2 X Pos
@@ -2223,92 +2264,92 @@ b1BE8   LDA a56
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
         ORA #$04
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-        JMP j1C04
+        JMP UpdateCamelSpiteFrame
 
 b1BFC   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         AND #$FB
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-;-------------------------------------------------------------------------
-; j1C04
-;-------------------------------------------------------------------------
-j1C04
-        INC a57
-        LDA a57
+
+UpdateCamelSpiteFrame
+        INC camelSpitFrame
+        LDA camelSpitFrame
         CMP #$D1
-        BNE b1C13
+        BNE CheckSpitNextFrame
         LDA #$D7
-        STA a57
-        JMP j1C1B
+        STA camelSpitFrame
+        JMP ExitAnimateSpit
 
-b1C13   CMP #$D9
-        BNE j1C1B
+CheckSpitNextFrame   
+        CMP #CAMEL_SPIT_FRAME2 + 1
+        BNE ExitAnimateSpit
         LDA #$D0
-        STA a57
-;-------------------------------------------------------------------------
-; j1C1B
-;-------------------------------------------------------------------------
-j1C1B
-        STA SCREEN_RAM + $03FA
-        JMP j1CDC
+        STA camelSpitFrame
 
-b1C21   JMP j1D01
+ExitAnimateSpit
+        STA Sprite2Ptr
+        JMP PlayCamelSpitSound
 
-b1C24   LDA a23
+b1C21   
+        JMP CamelSpitSound
+
+EnableSpitIfSelected   
+        LDA currentEnemyID
         CMP #$FF
-        BNE b1C2B
+        BNE CamelIsActive
         RTS 
 
-b1C2B   LDA a42
-        JMP j1B7F
+CamelIsActive   
+        LDA camelX
+        JMP SetSpitPosition
 
 ;-------------------------------------------------------------------------
-; j1C30
+; DisableSpitSPrite
 ;-------------------------------------------------------------------------
-j1C30
+DisableSpitSPrite
         LDA $D015    ;Sprite display Enable
         AND #$FB
-        JMP j1CF4
+        JMP DisableSpitNoise
 
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1C39
+; RandomizeSPit
 ;-------------------------------------------------------------------------
-j1C39
+RandomizeSPit
         LDA @wa00A2
         AND #$FF
         CMP #$02
-        BMI b1C24
+        BMI EnableSpitIfSelected
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1C43
+; TestForSPitBomb
 ;-------------------------------------------------------------------------
-j1C43
-        DEC a5B
+TestForSPitBomb
+        DEC camelSpitBombRateCounter
         BEQ b1C48
         RTS 
 
 b1C48   LDA #$FF
-        STA a55
+        STA camelSPitState
         LDA a58
-        STA a5B
+        STA camelSpitBombRateCounter
         LDA #$00
         STA a54
         STA a53
         RTS 
 
-;-------------------------------------------------------------------------
-; j1C57
-;-------------------------------------------------------------------------
+;*******************************************************************************
+; Redundant/Orphaned Code
+;*******************************************************************************
 j1C57
-        JMP j1D01
+        JMP CamelSpitSound
 
         NOP 
         BPL b1C61
-        INC a56
-        INC a56
-b1C61   DEC a56
+        INC camelSpitX
+        INC camelSpitX
+b1C61   DEC camelSpitX
         LDA $D005    ;Sprite 2 Y Pos
         CMP shipYPosition
         BPL b1C70
@@ -2320,9 +2361,9 @@ b1C70   DEC $D005    ;Sprite 2 Y Pos
         AND #$03
         STA a54
         TAX 
-        LDA f1CAD,X
-        STA SCREEN_RAM + $03FA
-        LDA a56
+        LDA spitBombSpriteFrames,X
+        STA Sprite2Ptr
+        LDA camelSpitX
         CLC 
         ASL 
         STA $D004    ;Sprite 2 X Pos
@@ -2339,23 +2380,27 @@ b1C96   LDA $D010    ;Sprites 0-7 MSB of X coordinate
 ; j1C9E
 ;-------------------------------------------------------------------------
 j1C9E
-        JSR s1D29
+        JSR SpitHomeOnShip
         DEC a53
         BEQ b1CA6
         RTS 
 
 b1CA6   LDA #$00
-        STA a55
-        JMP j1C30
+        STA camelSPitState
+        JMP DisableSpitSPrite
 
-f1CAD   .BYTE $CD,$CE,$CF,$CE,$EA,$EA
+spitBombSpriteFrames   
+        .BYTE $CD,$CE,$CF,$CE,$EA,$EA
 ;-------------------------------------------------------------------------
-; j1CB3
+; EnableSpitSPrite
 ;-------------------------------------------------------------------------
-j1CB3
+EnableSpitSPrite
         STA $D015    ;Sprite display Enable
-        JMP j1C43
+        JMP TestForSPitBomb
 
+;*******************************************************************************
+; Redundant/Orphaned Code
+;*******************************************************************************
         DEC a5A
         BEQ b1D1E
         LDA a5A
@@ -2363,88 +2408,91 @@ j1CB3
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1CC2
+; CheckCamelFrameSound
 ;-------------------------------------------------------------------------
-j1CC2
-        LDA a55
+CheckCamelFrameSound
+        LDA camelSPitState
         BNE b1CD2
-        LDA a5C
+        LDA a5CRedundant
         BNE b1CD2
         LDA #$00
         STA $D40B    ;Voice 2: Control Register
-        JMP j1786
+        JMP ResetCamelAnimationFrame
 
-b1CD2   JMP j178B
+b1CD2   JMP SetBackLegsFrame
 
 ;-------------------------------------------------------------------------
-; j1CD5
+; SetSpitFrequency
 ;-------------------------------------------------------------------------
-j1CD5
+SetSpitFrequency
         LDA #$90
-        STA a51
-        JMP j1C39
+        STA camelSpitSoundFrequency
+        JMP RandomizeSPit
 
 ;-------------------------------------------------------------------------
-; j1CDC
+; PlayCamelSpitSound
 ;-------------------------------------------------------------------------
-j1CDC
-        DEC a51
+PlayCamelSpitSound
+        DEC camelSpitSoundFrequency
         NOP 
         NOP 
         NOP 
         NOP 
-        LDA a51
+        LDA camelSpitSoundFrequency
         STA $D408    ;Voice 2: Frequency Control - High-Byte
         LDA #$00
         STA $D40B    ;Voice 2: Control Register
         LDA #$21
         STA $D40B    ;Voice 2: Control Register
-        JMP s1D29
+        JMP SpitHomeOnShip
 
 ;-------------------------------------------------------------------------
-; j1CF4
+; DisableSpitNoise
 ;-------------------------------------------------------------------------
-j1CF4
+DisableSpitNoise
         STA $D015    ;Sprite display Enable
         LDA #$00
         STA $D40B    ;Voice 2: Control Register
         LDA #$02
-        JMP j1D25
+        JMP DisableSpitNoiseB
 
 ;-------------------------------------------------------------------------
-; j1D01
+; CamelSpitSound
 ;-------------------------------------------------------------------------
-j1D01
-        LDA a51
+CamelSpitSound
+        LDA camelSpitSoundFrequency
         ADC #$57
-        STA a51
-        LDA #$00
+        STA camelSpitSoundFrequency
+        LDA #VOICE_OFF
         STA $D40B    ;Voice 2: Control Register
-        LDA #$21
+        LDA #VOICE_ON_SAW
         STA $D40B    ;Voice 2: Control Register
-        LDA a51
+        LDA camelSpitSoundFrequency
         STA $D408    ;Voice 2: Frequency Control - High-Byte
         NOP 
         LDA #$01
-        STA a5F
-        JMP j1BA6
+        STA camelSPitRateCounter
+        JMP MoveSPitForCamel
 
+;*******************************************************************************
+; Redundant/Orphaned Code
+;*******************************************************************************
 b1D1E   LDA #$03
         STA a5A
         JMP j1C57
 
 ;-------------------------------------------------------------------------
-; j1D25
+; DisableSpitNoiseB
 ;-------------------------------------------------------------------------
-j1D25
+DisableSpitNoiseB
         STA $D408    ;Voice 2: Frequency Control - High-Byte
         RTS 
 
 ;-------------------------------------------------------------------------
-; s1D29
+; SpitHomeOnShip
 ;-------------------------------------------------------------------------
-s1D29
-        LDA a3A
+SpitHomeOnShip
+        LDA camelState
         BEQ b1D33
         RTS 
 
@@ -2454,14 +2502,14 @@ s1D29
 
 b1D33   LDA shipXPosition
         CLC 
-        SBC a56
-        STA a60
+        SBC camelSpitX
+        STA camelSpitShipDifference
         AND #$80
         BEQ b1D44
         LDA #$FF
-        SBC a60
-        STA a60
-b1D44   LDA a60
+        SBC camelSpitShipDifference
+        STA camelSpitShipDifference
+b1D44   LDA camelSpitShipDifference
         CMP #$09
         BMI b1D4B
         RTS 
@@ -2476,17 +2524,18 @@ b1D4B   LDA shipYPosition
         NOP 
         CLC 
         SBC #$03
-        STA a60
+        STA camelSpitShipDifference
         LDX #$06
 b1D5B   LDA $D005    ;Sprite 2 Y Pos
-        CMP a60
-        BEQ b1D68
-        INC a60
+        CMP camelSpitShipDifference
+        BEQ ContactWithShip
+        INC camelSpitShipDifference
         DEX 
         BNE b1D5B
         RTS 
 
-b1D68   LDA #$02
+ContactWithShip   
+        LDA #$02
         STA $D408    ;Voice 2: Frequency Control - High-Byte
         LDA #$00
         STA $D40B    ;Voice 2: Control Register
@@ -2495,39 +2544,37 @@ b1D68   LDA #$02
         LDA $D015    ;Sprite display Enable
         AND #$FB
         STA $D015    ;Sprite display Enable
-        LDA a55
+        LDA camelSPitState
         CMP #$01
         BNE b1D8A
         NOP 
-        DEC a61
+        DEC playerHealth
         BNE b1D8D
-b1D8A   JMP j1DBE
+b1D8A   JMP PlayerSHipExplosion
 
 b1D8D   LDA #$80
-        JMP j1DB7
+        JMP DisableSpit
 
 ;-------------------------------------------------------------------------
 ; AnimateShipDamage
 ;-------------------------------------------------------------------------
 AnimateShipDamage
-        LDA a62
+        LDA damageFlashFlag
         BNE b1D97
         RTS 
 
-b1D97   DEC a62
-        LDA a62
+b1D97   DEC damageFlashFlag
+        LDA damageFlashFlag
         AND #$01
         BEQ b1DA7
         LDA #$07
         STA $D021    ;Background Color 0
-        JMP j1DAC
+        JMP DamageNoise
 
 b1DA7   LDA #$00
         STA $D021    ;Background Color 0
-;-------------------------------------------------------------------------
-; j1DAC
-;-------------------------------------------------------------------------
-j1DAC
+
+DamageNoise
         LDA #$00
         STA $D40B    ;Voice 2: Control Register
         LDA #$81
@@ -2535,24 +2582,24 @@ j1DAC
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1DB7
+; DisableSpit
 ;-------------------------------------------------------------------------
-j1DB7
-        STA a62
+DisableSpit
+        STA damageFlashFlag
         LDA #$00
-        STA a55
+        STA camelSPitState
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1DBE
+; PlayerSHipExplosion
 ;-------------------------------------------------------------------------
-j1DBE
+PlayerSHipExplosion
         LDA #$00
         STA $D404    ;Voice 1: Control Register
         STA $D40B    ;Voice 2: Control Register
         STA $D412    ;Voice 3: Control Register
         LDA #$FF
-        STA a55
+        STA camelSPitState
         LDA #$01
         STA $D409    ;Voice 2: Pulse Waveform Width - Low-Byte
         LDA #$81
@@ -2562,7 +2609,7 @@ j1DBE
         LDA #$00
         STA $D01C    ;Sprites Multi-Color Mode Select
         LDA #$D2
-        JSR s1EE3
+        JSR UpdateShipFrame
         LDX #$00
 b1DE8   STX $D020    ;Border Color
         LDY #$00
@@ -2570,85 +2617,104 @@ b1DED   DEY
         BNE b1DED
         CPX #$A0
         BNE b1DF7
-        INC SCREEN_RAM + $03F8
+        INC Sprite0Ptr
 b1DF7   CPX #$50
         BNE b1DFE
-        INC SCREEN_RAM + $03F8
+        INC Sprite0Ptr
 b1DFE   DEX 
         BNE b1DE8
-        JMP j1E04
+        JMP NextLine
 
+explosionX1                             = $40
+explosionX2                             = $41
+explosionX3                             = $42
+explosionX4                             = $43
+explosionY1                             = $44
+explosionY2                             = $45
+explosionY3                             = $46
+explosionY4                             = $47
 ;-------------------------------------------------------------------------
-; j1E04
+; NextLine
 ;-------------------------------------------------------------------------
-j1E04
-        STA SCREEN_RAM + $03F8
-        LDA #$79
+NextLine
+        STA Sprite0Ptr
+        LDA #SPR_CAMEL_AND_SHIP_MASK_ON
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
         STA $D017    ;Sprites Expand 2x Vertical (Y)
-        LDA #$00
+        LDA #BLACK
         STA $D020    ;Border Color
-        LDA #$81
-        JSR s1EEC
+        LDA #SPR_SHIP_AND_RADAR_MASK_ON
+        JSR EnableExplosionSprites
         LDA shipXPosition
-        STA a40
-        STA a41
-        STA a42
-        STA a43
+        STA explosionX1
+        STA explosionX2
+        STA explosionX3
+        STA explosionX4
         LDA shipYPosition
-        STA a44
-        STA a45
-        STA a46
-        STA a47
+        STA explosionY1
+        STA explosionY2
+        STA explosionY3
+        STA explosionY4
 ;-------------------------------------------------------------------------
-; j1E2D
+; ExplosionX1Update
 ;-------------------------------------------------------------------------
-j1E2D
-        LDA a40
-        BEQ b1E33
-        INC a40
-b1E33   LDA a41
-        BEQ b1E39
-        INC a41
-b1E39   LDA a42
-        BEQ b1E3F
-        DEC a42
-b1E3F   LDA a43
-        BEQ b1E45
-        DEC a43
-b1E45   LDA a44
-        BEQ b1E4B
-        INC a44
-b1E4B   LDA a45
-        BEQ b1E51
-        DEC a45
-b1E51   LDA a46
-        BEQ b1E57
-        INC a46
-b1E57   LDA a47
-        BEQ b1E5D
-        DEC a47
-b1E5D   LDY #$00
+ExplosionX1Update
+        LDA explosionX1
+        BEQ ExplosionX2Update
+        INC explosionX1
+ExplosionX2Update
+        LDA explosionX2
+        BEQ ExplosionX3Update
+        INC explosionX2
+ExplosionX3Update
+        LDA explosionX3
+        BEQ ExplosionX4Update
+        DEC explosionX3
+ExplosionX4Update
+        LDA explosionX4
+        BEQ ExplosionY1Update
+        DEC explosionX4
+ExplosionY1Update
+        LDA explosionY1
+        BEQ ExplosionY2Update
+        INC explosionY1
+ExplosionY2Update
+        LDA explosionY2
+        BEQ ExplosionY3Update
+        DEC explosionY2
+ExplosionY3Update
+        LDA explosionY3
+        BEQ ExplosionY4Update
+        INC explosionY3
+ExplosionY4Update
+        LDA explosionY4
+        BEQ EnableExplosionSprites2
+        DEC explosionY4
+EnableExplosionSprites2
+        LDY #$00
 b1E5F   DEY 
         BNE b1E5F
-        LDA #$D2
-        STA SCREEN_RAM + $03F9
-        STA SCREEN_RAM + $03FA
-        STA SCREEN_RAM + $03FB
+        LDA #EXPLOSION_FRAME1
+        STA Sprite1Ptr
+        STA Sprite2Ptr
+        STA Sprite3Ptr
+
         LDA #$01
         STA $D028    ;Sprite 1 Color
         STA $D029    ;Sprite 2 Color
         STA $D02A    ;Sprite 3 Color
+
         LDA #$0F
         STA $D017    ;Sprites Expand 2x Vertical (Y)
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
         STA $D015    ;Sprite display Enable
+
         LDX #$02
 b1E85   LDA @wf0043,X
         BNE b1E90
         DEX 
         BNE b1E85
-        JMP j28AC
+        JMP ExplosionEnded
 
 b1E90   LDX #$04
 b1E92   STX currentCharacter
@@ -2656,9 +2722,9 @@ b1E92   STX currentCharacter
         CLC 
         ASL 
         STA colorForCurrentCharacter
-        LDA @wf0043,X
+        LDA @wexplosionY1 - 1,X
         LDX colorForCurrentCharacter
-        STA fCFFF,X
+        STA SpriteXPos-1,X
         LDX currentCharacter
         LDA #$01
 b1EA5   ASL 
@@ -2667,11 +2733,11 @@ b1EA5   ASL
         ROR 
         STA a06
         LDX currentCharacter
-        LDA @wf003F,X
+        LDA @wexplosionX1-1,X
         CLC 
         ASL 
         LDX colorForCurrentCharacter
-        STA fCFFE,X
+        STA SpriteXPos-2,X
         BCC b1EC5
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
         ORA a06
@@ -2694,124 +2760,126 @@ j1ECF
         STA $D40B    ;Voice 2: Control Register
         LDA #$81
         STA $D40B    ;Voice 2: Control Register
-        JMP j1EF4
+        JMP DecreaseExplosionCounter
 
 ;-------------------------------------------------------------------------
-; s1EE3
+; UpdateShipFrame
 ;-------------------------------------------------------------------------
-s1EE3
-        STA SCREEN_RAM + $03F8
+UpdateShipFrame
+        STA Sprite0Ptr
         LDY #$00
 b1EE8   DEY 
         BNE b1EE8
         RTS 
 
+explosionCounter = camelMarkerX
 ;-------------------------------------------------------------------------
-; s1EEC
+; EnableExplosionSprites
 ;-------------------------------------------------------------------------
-s1EEC
+EnableExplosionSprites
         STA $D015    ;Sprite display Enable
         LDA #$60
-        STA a20
+        STA explosionCounter
         RTS 
 
 ;-------------------------------------------------------------------------
-; j1EF4
+; DecreaseExplosionCounter
 ;-------------------------------------------------------------------------
-j1EF4
-        DEC a20
+DecreaseExplosionCounter
+        DEC explosionCounter
         BEQ b1EFB
-        JMP j1E2D
+        JMP ExplosionX1Update
 
-b1EFB   JMP j1563
+b1EFB   JMP DisableExplosionSprites
 
         ORA fD0,X
 ;-------------------------------------------------------------------------
-; j1F00
+; InitializeGameVariables
 ;-------------------------------------------------------------------------
-j1F00
+InitializeGameVariables
         LDA #$00
-        STA a30
-        STA a31
+        STA enableBullets
+        STA bulletDirection
         LDA #$CC
-        STA SCREEN_RAM + $03F9
+        STA Sprite1Ptr
         LDA #$0A
         STA $D413    ;Voice 3: Attack / Decay Cycle Control
         LDA #$00
         STA $D414    ;Voice 3: Sustain / Release Cycle Control
-        STA a3A
+        STA camelState
         LDA #$C1
-        STA a38
-        LDA #<p09FF
-        STA a3C
-        LDA #>p09FF
-        STA a3D
+        STA camelHeadFrame
+        LDA #$FF
+        STA landPositionMinor
+        LDA #$09
+        STA landPositionMajor
         LDA #$00
-        STA aFF
-        STA aFF
+        STA aFFRedundant
+        STA aFFRedundant
         LDA #$04
-        STA a43
+        STA camelLandPositionCounter
         LDA #$00
-        STA aFF
+        STA aFFRedundant
         SEI 
-        LDA #<p1AA8
-        STA a0314    ;IRQ
-        LDA #>p1AA8
-        STA a0315    ;IRQ
+        LDA #<IRQInterruptHandler
+        STA IRQ_LO    ;IRQ
+        LDA #>IRQInterruptHandler
+        STA IRQ_HI    ;IRQ
+
         CLI 
         LDA #$10
-        STA a45
-        JSR s1AD5
-        LDA #<p0300
-        STA a47
-        LDA #>p0300
+        STA camelFrameRate
+        JSR DisplayStars
+        LDA #$00
+        STA currentStar
+        LDA #TWINKLE_RATE
         STA a48
         LDA #$00
-        STA a21
+        STA unknownPurpose1
         LDA #$10
-        STA a5D
-        STA a5E
+        STA camelSpitSpeedCounter
+        STA camelSPitSpeed
         LDA #$03
-        STA a5F
-        STA a52
+        STA camelSPitRateCounter
+        STA camelSpitRate
         LDA #$07
-        STA a5B
+        STA camelSpitBombRateCounter
         STA a58
         LDA #$00
-        STA a55
+        STA camelSPitState
         LDA #$D0
-        STA a57
+        STA camelSpitFrame
         LDA #$01
         STA $D029    ;Sprite 2 Color
         STA a5A
         LDA #$00
-        STA a5C
-        STA a62
+        STA a5CRedundant
+        STA damageFlashFlag
         LDA #$04
-        STA a61
-        STA a63
-        STA a65
+        STA playerHealth
+        STA storeColourCounter
+        STA scoreScreenHi
         LDA #$00
         STA $D021    ;Background Color 0
         NOP 
         LDA #$D8
-        STA a67
+        STA storeColorHi
         LDA $D01E    ;Sprite to Sprite Collision Detect
         LDA #$01
-        STA a68
-        LDA a69
-        STA a69
-        LDA #$30
-        STA a6A
-        LDA #$80
-        STA a2B
-        LDA a70
+        STA scoreBonus
+        LDA camelsRemaining
+        STA camelsRemaining
+        LDA #ROCKET_MOVE_RATE
+        STA rocketMoveRate
+        LDA #CAMEL_SPEED
+        STA camelSpeed
+        LDA bottomRowFlag
         BEQ b1FA3
-        JSR s2971
-b1FA3   LDA #$DD
-        STA a70
-        JSR s24AA
-        JSR s29BB
+        JSR ClearBottomRows
+b1FA3   LDA #BOTTOM_ROWS_DO_CLEAR
+        STA bottomRowFlag
+        JSR DisplayCamelBonus
+        JSR SetLevelDifficulty
         LDA aFD
         STA aFD
         LDA #$19
@@ -2827,47 +2895,57 @@ b1FA3   LDA #$DD
 
 .include "charset.asm"
 
-f21FF=*-$01
+landscapeRow0=*-$01
         .BYTE $20,$20,$20,$20,$20,$1B,$23
         .BYTE $23,$20,$20,$20,$20,$20,$20,$20
         .BYTE $20,$20,$20,$20,$20,$20,$20,$20
         .BYTE $20,$20,$20,$20,$20,$20,$20,$20
         .BYTE $20,$20,$20,$1D,$1E,$20,$20,$20
-landscapeRow1   .BYTE $20,$20,$20,$20,$20,$1B,$1D,$2B
+landscapeRow1   
+        .BYTE $20,$20,$20,$20,$20,$1B,$1D,$2B
         .BYTE $2B,$1E,$23,$1C,$20,$20,$20,$20
         .BYTE $20,$20,$20,$20,$20,$20,$20,$20
         .BYTE $20,$20,$20,$1B,$23,$1C,$1B,$1F
         .BYTE $1D,$23,$1D,$2B,$2B,$1E,$20,$20
-landscapeRow2   .BYTE $20,$20,$20,$1B,$23,$1D,$2B,$2B
+landscapeRow2   
+        .BYTE $20,$20,$20,$1B,$23,$1D,$2B,$2B
         .BYTE $2B,$2B,$2B,$2B,$1E,$20,$20,$20
         .BYTE $20,$20,$20,$1D,$1E,$20,$20,$20
         .BYTE $20,$20,$1B,$1D,$2B,$1E,$1D,$2B
         .BYTE $2B,$2B,$2B,$2B,$2B,$2B,$1E,$20
-landscapeRow3   .BYTE $20,$1F,$1F,$1D,$2B,$2B,$2B,$2B
+landscapeRow3   
+        .BYTE $20,$1F,$1F,$1D,$2B,$2B,$2B,$2B
         .BYTE $2B,$2B,$2B,$2B,$2B,$1E,$23,$1F
         .BYTE $1F,$1F,$1D,$2B,$2B,$1E,$1F,$1F
         .BYTE $1F,$1F,$1D,$2B,$2B,$2B,$2B,$2B
         .BYTE $2B,$2B,$2B,$2B,$2B,$2B,$2B,$1E
         .BYTE $1F,$13,$19,$13,$33,$32,$37,$36
         .BYTE $38
-f22A8   .BYTE $FF,$0A,$08,$06,$04,$02,$01,$01
+shipSpeedsArray   
+        .BYTE $FF,$0A,$08,$06,$04,$02,$01,$01
         .BYTE $01,$01,$01,$01,$01,$01,$01,$01
         .BYTE $20,$20,$20,$20,$20,$20,$20,$20
         .BYTE $20,$20,$20,$20,$20,$20,$20
-f22C7   .BYTE $20,$07,$07,$07,$07,$07,$07,$07
-f22CF   .BYTE $07,$00,$00,$00,$00,$00,$00,$00
-f22D7   .BYTE $00,$07,$0B,$0F,$13,$17,$1B,$1B
-f22DF   .BYTE $1C,$10,$10,$10,$10,$10,$10,$10
-f22E7   .BYTE $10,$06,$06,$06,$06,$06,$06,$06
+camelCurrentColorArray   
+        .BYTE $20,$07,$07,$07,$07,$07,$07,$07
+f22CF   
+        .BYTE $07,$00,$00,$00,$00,$00,$00,$00
+camelMarkerScreenLoPtrArray   
+        .BYTE $00,$07,$0B,$0F,$13,$17,$1B,$1B
+camelHealthMinorArray   
+        .BYTE $1C,$10,$10,$10,$10,$10,$10,$10
+camelHealthArray   
+        .BYTE $10,$06,$06,$06,$06,$06,$06,$06
         .BYTE $06,$00,$00,$00,$00,$00,$00,$00
         .BYTE $00,$FF,$FF,$00,$00,$FF,$FF,$00
-f22FF   .BYTE $FF
-f2300   .BYTE $04,$07,$12,$09,$07,$15,$18,$0C
-        .BYTE $23,$13,$19,$04,$20,$22,$01
-f230F   .BYTE $25
-f2310   .BYTE $06,$06,$07,$08,$09,$0A,$07,$09
-        .BYTE $09,$08,$08,$07,$09,$06,$09
-f231F   .BYTE $07,$02,$D9,$DA,$D9,$FF,$FF,$FF
+starXPositionArray   
+        .BYTE $FF,$04,$07,$12,$09,$07,$15,$18
+        .BYTE $0C,$23,$13,$19,$04,$20,$22,$01
+starYPositionArray   
+        .BYTE $25,$06,$06,$07,$08,$09,$0A,$07
+        .BYTE $09,$09,$08,$08,$07,$09,$06,$09
+camelHeadFrameArray   
+        .BYTE $07,$02,$D9,$DA,$D9,$FF,$FF,$FF
         .BYTE $00,$FF,$FF,$FF,$FF,$00,$FF,$FF
         .BYTE $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
         .BYTE $FF,$FD,$FF,$FF,$FF,$FF,$FF,$FF
@@ -2897,54 +2975,58 @@ f231F   .BYTE $07,$02,$D9,$DA,$D9,$FF,$FF,$FF
         .BYTE $00,$00,$00,$00,$00,$00,$00,$00
         .BYTE $00
 ;-------------------------------------------------------------------------
-; j2400
+; InitializeCamelStats
 ;-------------------------------------------------------------------------
-j2400
+InitializeCamelStats
         LDY #$08
-b2402   LDA f2417,Y
-        STA f22D7,Y
-        LDA f241F,Y
-        STA f22DF,Y
-        LDA f2427,Y
-        STA f22E7,Y
-        JMP j2440
+b2402   LDA initialCamelMarkerScreenLoPtrArray,Y
+        STA camelMarkerScreenLoPtrArray,Y
+        LDA initialCamelHealthMinorArray,Y
+        STA camelHealthMinorArray,Y
+        LDA initialCamelHealthArray,Y
+        STA camelHealthArray,Y
+        JMP InitialiseCamelColor
+        RTS 
 
-f2417   RTS 
-
+initialCamelMarkerScreenLoPtrArray=*-$01
         .BYTE $03,$07,$0B,$0F,$13,$17,$1B
-f241F   .BYTE $1C,$10,$10,$10,$10,$10,$10,$10
-f2427   .BYTE $10,$06,$06,$06,$06,$06,$06,$06
-f242F   .BYTE $06,$FF,$0D,$02,$06,$0F,$09,$07
+initialCamelHealthMinorArray   
+        .BYTE $1C,$10,$10,$10,$10,$10,$10,$10
+initialCamelHealthArray   
+        .BYTE $10,$06,$06,$06,$06,$06,$06,$06
+camelColorsArray   
+        .BYTE $06,$FF,$0D,$02,$06,$0F,$09,$07
         .BYTE $07,$FF,$FF,$FF,$FF,$FF,$FF,$FF
         .BYTE $FF
 ;-------------------------------------------------------------------------
-; j2440
+; InitialiseCamelColor
 ;-------------------------------------------------------------------------
-j2440
+InitialiseCamelColor
         LDA #$07
-        STA f22C7,Y
+        STA camelCurrentColorArray,Y
         DEY 
         BNE b2402
         RTS 
 
 ;-------------------------------------------------------------------------
-; s2449
+; FlashPlayerScore
 ;-------------------------------------------------------------------------
-s2449
-        DEC a63
+FlashPlayerScore
+        DEC storeColourCounter
         BNE b2451
         LDA #$04
-        STA a63
-b2451   LDX a63
-        LDA f245D,X
+        STA storeColourCounter
+b2451   LDX storeColourCounter
+        LDA scoreFlashColors,X
         LDY #$07
-b2458   STA (p66),Y
+b2458   STA (scoreColorLo),Y
         DEY 
         BNE b2458
-f245D   RTS 
+        RTS 
 
+scoreFlashColors = *-$01
         .BYTE $0E,$07,$0A,$01,$EA
-b2463   STY a07
+b2463   STY scoreScreenLoPtr
 b2465   LDA (p64),Y
         CLC 
         ADC #$01
@@ -2955,28 +3037,28 @@ b2465   LDA (p64),Y
         STA (p64),Y
         DEY 
         BNE b2465
-b2477   LDY a07
+b2477   LDY scoreScreenLoPtr
         DEX 
         BNE b2463
         RTS 
 
 ;-------------------------------------------------------------------------
-; s247D
+; Add1PointToScore
 ;-------------------------------------------------------------------------
-s247D
-        JSR s18F4
+Add1PointToScore
+        JSR DecreaseCamelHealth
         LDY #$07
         LDX #$01
         JMP b2463
 
 ;-------------------------------------------------------------------------
-; s2487
+; AddBonusPoints
 ;-------------------------------------------------------------------------
-s2487
+AddBonusPoints
         STA @wa0046
         TXA 
         PHA 
-        LDA a68
+        LDA scoreBonus
         NOP 
         NOP 
         NOP 
@@ -2987,26 +3069,26 @@ s2487
         TAX 
         LDY #$05
         JSR b2463
-        LDA a68
+        LDA scoreBonus
         CMP #$40
         BEQ b24A2
         ASL 
-b24A2   STA a68
-        JSR s24AA
+b24A2   STA scoreBonus
+        JSR DisplayCamelBonus
         PLA 
         TAX 
         RTS 
 
 ;-------------------------------------------------------------------------
-; s24AA
+; DisplayCamelBonus
 ;-------------------------------------------------------------------------
-s24AA
+DisplayCamelBonus
         LDA #$20
         STA SCREEN_RAM + $0063
         STA SCREEN_RAM + $0064
         LDA #$30
         STA SCREEN_RAM + $0065
-        LDY a68
+        LDY scoreBonus
 b24B9   LDX #$03
 b24BB   INC SCREEN_RAM + $0062,X
         LDA SCREEN_RAM + $0062,X
@@ -3028,18 +3110,19 @@ b24DC   DEY
         RTS 
 
 ;-------------------------------------------------------------------------
-; j24E0
+; CheckRemainingCamels
 ;-------------------------------------------------------------------------
-j24E0
-        DEC a69
+CheckRemainingCamels
+        DEC camelsRemaining
         BEQ b24E7
 ;-------------------------------------------------------------------------
 ; s24E6
 ;-------------------------------------------------------------------------
 s24E6 =*+$02
-        JMP j19AB
+        JMP ResetCamelHeadSprite
 
-b24E7   JMP j297E
+b24E7   
+        JMP MoveToNextSector
 
         NOP 
         LDA @wa0095
@@ -3050,14 +3133,14 @@ b24E7   JMP j297E
 b24F6   RTS 
 
 ;-------------------------------------------------------------------------
-; s24F7
+; UpdateShipSprite
 ;-------------------------------------------------------------------------
-s24F7
+UpdateShipSprite
         LDA shipYPosition
         STA $D001    ;Sprite 0 Y Pos
         LDA shipXPosition
         ASL 
-        STA pD000    ;Sprite 0 X Pos
+        STA SpriteXPos    ;Sprite 0 X Pos
         BCC b250D
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
         ORA #$01
@@ -3070,24 +3153,24 @@ b250D   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         RTS 
 
 ;-------------------------------------------------------------------------
-; j2516
+; EngageHyperDrive
 ;-------------------------------------------------------------------------
-j2516
+EngageHyperDrive
         LDA #$00
         STA $D404    ;Voice 1: Control Register
         STA $D40B    ;Voice 2: Control Register
         STA $D412    ;Voice 3: Control Register
         LDA #$80
-        STA a55
+        STA camelSPitState
         LDA #$A0
         STA shipXPosition
         LDA shipYPosition
         STA shipYPosition
-        JSR s27B0
+        JSR ResetRocketSPrite
         NOP 
-        JSR s24F7
+        JSR UpdateShipSprite
         LDX #$20
-b2536   LDA f2579,X
+b2536   LDA hyperDriveEngagingText,X
         STA SCREEN_RAM + $03C2,X
         LDA #$01
         STA COLOR_RAM + $03C2,X
@@ -3095,11 +3178,11 @@ b2536   LDA f2579,X
         BNE b2536
         LDX #$20
 b2546   LDA #$00
-        STA a07
+        STA scoreScreenLoPtr
         STA screenLineLoPtr
 b254C   LDA screenLineLoPtr
         STA $D400    ;Voice 1: Frequency Control - Low-Byte
-        LDA a07
+        LDA scoreScreenLoPtr
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         LDA #$00
         STA $D404    ;Voice 1: Control Register
@@ -3109,25 +3192,24 @@ b254C   LDA screenLineLoPtr
         CLC 
         ADC #$30
         STA screenLineLoPtr
-        LDA a07
+        LDA scoreScreenLoPtr
         ADC #$00
-        STA a07
+        STA scoreScreenLoPtr
         STA $D020    ;Border Color
         CMP #$FF
         BNE b254C
         DEX 
         BNE b2546
-f2579   =*+$02
-        JMP j25A5
+        JMP InitializeLevelAfterHyperDrive
 
-        .BYTE $14,$12,$01,$0E,$13,$20,$13,$05
-        .BYTE $03,$14,$0F,$12,$20,$08,$19,$10
-        .BYTE $05,$12,$04,$12,$09,$16,$05,$20
-        .BYTE $05,$0E,$07,$01,$07,$09,$0E,$07
+hyperDriveEngagingText   =*-$01
+.enc "petscii"
+.TEXT 'TRANS SECTOR HYPERDRIVE ENGAGING'
+.enc "none"
 ;-------------------------------------------------------------------------
-; j259A
+; HyperDriveResetShipSrite
 ;-------------------------------------------------------------------------
-j259A
+HyperDriveResetShipSrite
         LDA #$07
         STA $D025    ;Sprite Multi-Color Register 0
         LDA #$05
@@ -3135,9 +3217,9 @@ j259A
         RTS 
 
 ;-------------------------------------------------------------------------
-; j25A5
+; InitializeLevelAfterHyperDrive
 ;-------------------------------------------------------------------------
-j25A5
+InitializeLevelAfterHyperDrive
         LDA #$00
         STA $D020    ;Border Color
         STA $D404    ;Voice 1: Control Register
@@ -3145,44 +3227,44 @@ j25A5
         LDA #$00
         STA shipDirection
         LDA #$80
-        STA a20
-        STA a21
+        STA camelMarkerX
+        STA unknownPurpose1
         LDA #$10
-        STA a23
-        JSR s2715
+        STA currentEnemyID
+        JSR InitializeRocket
         NOP 
         NOP 
 ;-------------------------------------------------------------------------
-; j25C3
+; MainHyperDriveLoop
 ;-------------------------------------------------------------------------
-j25C3
-        JSR s25E0
-        JSR s2607
-        JSR s272D
+MainHyperDriveLoop
+        JSR UpdatePlayerDuringHyperDrive
+        JSR UpdateHyperdriveLandscape
+        JSR HyperDriveMoveRocket
         LDA $D01E    ;Sprite to Sprite Collision Detect
         BEQ b25D4
-        JMP j1DBE
+        JMP PlayerSHipExplosion
 
 b25D4   LDA shipXPosition
         CMP #$40
         BEQ b25DD
-        JMP j25C3
+        JMP MainHyperDriveLoop
 
-b25DD   JMP j27A8
+b25DD   JMP ClearRocketSPrite
 
 ;-------------------------------------------------------------------------
-; s25E0
+; UpdatePlayerDuringHyperDrive
 ;-------------------------------------------------------------------------
-s25E0
-        DEC a20
+UpdatePlayerDuringHyperDrive
+        DEC camelMarkerX
         BEQ b25E5
         RTS 
 
-b25E5   LDA a21
-        STA a20
+b25E5   LDA unknownPurpose1
+        STA camelMarkerX
         LDA shipXPosition
-        JSR s24F7
-        JSR b1239
+        JSR UpdateShipSprite
+        JSR CheckJoystickInput
         LDA #$A1
         SBC shipXPosition
         STA $D401    ;Voice 1: Frequency Control - High-Byte
@@ -3197,48 +3279,48 @@ b25E5   LDA a21
         RTS 
 
 ;-------------------------------------------------------------------------
-; s2607
+; UpdateHyperdriveLandscape
 ;-------------------------------------------------------------------------
-s2607
-        DEC a22
+UpdateHyperdriveLandscape
+        DEC hyperdriveShipMoveCounter
         BEQ b260C
         RTS 
 
-b260C   LDA a23
-        STA a22
-        DEC a24
+b260C   LDA currentEnemyID
+        STA hyperdriveShipMoveCounter
+        DEC hyperdriveLanscapeMoveCOunter
         BEQ b2615
         RTS 
 
-b2615   LDA a25
-        STA a24
+b2615   LDA hyperdriveLanscapeMoveRate
+        STA hyperdriveLanscapeMoveCOunter
         JSR MoveLandscape
         DEC shipXPosition
-        DEC a25
-        JMP s24F7
+        DEC hyperdriveLanscapeMoveRate
+        JMP UpdateShipSprite
 
 ;-------------------------------------------------------------------------
-; j2623
+; HyperDriveInitializeCOunters
 ;-------------------------------------------------------------------------
-j2623
+HyperDriveInitializeCOunters
         LDA #$60
-        STA a24
-        STA a25
+        STA hyperdriveLanscapeMoveCOunter
+        STA hyperdriveLanscapeMoveRate
         LDA #$10
-        STA a22
+        STA hyperdriveShipMoveCounter
         RTS 
 
 ;-------------------------------------------------------------------------
-; j262E
+; AnimateShipDuringHyperDrive
 ;-------------------------------------------------------------------------
-j262E
+AnimateShipDuringHyperDrive
         LDA #$01
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
         LDA shipXPosition
         CMP #$E0
         BEQ b265D
         LDA #$01
-        STA a25
+        STA hyperdriveLanscapeMoveRate
         LDA shipXPosition
         STA $D025    ;Sprite Multi-Color Register 0
         ADC #$08
@@ -3249,21 +3331,21 @@ j262E
         STA $D40B    ;Voice 2: Control Register
         LDA #$21
         STA $D40B    ;Voice 2: Control Register
-        JSR s2660
-        JMP j27A8
+        JSR HyperDriveDecreaseShipX
+        JMP ClearRocketSPrite
 
 b265D   JMP j266E
 
 ;-------------------------------------------------------------------------
-; s2660
+; HyperDriveDecreaseShipX
 ;-------------------------------------------------------------------------
-s2660
-        LDA a22
+HyperDriveDecreaseShipX
+        LDA hyperdriveShipMoveCounter
         CMP #$01
         BNE b2668
         DEC shipXPosition
 b2668   JSR MoveLandscape
-        JMP s2607
+        JMP UpdateHyperdriveLandscape
 
 ;-------------------------------------------------------------------------
 ; j266E
@@ -3278,7 +3360,7 @@ b2677   TXA
         STA $D020    ;Border Color
         EOR #$01
         STA $D021    ;Background Color 0
-        JSR s26A3
+        JSR LandscapeUpdate
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         LDA #$00
         STA $D404    ;Voice 1: Control Register
@@ -3292,12 +3374,12 @@ b2677   TXA
         LDA #$00
         STA $D020    ;Border Color
         STA $D021    ;Background Color 0
-        JMP j2E8C
+        JMP HyperDriveResetShipY
 
 ;-------------------------------------------------------------------------
-; s26A3
+; LandscapeUpdate
 ;-------------------------------------------------------------------------
-s26A3
+LandscapeUpdate
         TXA 
         PHA 
         JSR MoveLandscape
@@ -3306,10 +3388,11 @@ s26A3
         LDA $D012    ;Raster Position
         RTS 
 
+hyperDriveUpdatePlayerCounter = camelMarkerX
 ;-------------------------------------------------------------------------
-; j26AE
+; HyperDriveFinishing
 ;-------------------------------------------------------------------------
-j26AE
+HyperDriveFinishing
         LDA #$78
         STA $D017    ;Sprites Expand 2x Vertical (Y)
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
@@ -3321,9 +3404,9 @@ b26BA   STA SCREEN_RAM + $03C2,X
         LDA #$0E
         STA $D026    ;Sprite Multi-Color Register 1
         LDA #$00
-        STA a20
-        STA a21
-b26CB   LDA a20
+        STA hyperDriveUpdatePlayerCounter
+        STA unknownPurpose1
+b26CB   LDA hyperDriveUpdatePlayerCounter
         STA shipXPosition
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         ADC #$80
@@ -3334,64 +3417,62 @@ b26CB   LDA a20
         LDA #$21
         STA $D404    ;Voice 1: Control Register
         STA $D40B    ;Voice 2: Control Register
-        JSR s2704
-        INC a20
-        LDA a20
+        JSR FlashShipSPriteColor
+        INC hyperDriveUpdatePlayerCounter
+        LDA hyperDriveUpdatePlayerCounter
         CMP #$A0
         BNE b26CB
-        INC a21
-        LDA a21
+        INC unknownPurpose1
+        LDA unknownPurpose1
         CMP #$A0
         BEQ b2701
-        LDA a21
-        STA a20
+        LDA unknownPurpose1
+        STA hyperDriveUpdatePlayerCounter
         JMP b26CB
 
-b2701   JMP j270A
+b2701   JMP ExitHyperDriveFinishing
 
 ;-------------------------------------------------------------------------
-; s2704
+; FlashShipSPriteColor
 ;-------------------------------------------------------------------------
-s2704
+FlashShipSPriteColor
         INC $D025    ;Sprite Multi-Color Register 0
-        JMP s24F7
+        JMP UpdateShipSprite
 
-;-------------------------------------------------------------------------
-; j270A
-;-------------------------------------------------------------------------
-j270A
+ExitHyperDriveFinishing
         LDA #$00
         STA $D404    ;Voice 1: Control Register
         STA $D40B    ;Voice 2: Control Register
-        JMP j298B
+        JMP HyperDriveEnded
 
 ;-------------------------------------------------------------------------
-; s2715
+; InitializeRocket
 ;-------------------------------------------------------------------------
-s2715
+InitializeRocket
         LDA #$F0
-        STA a40
+        STA camelMarkerOffset
         LDA #$04
         STA $D01D    ;Sprites Expand 2x Horizontal (X)
-        LDA a6A
-        STA a2F
+        LDA rocketMoveRate
+        STA enemyMoveCounterMajor
         LDA #$07
-        STA a2E
+        STA enemyMoveCounterMinor
         LDA #$07
-        STA a3D
-        JMP j2623
+        STA landPositionMajor
+        JMP HyperDriveInitializeCOunters
 
+rocketX = camelMarkerOffset
 ;-------------------------------------------------------------------------
-; s272D
+; HyperDriveMoveRocket
 ;-------------------------------------------------------------------------
-s272D
-        DEC a2F
+HyperDriveMoveRocket
+        DEC enemyMoveCounterMajor
         BEQ b2732
         RTS 
 
-b2732   LDA a6A
-        STA a2F
-        LDA a40
+b2732   LDA rocketMoveRate
+        STA enemyMoveCounterMajor
+        LDA camelMarkerOffset
         CMP #$F0
         BNE b274F
         LDA shipYPosition
@@ -3402,7 +3483,7 @@ b2732   LDA a6A
         CLC 
         ADC $D005    ;Sprite 2 Y Pos
         STA $D005    ;Sprite 2 Y Pos
-b274F   INC a40
+b274F   INC camelMarkerOffset
         NOP 
         NOP 
         NOP 
@@ -3411,267 +3492,266 @@ b274F   INC a40
         NOP 
         NOP 
         NOP 
-        LDA a40
+        LDA camelMarkerOffset
         ASL 
         STA $D004    ;Sprite 2 X Pos
         BCC b276C
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
         ORA #$04
         STA $D010    ;Sprites 0-7 MSB of X coordinate
-        JMP j2774
+        JMP SetRocketSpriteFrame
 
 b276C   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         AND #$FB
         STA $D010    ;Sprites 0-7 MSB of X coordinate
 ;-------------------------------------------------------------------------
-; j2774
+; SetRocketSpriteFrame
 ;-------------------------------------------------------------------------
-j2774
-        LDX a2E
-        LDA f278D,X
-        STA SCREEN_RAM + $03FA
-        DEC a3D
-        BEQ b2795
+SetRocketSpriteFrame
+        LDX enemyMoveCounterMinor
+        LDA rocketSpritesArray,X
+        STA Sprite2Ptr
+        DEC landPositionMajor
+        BEQ SetRocketHoming
 b2780   RTS 
 
 ;-------------------------------------------------------------------------
-; j2781
+; HyperdriveDecreaseCounter
 ;-------------------------------------------------------------------------
-j2781
+HyperdriveDecreaseCounter
         LDA #$07
-        STA a3D
-        DEC a2E
+        STA landPositionMajor
+        DEC enemyMoveCounterMinor
         BNE b2780
         LDA #$07
-        STA a2E
-f278D   RTS 
+        STA enemyMoveCounterMinor
+        RTS 
 
+rocketSpritesArray=*-$01
         .BYTE $DB,$DC,$DD,$DE,$DD,$DC,$DB
-b2795   LDA $D005    ;Sprite 2 Y Pos
+
+SetRocketHoming   
+        LDA $D005    ;Sprite 2 Y Pos
         CMP shipYPosition
         BPL b27A2
         INC $D005    ;Sprite 2 Y Pos
         INC $D005    ;Sprite 2 Y Pos
 b27A2   DEC $D005    ;Sprite 2 Y Pos
-        JMP j2781
+        JMP HyperdriveDecreaseCounter
 
 ;-------------------------------------------------------------------------
-; j27A8
+; ClearRocketSPrite
 ;-------------------------------------------------------------------------
-j27A8
+ClearRocketSPrite
         LDA #$01
         STA $D015    ;Sprite display Enable
-        JMP j262E
+        JMP AnimateShipDuringHyperDrive
 
 ;-------------------------------------------------------------------------
-; s27B0
+; ResetRocketSPrite
 ;-------------------------------------------------------------------------
-s27B0
+ResetRocketSPrite
         STA $D015    ;Sprite display Enable
         LDA #$CA
-        STA a16
-        STA SCREEN_RAM + $03F8
-        JMP j259A
+        STA shipSpriteFrame
+        STA Sprite0Ptr
+        JMP HyperDriveResetShipSrite
 
+; Redundant/Orphaned Code
         DEC a6B
-        BEQ s27C2
+        BEQ ResetCamelSpeedCounter
         RTS 
 
 ;-------------------------------------------------------------------------
-; s27C2
+; ResetCamelSpeedCounter
 ;-------------------------------------------------------------------------
-s27C2
-        LDA a2B
-        STA a28
-        DEC a2E
+ResetCamelSpeedCounter
+        LDA camelSpeed
+        STA camelSpeedCounter
+        DEC enemyMoveCounterMinor
         RTS 
 
 ;-------------------------------------------------------------------------
-; s27C9
+; TestSpitCollisionXPos
 ;-------------------------------------------------------------------------
-s27C9
-        STA a56
+TestSpitCollisionXPos
+        STA camelSpitX
         LDA shipXPosition
         CLC 
         ROR 
-        STA a07
-        LDA a56
+        STA scoreScreenLoPtr
+        LDA camelSpitX
         CLC 
         ROR 
-        CMP a07
+        CMP scoreScreenLoPtr
         RTS 
 
+player1Statistics = $38C0
 ;-------------------------------------------------------------------------
-; j27D8
+; InitializePlayerStats
 ;-------------------------------------------------------------------------
-j27D8
-        LDA a6D
+InitializePlayerStats
+        LDA player2Lives
         CLC 
         ADC #$00
-        STA a6D
+        STA player2Lives
         NOP 
-        LDA a6E
-        STA a6E
-        LDA a6F
-        STA a6F
-        STA a38F3
+        LDA playerTUrn
+        STA playerTUrn
+        LDA playerSector
+        STA playerSector
+        STA camelHeadFrameF3
         LDA #$00
-        STA a38F1
-        STA a38F2
-        JSR s2939
+        STA camelHeadFrameF1
+        STA camelHeadFrameF2
+        JSR InitializePlayerStatsCont
         LDX #$30
-b27F8   LDA f22C7,X
-        STA f38C0,X
+b27F8   LDA camelCurrentColorArray,X
+        STA player1Statistics,X
         DEX 
         BNE b27F8
         NOP 
         NOP 
         NOP 
-        JMP j1400
+        JMP InitializeSPrites
 
 ;-------------------------------------------------------------------------
-; j2807
+; PlayerLoseLife
 ;-------------------------------------------------------------------------
-j2807
-        LDA a6E
+PlayerLoseLife
+        LDA playerTUrn
         CMP #$02
         BEQ b281A
-        LDA a6C
+        LDA player1Lives
         BEQ b281A
-        DEC a6C
+        DEC player1Lives
         LDA #$02
-        STA a6E
-        JMP j282B
+        STA playerTUrn
+        JMP Player2Selected
 
-b281A   DEC a6D
-        JMP j2827
+b281A   DEC player2Lives
+        JMP InitializeGameVariables2
 
+; Redundant/Orphaned Code
         JMP (SCREEN_RAM + $01D0)
 
-;-------------------------------------------------------------------------
-; j2822
-;-------------------------------------------------------------------------
 j2822
         JMP j2822
 
-        DEC a6D
+        DEC player2Lives
 ;-------------------------------------------------------------------------
-; j2827
+; InitializeGameVariables2
 ;-------------------------------------------------------------------------
-j2827
+InitializeGameVariables2
         LDA #$01
-        STA a6E
+        STA playerTUrn
 ;-------------------------------------------------------------------------
-; j282B
+; Player2Selected
 ;-------------------------------------------------------------------------
-j282B
-        LDA #>f38C0
+Player2Selected
+        LDA #>player1Statistics
         STA screenLineLoPtr
-        LDA #<f38C0
-        STA a07
-        LDA a6E
+        LDA #<player1Statistics
+        STA scoreScreenLoPtr
+        LDA playerTUrn
         CMP #$01
         BNE b283B
         INC screenLineLoPtr
 b283B   LDY #$30
-b283D   LDA f22C7,Y
-        STA (p07),Y
+b283D   LDA camelCurrentColorArray,Y
+        STA (scoreScreenLoPtr),Y
         DEY 
         BNE b283D
         LDY #$31
-        LDA a3E
-        STA (p07),Y
+        LDA camelPositionMinor
+        STA (scoreScreenLoPtr),Y
         INY 
-        LDA a3F
-        STA (p07),Y
+        LDA camelPositionMajor
+        STA (scoreScreenLoPtr),Y
         INY 
-        LDA a6F
-        STA (p07),Y
-        JSR s28A0
-        LDA a6E
+        LDA playerSector
+        STA (scoreScreenLoPtr),Y
+        JSR StoreRemainingCamels
+        LDA playerTUrn
         CMP #$02
         BEQ b286B
         LDA #$38
         STA screenLineLoPtr
         LDA #$4F
         STA a64
-        STA a66
+        STA scoreColorLo
         JMP j2875
 
 b286B   LDA #$39
         STA screenLineLoPtr
         LDA #$70
         STA a64
-        STA a66
-;-------------------------------------------------------------------------
-; j2875
-;-------------------------------------------------------------------------
+        STA scoreColorLo
+
 j2875
         LDY #$30
-b2877   LDA (p07),Y
-        STA f22C7,Y
+b2877   LDA (scoreScreenLoPtr),Y
+        STA camelCurrentColorArray,Y
         DEY 
         BNE b2877
         LDY #$31
-        LDA (p07),Y
-        STA a3E
+        LDA (scoreScreenLoPtr),Y
+        STA camelPositionMinor
         INY 
-        LDA (p07),Y
-        STA a3F
+        LDA (scoreScreenLoPtr),Y
+        STA camelPositionMajor
         INY 
-        LDA (p07),Y
-        STA a6F
-        JSR s28A6
-;-------------------------------------------------------------------------
-; j2892
-;-------------------------------------------------------------------------
-j2892
-        JSR s28B6
+        LDA (scoreScreenLoPtr),Y
+        STA playerSector
+        JSR ReadCamelsRemaining
+
+PrepareToStart
+        JSR InitPrepareToStart
         RTS 
 
 ;-------------------------------------------------------------------------
-; j2896
+; InitializePlayerStats3
 ;-------------------------------------------------------------------------
-j2896
+InitializePlayerStats3
         LDA #$06
-        STA a69
-        STA a38F4
-        JMP j2400
+        STA camelsRemaining
+        STA camelHeadFrameF4
+        JMP InitializeCamelStats
 
 ;-------------------------------------------------------------------------
-; s28A0
+; StoreRemainingCamels
 ;-------------------------------------------------------------------------
-s28A0
+StoreRemainingCamels
         INY 
-        LDA a69
-        STA (p07),Y
+        LDA camelsRemaining
+        STA (scoreScreenLoPtr),Y
         RTS 
 
 ;-------------------------------------------------------------------------
-; s28A6
+; ReadCamelsRemaining
 ;-------------------------------------------------------------------------
-s28A6
+ReadCamelsRemaining
         INY 
-        LDA (p07),Y
-        STA a69
+        LDA (scoreScreenLoPtr),Y
+        STA camelsRemaining
         RTS 
 
 ;-------------------------------------------------------------------------
-; j28AC
+; ExplosionEnded
 ;-------------------------------------------------------------------------
-j28AC
+ExplosionEnded
         LDX #$F6
         TXS 
         NOP 
         NOP 
         NOP 
         NOP 
-        JMP j1400
+        JMP InitializeSPrites
 
 ;-------------------------------------------------------------------------
-; s28B6
+; InitPrepareToStart
 ;-------------------------------------------------------------------------
-s28B6
+InitPrepareToStart
         LDX #$07
         LDA #$01
 b28BA   STA COLOR_RAM + $004F,X
@@ -3684,19 +3764,19 @@ b28C7   STA SCREEN_RAM + $009F,X
         DEX 
         BNE b28C7
         LDX #$0B
-b28CF   LDA f2926,X
+b28CF   LDA txt_PlayPlayer,X
         STA SCREEN_RAM + $00AB,X
         LDA #$0E
         STA COLOR_RAM + $00AB,X
         DEX 
         BNE b28CF
         LDX #$0D
-        LDA a6E
+        LDA playerTUrn
         CMP #$02
         BNE b28E7
         LDX #$10
 b28E7   LDY #$03
-b28E9   LDA f2926,X
+b28E9   LDA txt_PlayPlayer,X
         STA SCREEN_RAM + $00B8,Y
         LDA #$07
         STA COLOR_RAM + $00B8,Y
@@ -3704,8 +3784,8 @@ b28E9   LDA f2926,X
         DEY 
         BNE b28E9
         LDA #$F0
-        STA a07
-b28FC   LDX a07
+        STA scoreScreenLoPtr
+b28FC   LDX scoreScreenLoPtr
 b28FE   STX $D401    ;Voice 1: Frequency Control - High-Byte
         LDY #$10
 b2903   STA $D400    ;Voice 1: Frequency Control - Low-Byte
@@ -3716,7 +3796,7 @@ b2903   STA $D400    ;Voice 1: Frequency Control - Low-Byte
         STA $D404    ;Voice 1: Control Register
         DEX 
         BNE b28FE
-        DEC a07
+        DEC scoreScreenLoPtr
         BNE b28FC
         LDX #$28
         LDA #$20
@@ -3724,63 +3804,60 @@ b291C   STA SCREEN_RAM + $009F,X
         DEX 
         BNE b291C
         LDX #$06
-f2926   =*+$02
-        JMP j2940
+        JMP DisplayCamelMarker
 
-        .BYTE $10,$0C,$01,$19,$20,$10,$0C,$01
-        .BYTE $19,$05,$12,$20,$05,$0E,$0F,$0F
-        .BYTE $17,$14
+.enc "petscii"
+txt_PlayPlayer=*-$01
+        .TEXT 'PLAY PLAYER ENOOWT'
+.enc "none"
 ;-------------------------------------------------------------------------
-; s2939
+; InitializePlayerStatsCont
 ;-------------------------------------------------------------------------
-s2939
-        STA a3E
-        STA a3F
+InitializePlayerStatsCont
+        STA camelPositionMinor
+        STA camelPositionMajor
         JMP j2E84
 
 ;-------------------------------------------------------------------------
-; j2940
+; DisplayCamelMarker
 ;-------------------------------------------------------------------------
-j2940
+DisplayCamelMarker
         LDX #$06
-b2942   LDA f22E7,X
+b2942   LDA camelHealthArray,X
         CMP #$FF
         BEQ b295E
-        JSR s2962
+        JSR SetCamelMarkerScreenLoPtr
         NOP 
         STA currentYPosition
         LDA #<p0124
         STA currentCharacter
         LDA #>p0124
         STA colorForCurrentCharacter
-        STX a2C
+        STX tempXStorage
         JSR WriteCurrentCharacterToCurrentXYPos
-        LDX a2C
+        LDX tempXStorage
 b295E   DEX 
         BNE b2942
         RTS 
 
-;-------------------------------------------------------------------------
-; s2962
-;-------------------------------------------------------------------------
-s2962
-        LDA f22D7,X
+SetCamelMarkerScreenLoPtr
+        LDA camelMarkerScreenLoPtrArray,X
         STA currentXPosition
         LDA #$04
         RTS 
 
 ;-------------------------------------------------------------------------
-; j296A
+; ClearBottomRowFlagPlayerStats
 ;-------------------------------------------------------------------------
-j296A
+ClearBottomRowFlagPlayerStats
         LDA #$DD
-        STA a70
-        JMP j2896
+        STA bottomRowFlag
+        JMP InitializePlayerStats3
 
 ;-------------------------------------------------------------------------
-; s2971
+; ClearBottomRows
 ;-------------------------------------------------------------------------
-s2971
+ClearBottomRows
         LDA #$20
         LDX #$50
 b2975   STA SCREEN_RAM + $0397,X
@@ -3789,121 +3866,154 @@ b2975   STA SCREEN_RAM + $0397,X
         JMP j2AF0
 
 ;-------------------------------------------------------------------------
-; j297E
+; MoveToNextSector
 ;-------------------------------------------------------------------------
-j297E
-        INC a6F
-        LDA a6F
+MoveToNextSector
+        INC playerSector
+        LDA playerSector
         CMP #$20
         BNE b2988
-        DEC a6F
-b2988   JMP j2995
+        DEC playerSector
+b2988   JMP ResetCamelPosition
 
 ;-------------------------------------------------------------------------
-; j298B
+; HyperDriveEnded
 ;-------------------------------------------------------------------------
-j298B
+HyperDriveEnded
         LDX #$F6
         TXS 
         LDA #$00
-        STA a70
-        JMP j29A4
+        STA bottomRowFlag
+        JMP PrepareFOrNextSector
 
 ;-------------------------------------------------------------------------
-; j2995
+; ResetCamelPosition
 ;-------------------------------------------------------------------------
-j2995
-        JSR j2400
+ResetCamelPosition
+        JSR InitializeCamelStats
         LDA #$00
-        STA a3E
-        STA a3F
-        JSR j2940
-        JMP j29B4
+        STA camelPositionMinor
+        STA camelPositionMajor
+        JSR DisplayCamelMarker
+        JMP ResetCamelsRemaining
 
 ;-------------------------------------------------------------------------
-; j29A4
+; PrepareFOrNextSector
 ;-------------------------------------------------------------------------
-j29A4
+PrepareFOrNextSector
         LDA #$00
-        STA a3E
-        STA a3F
+        STA camelPositionMinor
+        STA camelPositionMajor
         NOP 
         NOP 
         NOP 
         LDA #$00
-        STA a70
-        JMP j1400
+        STA bottomRowFlag
+        JMP InitializeSPrites
 
 ;-------------------------------------------------------------------------
-; j29B4
+; ResetCamelsRemaining
 ;-------------------------------------------------------------------------
-j29B4
+ResetCamelsRemaining
         LDA #$06
-        STA a69
-        JMP j2516
+        STA camelsRemaining
+        JMP EngageHyperDrive
 
 ;-------------------------------------------------------------------------
-; s29BB
+; SetLevelDifficulty
 ;-------------------------------------------------------------------------
-s29BB
-        LDX a6F
-        LDA f2A50,X
-        STA a2B
-        LDA f2A70,X
-        STA a5D
-        STA a5E
-        LDA f2A90,X
-        STA a5F
-        STA a52
-        LDA f2AB0,X
-        STA a6A
-        LDA f2AD0,X
-        STA a5B
+SetLevelDifficulty
+        LDX playerSector
+        LDA camelSpeedsForLevels,X
+        STA camelSpeed
+        LDA camelSpitSpeedsForLevels,X
+        STA camelSpitSpeedCounter
+        STA camelSPitSpeed
+        LDA camelSpitRatesForLevels,X
+        STA camelSPitRateCounter
+        STA camelSpitRate
+        LDA rocketMoveRatesForLevels,X
+        STA rocketMoveRate
+        LDA spitBombRatesForLevels,X
+        STA camelSpitBombRateCounter
         STA a58
         LDX #$28
-b29DE   LDA f29EE,X
+b29DE   LDA playerStats,X
         STA SCREEN_RAM + $0397,X
         LDA #$07
         STA COLOR_RAM + $0397,X
         DEX 
         BNE b29DE
-f29EE   =*+$02
-        JMP j2A17
+        JMP Screen_UpdatePlayerStats
 
-        .BYTE $0A,$05,$14,$13,$20,$20,$20,$20
-        .BYTE $20,$20,$20,$20,$20,$20,$20,$20
-        .BYTE $13,$05,$03,$14,$0F,$12,$20,$30
-        .BYTE $30,$20,$20,$20,$20,$20,$20,$20
-        .BYTE $20,$20,$0A,$05,$14,$13,$20,$20
-;-------------------------------------------------------------------------
-; j2A17
-;-------------------------------------------------------------------------
-j2A17
-        .BYTE $A5,$6C,$18,$69,$30,$8D,$9D,$07
-        .BYTE $A5,$6D,$18,$69,$30,$8D,$BF,$07
-        .BYTE $A9,$04,$8D,$9D,$DB,$8D,$BF,$DB
-        .BYTE $A6,$6F,$EE,$B0,$07,$AD,$B0,$07
-        .BYTE $C9,$3A,$D0,$08,$A9,$30,$8D,$B0
-        .BYTE $07,$EE,$AF,$07,$CA,$D0,$EB,$A9
-        .BYTE $03,$8D,$B0,$DB,$8D,$AF,$DB,$60
-        .BYTE $EA
-f2A50   .BYTE $80,$80,$70,$60,$50,$80,$70,$60
+playerStats   =*-$01
+.enc "petscii"
+.TEXT 'JETS            SECTOR 00         JETS  '
+.enc "none"
+
+SCN_PL1LIVES                    = $079D
+SCN_PL2LIVES                    = $07BF
+COL_PL1LIVES    = $DB9D
+COL_PL2LIVES    = $DBBF
+COL_SECTOR      = $DBAF
+SCN_SECTOR                      = $07AF
+;-------------------------------------------------------------------------------
+; Screen_UpdatePlayerStats
+; Refresh lives and current sector on the screen
+; Called by: InitLevel_SetDifficulty (JMP)
+;-------------------------------------------------------------------------------
+Screen_UpdatePlayerStats
+        LDA player1Lives
+        CLC
+        ADC #CHAR_0
+        STA SCN_PL1LIVES
+        LDA player2Lives
+        CLC
+        ADC #CHAR_0
+        STA SCN_PL2LIVES
+        LDA #PURPLE
+        STA COL_PL1LIVES
+        STA COL_PL2LIVES
+        LDX playerSector
+DisplaySectorLoop
+        INC SCN_SECTOR+1
+        LDA SCN_SECTOR+1
+        CMP #CHAR_9+1
+        BNE SkipSectorHighDigit
+        LDA #CHAR_0
+        STA SCN_SECTOR+1
+        INC SCN_SECTOR
+SkipSectorHighDigit
+        DEX
+        BNE DisplaySectorLoop
+        LDA #CYAN
+        STA COL_SECTOR+1
+        STA COL_SECTOR
+        RTS
+        NOP
+
+camelSpeedsForLevels   
+        .BYTE $80,$80,$70,$60,$50,$80,$70,$60
         .BYTE $50,$70,$70,$70,$70,$60,$60,$60
         .BYTE $60,$60,$5A,$58,$58,$58,$58,$58
         .BYTE $58,$56,$54,$52,$50,$4E,$4C,$4A
-f2A70   .BYTE $10,$10,$0E,$0C,$0A,$10,$0E,$0C
+camelSpitSpeedsForLevels   
+        .BYTE $10,$10,$0E,$0C,$0A,$10,$0E,$0C
         .BYTE $0A,$0E,$0E,$0E,$0E,$0C,$0C,$0C
         .BYTE $0C,$0A,$0A,$0A,$0A,$09,$09,$09
         .BYTE $09,$08,$08,$08,$08,$08,$08,$08
-f2A90   .BYTE $03,$03,$03,$03,$03,$02,$02,$02
+camelSpitRatesForLevels   
+        .BYTE $03,$03,$03,$03,$03,$02,$02,$02
         .BYTE $02,$01,$01,$01,$01,$03,$03,$03
         .BYTE $03,$02,$02,$02,$02,$01,$01,$01
         .BYTE $01,$01,$01,$01,$01,$01,$01,$01
-f2AB0   .BYTE $40,$40,$3E,$38,$36,$34,$32,$30
+rocketMoveRatesForLevels   
+        .BYTE $40,$40,$3E,$38,$36,$34,$32,$30
         .BYTE $2E,$2D,$2C,$2B,$2A,$29,$28,$27
         .BYTE $26,$26,$25,$25,$24,$24,$23,$23
         .BYTE $22,$22,$21,$21,$20,$20,$20,$20
-f2AD0   .BYTE $07,$07,$07,$07,$07,$07,$07,$07
+spitBombRatesForLevels   
+        .BYTE $07,$07,$07,$07,$07,$07,$07,$07
         .BYTE $07,$06,$06,$06,$05,$04,$03,$03
         .BYTE $03,$03,$03,$03,$02,$02,$01,$03
         .BYTE $03,$02,$02,$01,$01,$01,$01,$01
@@ -3911,27 +4021,27 @@ f2AD0   .BYTE $07,$07,$07,$07,$07,$07,$07,$07
 ; j2AF0
 ;-------------------------------------------------------------------------
 j2AF0
-        LDA a6C
+        LDA player1Lives
         BEQ b2AFB
-        LDA a6D
+        LDA player2Lives
         BEQ b2AFB
-        JMP j2807
+        JMP PlayerLoseLife
 
-b2AFB   LDA a6C
-        CMP a6D
+b2AFB   LDA player1Lives
+        CMP player2Lives
         BNE b2B04
 b2B01   JMP j2DF8
 
-b2B04   LDA a6E
+b2B04   LDA playerTUrn
         CMP #$02
         BEQ b2B0E
-        DEC a6C
-        INC a6D
-b2B0E   DEC a6D
-        LDA a6C
-        CMP a6D
+        DEC player1Lives
+        INC player2Lives
+b2B0E   DEC player2Lives
+        LDA player1Lives
+        CMP player2Lives
         BEQ b2B01
-        JMP j2892
+        JMP PrepareToStart
 
 ;-------------------------------------------------------------------------
 ; DetectShipAndCamelCollisions
@@ -3939,7 +4049,7 @@ b2B0E   DEC a6D
 DetectShipAndCamelCollisions
         LDA @wa0095
         STA collisionDetectedBits
-        LDA a3A
+        LDA camelState
         BEQ b2B23
 b2B22   RTS 
 
@@ -3954,7 +4064,7 @@ b2B23   LDA @wa0095
         LDA collisionDetectedBits
         AND #$01
         BEQ b2B22
-        JMP j1DBE
+        JMP PlayerSHipExplosion
 
 ;-------------------------------------------------------------------------
 ; s2B3D
@@ -4004,7 +4114,7 @@ j2B84
         STA $D01C    ;Sprites Multi-Color Mode Select
         STA $D010    ;Sprites 0-7 MSB of X coordinate
         LDA #$40
-        STA a55
+        STA camelSPitState
         LDA #$07
         STA $D027    ;Sprite 0 Color
         STA $D028    ;Sprite 1 Color
@@ -4016,19 +4126,19 @@ j2B84
         STA $D005    ;Sprite 2 Y Pos
         STA $D007    ;Sprite 3 Y Pos
         LDA #$94
-        STA pD000    ;Sprite 0 X Pos
+        STA SpriteXPos    ;Sprite 0 X Pos
         STA $D004    ;Sprite 2 X Pos
         LDA #$C0
         STA $D002    ;Sprite 1 X Pos
         STA $D006    ;Sprite 3 X Pos
         LDA #<pE0DF
-        STA SCREEN_RAM + $03F8
+        STA Sprite0Ptr
         LDA #>pE0DF
-        STA SCREEN_RAM + $03F9
+        STA Sprite1Ptr
         LDA #<pE2E1
-        STA SCREEN_RAM + $03FA
+        STA Sprite2Ptr
         LDA #>pE2E1
-        STA SCREEN_RAM + $03FB
+        STA Sprite3Ptr
         LDA #$0F
         STA $D015    ;Sprite display Enable
 b2BE2   LDY #$10
@@ -4058,7 +4168,7 @@ b2C02   LDA f2C4F,X
         DEX 
         BNE b2C02
         LDA #$01
-        STA a07
+        STA scoreScreenLoPtr
         LDA #$00
         STA aFD
         JMP j2CD8
@@ -4133,8 +4243,8 @@ b2D0F   LDA aC5
 ; j2D18
 ;-------------------------------------------------------------------------
 j2D18
-        INC a07
-        LDA a07
+        INC scoreScreenLoPtr
+        LDA scoreScreenLoPtr
         CMP #$20
         BEQ b2D44
         NOP 
@@ -4146,7 +4256,7 @@ j2D22
         LDA #$30
         STA SCREEN_RAM + $031B
         STA SCREEN_RAM + $031C
-        LDX a07
+        LDX scoreScreenLoPtr
 b2D2C   INC SCREEN_RAM + $031C
         LDA SCREEN_RAM + $031C
         CMP #$3A
@@ -4159,7 +4269,7 @@ b2D3E   DEX
         JMP b2D0F
 
 b2D44   LDA #$01
-        STA a07
+        STA scoreScreenLoPtr
         JMP j2D22
 
 ;-------------------------------------------------------------------------
@@ -4190,8 +4300,8 @@ b2D64   LDA #<SCREEN_RAM + $0119
 ;-------------------------------------------------------------------------
 j2D76
         LDA #$05
-        STA a6C
-        STA a6D
+        STA player1Lives
+        STA player2Lives
         JSR s2DA1
         JMP j2D87
 
@@ -4200,8 +4310,8 @@ j2D76
 ; j2D87
 ;-------------------------------------------------------------------------
 j2D87
-        LDA a07
-        STA a6F
+        LDA scoreScreenLoPtr
+        STA playerSector
         LDA #$00
         STA aFD
         LDA SCREEN_RAM + $0367
@@ -4218,16 +4328,16 @@ b2D9A   JSR s2B3D
 ;-------------------------------------------------------------------------
 s2DA1
         LDA #<p0206
-        STA a6D
+        STA player2Lives
         LDA #>p0206
-        STA a6E
+        STA playerTUrn
         LDA SCREEN_RAM + $0306
         CMP #$31
         BEQ b2DB1
         RTS 
 
 b2DB1   LDA #$01
-        STA a6D
+        STA player2Lives
         RTS 
 
 ;-------------------------------------------------------------------------
@@ -4244,9 +4354,9 @@ b2DB8   LDA #$00
         JMP j2D76
 
 ;-------------------------------------------------------------------------
-; CheckForCollisions
+; UpdateCollisionRegister
 ;-------------------------------------------------------------------------
-CheckForCollisions
+UpdateCollisionRegister
         DEC CollisionDetectionRate
         BEQ b2DCD
         RTS 
@@ -4263,7 +4373,7 @@ b2DCD   LDA #$20
 s2DD7
         LDY #$01
 b2DD9   LDA (colorForCurrentCharacter),Y
-        CMP f1077,Y
+        CMP gameHiScore,Y
         BEQ b2DE4
         BPL b2DEA
         BNE b2DE9
@@ -4274,7 +4384,7 @@ b2DE9   RTS
 
 b2DEA   LDY #$01
 b2DEC   LDA (colorForCurrentCharacter),Y
-        STA f1077,Y
+        STA gameHiScore,Y
         STA SCREEN_RAM + $0012,Y
         JMP j2E0D
 
@@ -4312,15 +4422,15 @@ CheckSectorDefences
         BEQ b2E1B
         RTS 
 
-b2E1B   LDA a6E
+b2E1B   LDA playerTUrn
         CMP #$02
         BEQ b2E28
         LDA #$01
-        STA a6C
+        STA player1Lives
         JMP j2E2C
 
 b2E28   LDA #$01
-        STA a6D
+        STA player2Lives
 ;-------------------------------------------------------------------------
 ; j2E2C
 ;-------------------------------------------------------------------------
@@ -4362,7 +4472,7 @@ j2E79
         LDA #$00
         STA $D020    ;Border Color
         STA $D021    ;Background Color 0
-        JMP j1DBE
+        JMP PlayerSHipExplosion
 
 ;-------------------------------------------------------------------------
 ; j2E84
@@ -4370,15 +4480,15 @@ j2E79
 j2E84
         LDA #$8A
         STA $D40F    ;Voice 3: Frequency Control - High-Byte
-        JMP j296A
+        JMP ClearBottomRowFlagPlayerStats
 
 ;-------------------------------------------------------------------------
-; j2E8C
+; HyperDriveResetShipY
 ;-------------------------------------------------------------------------
-j2E8C
+HyperDriveResetShipY
         LDA #$70
         STA shipYPosition
-        JMP j26AE
+        JMP HyperDriveFinishing
 
 ;-------------------------------------------------------------------------
 ; s2E93

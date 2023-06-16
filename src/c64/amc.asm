@@ -260,18 +260,15 @@ b1056   STA (currentXPosition),Y
         .cdef "AZ", $01
         .cdef "09", $30
         .cdef "@@", $00
-.enc "none"
 
 gameHiScore = txtScreenHeader + $13
 txtScreenHeader   =*-$01
-.enc "petscii"
                         .TEXT 'SCORE PL. 1 >  HI:  LLAMA   > SCORE PL.2'
                         .TEXT '            >               >           '
                         .TEXT '0000000     >   $ :  100    >    0000000'
                         .TEXT '@@@@@@@@@@@@<@@@@@@@@@@@@@@@<@@@@@@@@@@@'
                         .TEXT '   $   $   $   $   $   $                '
                         .TEXT '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
-.enc "none"
 ;-------------------------------------------------------------------------
 ; WriteScreenHeaderText
 ;-------------------------------------------------------------------------
@@ -1394,7 +1391,7 @@ ChangeBulletSound
 ;-------------------------------------------------------------------------
 BulletHitSound
         LDA #$06
-        JSR s2E93
+        JSR ClearBulletCollisionRegister
         LDA #$00
         STA $D412    ;Voice 3: Control Register
         LDA #$81
@@ -2935,9 +2932,7 @@ b254C   LDA screenLineLoPtr
         JMP InitializeLevelAfterHyperDrive
 
 hyperDriveEngagingText   =*-$01
-.enc "petscii"
 .TEXT 'TRANS SECTOR HYPERDRIVE ENGAGING'
-.enc "none"
 ;-------------------------------------------------------------------------
 ; HyperDriveResetShipSrite
 ;-------------------------------------------------------------------------
@@ -3538,10 +3533,8 @@ b291C   STA SCREEN_RAM + $009F,X
         LDX #$06
         JMP DisplayCamelMarker
 
-.enc "petscii"
 txt_PlayPlayer=*-$01
         .TEXT 'PLAY PLAYER ENOOWT'
-.enc "none"
 ;-------------------------------------------------------------------------
 ; InitializePlayerStatsCont
 ;-------------------------------------------------------------------------
@@ -3595,7 +3588,7 @@ ClearBottomRows
 b2975   STA SCREEN_RAM + $0397,X
         DEX 
         BNE b2975
-        JMP j2AF0
+        JMP CheckLives
 
 ;-------------------------------------------------------------------------
 ; MoveToNextSector
@@ -3679,9 +3672,7 @@ b29DE   LDA playerStats,X
         JMP Screen_UpdatePlayerStats
 
 playerStats   =*-$01
-.enc "petscii"
 .TEXT 'JETS            SECTOR 00         JETS  '
-.enc "none"
 
 SCN_PL1LIVES                    = $079D
 SCN_PL2LIVES                    = $07BF
@@ -3750,9 +3741,9 @@ spitBombRatesForLevels
         .BYTE $03,$03,$03,$03,$02,$02,$01,$03
         .BYTE $03,$02,$02,$01,$01,$01,$01,$01
 ;-------------------------------------------------------------------------
-; j2AF0
+; CheckLives
 ;-------------------------------------------------------------------------
-j2AF0
+CheckLives
         LDA player1Lives
         BEQ b2AFB
         LDA player2Lives
@@ -3762,7 +3753,7 @@ j2AF0
 b2AFB   LDA player1Lives
         CMP player2Lives
         BNE b2B04
-b2B01   JMP j2DF8
+b2B01   JMP CHeckPlayerScores
 
 b2B04   LDA playerTUrn
         CMP #$02
@@ -3799,9 +3790,9 @@ b2B23   LDA @wa0095
         JMP PlayerSHipExplosion
 
 ;-------------------------------------------------------------------------
-; s2B3D
+; ClearScreen
 ;-------------------------------------------------------------------------
-s2B3D
+ClearScreen
         LDX #$00
 b2B3F   LDA #$20
         STA SCREEN_RAM + $00F0,X
@@ -3821,22 +3812,22 @@ b2B3F   LDA #$20
 ; DisplayMenu
 ;-------------------------------------------------------------------------
 DisplayMenu
-        JSR s2B3D
+        JSR ClearScreen
         LDX #$14
 b2B64   LDA f2B6F,X
         STA SCREEN_RAM + $0149,X
         DEX 
         BNE b2B64
 f2B6F   =*+$02
-        JMP j2B84
+        JMP DisplayTitleScreen
 
         .BYTE $0A,$05,$06,$06,$20,$0D,$09,$0E
         .BYTE $14,$05,$12,$20,$10,$12,$05,$13
         .BYTE $05,$0E,$14,$13
 ;-------------------------------------------------------------------------
-; j2B84
+; DisplayTitleScreen
 ;-------------------------------------------------------------------------
-j2B84
+DisplayTitleScreen
         LDA #$00
         STA $D015    ;Sprite display Enable
         LDA #$0F
@@ -3887,15 +3878,15 @@ b2BE6   DEX
         CMP $D005    ;Sprite 2 Y Pos
         BNE b2BE2
         LDX #$20
-b2C02   LDA f2C4F,X
+b2C02   LDA amcText-1,X
         STA SCREEN_RAM + $025C,X
-        LDA f2C8F,X
+        LDA gridrunnerText-1,X
         STA SCREEN_RAM + $02AC,X
-        LDA f2C2F,X
+        LDA playersText-1,X
         STA SCREEN_RAM + $02FC,X
-        LDA f2C6F,X
+        LDA camelCollisionsText-1,X
         STA SCREEN_RAM + $034C,X
-        LDA f2CAF,X
+        LDA pressFireText-1,X
         STA SCREEN_RAM + $039C,X
         DEX 
         BNE b2C02
@@ -3903,63 +3894,54 @@ b2C02   LDA f2C4F,X
         STA scoreScreenLoPtr
         LDA #$00
         STA camelCollision
-        JMP j2CD8
+        JMP CheckForOptionsSelection
 
-        .BYTE $EA
-f2C2F   .BYTE $EA,$10,$0C,$01,$19,$05,$12,$13
-        .BYTE $3A,$20,$31,$20,$20,$20,$13,$14
-        .BYTE $01,$12,$14,$20,$01,$14,$20,$13
-        .BYTE $05,$03,$14,$0F,$12,$3A,$20,$30
-f2C4F   .BYTE $31,$20,$20,$01,$14,$14,$01,$03
-        .BYTE $0B,$20,$0F,$06,$20,$14,$08,$05
-        .BYTE $20,$0D,$15,$14,$01,$0E,$14,$20
-        .BYTE $03,$01,$0D,$05,$0C,$13,$20,$20
-f2C6F   .BYTE $20,$20,$03,$0F,$0C,$0C,$09,$13
-        .BYTE $09,$0F,$0E,$13,$20,$17,$09,$14
-        .BYTE $08,$20,$03,$01,$0D,$05,$0C,$13
-        .BYTE $3A,$20,$20,$20,$0E,$0F,$20,$20
-f2C8F   .BYTE $20,$20,$06,$12,$0F,$0D,$20,$14
-        .BYTE $08,$05,$20,$03,$12,$05,$01,$14
-        .BYTE $0F,$12,$20,$0F,$06,$20,$07,$12
-        .BYTE $09,$04,$12,$15,$0E,$0E,$05,$12
-f2CAF   .BYTE $20,$20,$20,$10,$12,$05,$13,$13
-        .BYTE $20,$06,$09,$12,$05,$20,$14,$0F
-        .BYTE $20,$13,$14,$01,$12,$14,$20,$14
-        .BYTE $08,$05,$20,$07,$01,$0D,$05,$20
+        .BYTE $EA,$EA
+
+playersText
+        .TEXT 'PLAYERS: 1   START AT SECTOR: 01'
+amcText   
+        .TEXT '  ATTACK OF THE MUTANT CAMELS   '
+camelCollisionsText   
+        .TEXT ' COLLISIONS WITH CAMELS:   NO   '
+gridrunnerText   
+        .TEXT ' FROM THE CREATOR OF GRIDRUNNER '
+pressFireText   
+        .TEXT '  PRESS FIRE TO START THE GAME  '
+
         .BYTE $20,$20,$20,$20,$20,$20,$20,$20
-        .BYTE $20
 ;-------------------------------------------------------------------------
-; j2CD8
+; CheckForOptionsSelection
 ;-------------------------------------------------------------------------
-j2CD8
+CheckForOptionsSelection
         LDA lastKeyPressed
         CMP #$04
         BNE b2CE1
-        JMP j2D00
+        JMP SelectPlayers
 
 b2CE1   CMP #$05
         BNE b2CE8
-        JMP j2D18
+        JMP SelectSector
 
 b2CE8   CMP #$06
         BNE b2CEF
-        JMP j2D4B
+        JMP SelectCollisionsOnOff
 
 b2CEF   LDA joystickInput
         CMP #$EF
         BNE b2CF9
-        JMP j2DB6
+        JMP RestSpriteRegisters
 
 b2CF9   NOP 
         NOP 
         NOP 
-        JMP j2CD8
+        JMP CheckForOptionsSelection
 
         NOP 
 ;-------------------------------------------------------------------------
-; j2D00
+; SelectPlayers
 ;-------------------------------------------------------------------------
-j2D00
+SelectPlayers
         INC SCREEN_RAM + $0306
         LDA SCREEN_RAM + $0306
         CMP #$33
@@ -3972,19 +3954,17 @@ b2D0F   LDA lastKeyPressed
         JMP b2CEF
 
 ;-------------------------------------------------------------------------
-; j2D18
+; SelectSector
 ;-------------------------------------------------------------------------
-j2D18
+SelectSector
         INC scoreScreenLoPtr
         LDA scoreScreenLoPtr
         CMP #$20
         BEQ b2D44
         NOP 
         NOP 
-;-------------------------------------------------------------------------
-; j2D22
-;-------------------------------------------------------------------------
-j2D22
+
+SelectSectorLoop
         LDA #$30
         STA SCREEN_RAM + $031B
         STA SCREEN_RAM + $031C
@@ -4002,12 +3982,12 @@ b2D3E   DEX
 
 b2D44   LDA #$01
         STA scoreScreenLoPtr
-        JMP j2D22
+        JMP SelectSectorLoop
 
 ;-------------------------------------------------------------------------
-; j2D4B
+; SelectCollisionsOnOff
 ;-------------------------------------------------------------------------
-j2D4B
+SelectCollisionsOnOff
         LDA SCREEN_RAM + $0367
         CMP #$20
         BEQ b2D64
@@ -4028,20 +4008,20 @@ b2D64   LDA #<SCREEN_RAM + $0119
         JMP b2D0F
 
 ;-------------------------------------------------------------------------
-; j2D76
+; ResetPlayerLives
 ;-------------------------------------------------------------------------
-j2D76
+ResetPlayerLives
         LDA #$05
         STA player1Lives
         STA player2Lives
-        JSR s2DA1
-        JMP j2D87
+        JSR CheckNumberOfPlayers
+        JMP CheckSectorAndCollisions
 
         .BYTE $04,$A9,$00,$85,$6D
 ;-------------------------------------------------------------------------
-; j2D87
+; CheckSectorAndCollisions
 ;-------------------------------------------------------------------------
-j2D87
+CheckSectorAndCollisions
         LDA scoreScreenLoPtr
         STA playerSector
         LDA #$00
@@ -4051,14 +4031,14 @@ j2D87
         BEQ b2D9A
         LDA #$FF
         STA camelCollision
-b2D9A   JSR s2B3D
+b2D9A   JSR ClearScreen
         JSR InitializeScreenPointerArray
         RTS 
 
 ;-------------------------------------------------------------------------
-; s2DA1
+; CheckNumberOfPlayers
 ;-------------------------------------------------------------------------
-s2DA1
+CheckNumberOfPlayers
         LDA #6
         STA player2Lives
         LDA #2
@@ -4073,9 +4053,9 @@ b2DB1   LDA #$01
         RTS 
 
 ;-------------------------------------------------------------------------
-; j2DB6
+; RestSpriteRegisters
 ;-------------------------------------------------------------------------
-j2DB6
+RestSpriteRegisters
         LDX #$10
 b2DB8   LDA #$00
         STA SpriteXPos-1,X
@@ -4083,7 +4063,7 @@ b2DB8   LDA #$00
         BNE b2DB8
         LDA #$00
         STA $D015    ;Sprite display Enable
-        JMP j2D76
+        JMP ResetPlayerLives
 
 ;-------------------------------------------------------------------------
 ; UpdateCollisionRegister
@@ -4100,9 +4080,9 @@ b2DCD   LDA #$20
         RTS 
 
 ;-------------------------------------------------------------------------
-; s2DD7
+; CheckHighScore
 ;-------------------------------------------------------------------------
-s2DD7
+CheckHighScore
         LDY #$01
 b2DD9   LDA (colorForCurrentCharacter),Y
         CMP gameHiScore,Y
@@ -4118,28 +4098,28 @@ b2DEA   LDY #$01
 b2DEC   LDA (colorForCurrentCharacter),Y
         STA gameHiScore,Y
         STA SCREEN_RAM + $0012,Y
-        JMP j2E0D
+        JMP CheckHiScoreCont
 
         RTS 
 
 ;-------------------------------------------------------------------------
-; j2DF8
+; CHeckPlayerScores
 ;-------------------------------------------------------------------------
-j2DF8
+CHeckPlayerScores
         LDA #>SCREEN_RAM + $004F
         STA tempVar
         LDA #<SCREEN_RAM + $004F
         STA colorForCurrentCharacter
-        JSR s2DD7
+        JSR CheckHighScore
         LDA #$70
         STA colorForCurrentCharacter
-        JSR s2DD7
+        JSR CheckHighScore
         JMP RestartGame
 
 ;-------------------------------------------------------------------------
-; j2E0D
+; CheckHiScoreCont
 ;-------------------------------------------------------------------------
-j2E0D
+CheckHiScoreCont
         INY 
         CPY #$08
         BNE b2DEC
@@ -4159,16 +4139,13 @@ b2E1B   LDA playerTUrn
         BEQ b2E28
         LDA #$01
         STA player1Lives
-        JMP j2E2C
+        JMP SectoDefencTextLoop
 
 b2E28   LDA #$01
         STA player2Lives
-;-------------------------------------------------------------------------
-; j2E2C
-;-------------------------------------------------------------------------
-j2E2C
+SectoDefencTextLoop
         LDX #$1A
-b2E2E   LDA f2E5E,X
+b2E2E   LDA sectorDefencesText,X
         STA SCREEN_RAM + $03C5,X
         LDA #$03
         STA COLOR_RAM + $03C5,X
@@ -4190,17 +4167,14 @@ b2E40   STX $D020    ;Border Color
         NOP 
         NOP 
         NOP 
-f2E5E   =*+$02
-        JMP j2E79
+        JMP ResetScreenCOlors
 
-        .BYTE $13,$05,$03,$14,$0F,$12,$20,$04
-        .BYTE $05,$06,$05,$0E,$03,$05,$13,$20
-        .BYTE $10,$05,$0E,$05,$14,$12,$01,$14
-        .BYTE $05,$04
+sectorDefencesText   =*-$01
+        .TEXT 'SECTOR DEFENCES PENETRATED'
 ;-------------------------------------------------------------------------
-; j2E79
+; ResetScreenCOlors
 ;-------------------------------------------------------------------------
-j2E79
+ResetScreenCOlors
         LDA #$00
         STA $D020    ;Border Color
         STA $D021    ;Background Color 0
@@ -4223,15 +4197,16 @@ HyperDriveResetShipY
         JMP HyperDriveFinishing
 
 ;-------------------------------------------------------------------------
-; s2E93
+; ClearBulletCollisionRegister
 ;-------------------------------------------------------------------------
-s2E93
+ClearBulletCollisionRegister
         STA $D40F    ;Voice 3: Frequency Control - High-Byte
         LDA #$00
         STA collisionDetectedBits
 b2E9A   RTS 
 
-b2E9B   LDA lastKeyPressed
+PauseGame   
+        LDA lastKeyPressed
         CMP #$04
         BNE b2E9A
         LDA #$01
@@ -4257,7 +4232,7 @@ b2EBD   LDA lastKeyPressed
 CheckPausePressed
         LDA a028D
         CMP #$02
-        BEQ b2E9B
+        BEQ PauseGame
         RTS 
 
         .FILL 308, $EA

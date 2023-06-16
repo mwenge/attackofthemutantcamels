@@ -18,182 +18,160 @@
 ; A lot of this was adapted from:
 ; https://github.com/C64-Mark/Attack-of-the-Mutant-Camels
 ;
-; **** ZP FIELDS **** 
-;
-f1A = $1A
-fD0 = $D0
-;
 ; **** ZP ABSOLUTE ADRESSES **** 
 ;
-currentXPosition = $02
-currentYPosition = $03
-currentCharacter = $04
-colorForCurrentCharacter = $05
-a06 = $06
-scoreScreenLoPtr = $07
-screenLineLoPtr = $08
-screenLineHiPtr = $09
-landscapePosition = $10
-shipDirection = $11
-shipMoveCounter = $13
-shipXOffset = $14
-shipSpeed = $15
-shipSpriteFrame = $16
-shipSpeedCounter = $17
-shipXPosition = $18
-shipYPosition = $19
-lastJoystickInput = $1A
-a1B = $1B
-shipState = $1C
-gameTimer = $1D
-shipOffsetChangeCounter = $1E
-shipTurnSoundFlag = $1F
-camelMarkerX = $20
-unknownPurpose1 = $21
-hyperdriveShipMoveCounter = $22
-currentEnemyID = $23
+currentXPosition              = $02
+currentYPosition              = $03
+currentCharacter              = $04
+colorForCurrentCharacter      = $05
+tempVar                       = $06
+scoreScreenLoPtr              = $07
+screenLineLoPtr               = $08
+screenLineHiPtr               = $09
+landscapePosition             = $10
+shipDirection                 = $11
+shipMoveCounter               = $13
+shipXOffset                   = $14
+shipSpeed                     = $15
+shipSpriteFrame               = $16
+shipSpeedCounter              = $17
+shipXPosition                 = $18
+shipYPosition                 = $19
+lastJoystickInput             = $1A
+inputJoystickLR               = $1B
+shipState                     = $1C
+gameTimer                     = $1D
+shipOffsetChangeCounter       = $1E
+shipTurnSoundFlag             = $1F
+camelMarkerX                  = $20
+unknownPurpose1               = $21
+hyperdriveShipMoveCounter     = $22
+currentEnemyID                = $23
 hyperdriveLanscapeMoveCOunter = $24
-hyperdriveLanscapeMoveRate = $25
-camelMarkerUpdateCounter = $26
-neverUsed2 = $27
-camelSpeedCounter = $28
-camelSpeed = $2B
-tempXStorage = $2C
-camelAnimationFrame = $2D
-enemyMoveCounterMinor = $2E
-enemyMoveCounterMajor = $2F
-enableBullets = $30
-bulletDirection = $31
-bulletX = $32
-bulletY = $33
-starTwinkleCounter = $34
-bulletSoundFrequency = $36
-camelHeadFrame = $38
-camelState = $3A
-landPositionMinor = $3C
-landPositionMajor = $3D
-camelPositionMinor = $3E
-camelPositionMajor = $3F
-camelMarkerOffset = $40
-shipX = $41
-camelX = $42
-camelLandPositionCounter = $43
-a44 = $44
-camelFrameRate = $45
-camelKilledID = $46
-currentStar = $47
-a48 = $48
-camelSpitSoundFrequency = $51
-camelSpitRate = $52
-a53 = $53
-a54 = $54
-camelSPitState = $55
-camelSpitX = $56
-camelSpitFrame = $57
-a58 = $58
-camelSpitDirection = $59
-a5A = $5A
-camelSpitBombRateCounter = $5B
-a5CRedundant = $5C
-camelSpitSpeedCounter = $5D
-camelSPitSpeed = $5E
-camelSPitRateCounter = $5F
-camelSpitShipDifference = $60
-playerHealth = $61
-damageFlashFlag = $62
-storeColourCounter = $63
-a64 = $64
-scoreScreenHi = $65
-scoreColorLo = $66
-storeColorHi = $67
-scoreBonus = $68
-camelsRemaining = $69
-rocketMoveRate = $6A
-a6B = $6B
-player1Lives = $6C
-player2Lives = $6D
-playerTUrn = $6E
-playerSector = $6F
-bottomRowFlag = $70
-collisionDetectedBits = $95
-aC5 = $C5
-aFD = $FD
-CollisionDetectionRate = $FE
-aFFRedundant = $FF
-;
-; **** ZP POINTERS **** 
-;
-p60 = $60
-p64 = $64
+hyperdriveLanscapeMoveRate    = $25
+camelMarkerUpdateCounter      = $26
+neverUsed2                    = $27
+camelSpeedCounter             = $28
+camelSpeed                    = $2B
+tempXStorage                  = $2C
+camelAnimationFrame           = $2D
+enemyMoveCounterMinor         = $2E
+enemyMoveCounterMajor         = $2F
+enableBullets                 = $30
+bulletDirection               = $31
+bulletX                       = $32
+bulletY                       = $33
+starTwinkleCounter            = $34
+bulletSoundFrequency          = $36
+camelHeadFrame                = $38
+camelState                    = $3A
+landPositionMinor             = $3C
+landPositionMajor             = $3D
+camelPositionMinor            = $3E
+camelPositionMajor            = $3F
+camelMarkerOffset             = $40
+shipX                         = $41
+camelX                        = $42
+camelLandPositionCounter      = $43
+explosionY1                   = $44
+camelFrameRate                = $45
+camelKilledID                 = $46
+currentStar                   = $47
+explosionX1                   = $40
+explosionX2                   = $41
+explosionX3                   = $42
+explosionX4                   = $43
+explosionY2                   = $45
+explosionY3                   = $46
+explosionY4                   = $47
+starTwinkleRate               = $48
+camelSpitSoundFrequency       = $51
+camelSpitRate                 = $52
+a53Redundant                  = $53
+a54Redundant                  = $54
+camelSPitState                = $55
+camelSpitX                    = $56
+camelSpitFrame                = $57
+camelSpitBombRate             = $58
+camelSpitDirection            = $59
+a5ARedundant                  = $5A
+camelSpitBombRateCounter      = $5B
+a5CRedundant                  = $5C
+camelSpitSpeedCounter         = $5D
+camelSPitSpeed                = $5E
+camelSPitRateCounter          = $5F
+camelSpitShipDifference       = $60
+playerHealth                  = $61
+damageFlashFlag               = $62
+storeColourCounter            = $63
+storeScreenLo                 = $64
+scoreScreenHi                 = $65
+scoreColorLo                  = $66
+storeColorHi                  = $67
+scoreBonus                    = $68
+camelsRemaining               = $69
+rocketMoveRate                = $6A
+a6BRedundant                  = $6B
+player1Lives                  = $6C
+player2Lives                  = $6D
+playerTUrn                    = $6E
+playerSector                  = $6F
+bottomRowFlag                 = $70
+collisionDetectedBits         = $95
+lastKeyPressed                = $C5
+camelCollision                = $FD
+CollisionDetectionRate        = $FE
+aFFRedundant                  = $FF
 ;
 ; **** FIELDS **** 
 ;
-f003F = $003F
-f0043 = $0043
-screenLinesLoPtrArray = $0340
-screenLinesHiPtrArray = $0360
-SCREEN_RAM = $0400
-fCFFE = $CFFE
-fCFFF = $CFFF
-COLOR_RAM = $D800
+screenLinesLoPtrArray         = $0340
+screenLinesHiPtrArray         = $0360
+SCREEN_RAM                    = $0400
+COLOR_RAM                     = $D800
 
-JOYSTICK_FIRE = $10
-JOYSTICK_RIGHT = $08
-JOYSTICK_LEFT = $04
-JOYSTICK_DOWN = $02
-JOYSTICK_UP = $01
+JOYSTICK_FIRE                 = $10
+JOYSTICK_RIGHT                = $08
+JOYSTICK_LEFT                 = $04
+JOYSTICK_DOWN                 = $02
+JOYSTICK_UP                   = $01
 ;
 ; **** ABSOLUTE ADRESSES **** 
 ;
-a0038 = $0038
-a0042 = $0042
-a0046 = $0046
-a0095 = $0095
-a00A2 = $00A2
-a028D = $028D
-IRQ_LO = $0314
-IRQ_HI = $0315
-camelHeadFrameF1 = $38F1
-camelHeadFrameF2 = $38F2
-camelHeadFrameF3 = $38F3
-camelHeadFrameF4 = $38F4
-joystickInput = $DC11
+a0038                         = $0038
+a0042                         = $0042
+f0043                         = $0043
+a0046                         = $0046
+a0095                         = $0095
+a00A2                         = $00A2
+a028D                         = $028D
+
+IRQ_LO                        = $0314
+IRQ_HI                        = $0315
+camelHeadFrameF1              = $38F1
+camelHeadFrameF2              = $38F2
+camelHeadFrameF3              = $38F3
+camelHeadFrameF4              = $38F4
+joystickInput                 = $DC11
+
 ;
 ; **** POINTERS **** 
 ;
-p0100 = $0100
-p0104 = $0104
-p0120 = $0120
-p0124 = $0124
-p012E = $012E
-p0206 = $0206
-p0300 = $0300
-p70A0 = $70A0
-pC1C0 = $C1C0
-pC6C2 = $C6C2
-pCA20 = $CA20
-SpriteXPos = $D000
-pE0DF = $E0DF
-pE2E1 = $E2E1
+SpriteXPos                    = $D000
 
-pD018 = $D018
+Sprite0Ptr                    = $07F8
+Sprite1Ptr                    = $07F9
+Sprite2Ptr                    = $07FA
+Sprite3Ptr                    = $07FB
+Sprite4Ptr                    = $07FC
+Sprite5Ptr                    = $07FD
+Sprite6Ptr                    = $07FE
+Sprite7Ptr                    = $07FF
 
-Sprite0Ptr                              = $07F8
-Sprite1Ptr                              = $07F9
-Sprite2Ptr                              = $07FA
-Sprite3Ptr                              = $07FB
-Sprite4Ptr                              = $07FC
-Sprite5Ptr                              = $07FD
-Sprite6Ptr                              = $07FE
-Sprite7Ptr                              = $07FF
 ;
 ; **** EXTERNAL JUMPS **** 
 ;
 KERNEL_INTERRUPT = $EA31
-;
-; **** PREDEFINED LABELS **** 
-;
-ROM_CHKOUT = $FFC9
 
 .include "constants.asm"
 
@@ -211,16 +189,16 @@ ROM_CHKOUT = $FFC9
 ; StartGame
 ;-------------------------------------------------------------------------
 StartGame
-        LDA #>pD018
+        LDA #$D0
         STA scoreScreenLoPtr
         LDA #0
-        STA a06
+        STA tempVar
         STA $D020    ;Border Color
         STA $D021    ;Background Color 0
 
-        LDA #<pD018
+        LDA #$18
         TAY 
-        STA (a06),Y
+        STA (tempVar),Y
         JSR InitializeScreenPointerArray
 ;-------------------------------------------------------------------------
 ; RestartGame
@@ -485,13 +463,13 @@ b1262   RTS
 ; CheckJoystickLeftOrRight
 ;-------------------------------------------------------------------------
 CheckJoystickLeftOrRight
-        STA a1B
+        STA inputJoystickLR
         LDA shipDirection
         BEQ b126E
         LDA #JOYSTICK_RIGHT
-        STA a1B
+        STA inputJoystickLR
 b126E   LDA lastJoystickInput
-        AND a1B
+        AND inputJoystickLR
         BNE b1291
         LDA lastJoystickInput
         AND #JOYSTICK_RIGHT | JOYSTICK_LEFT
@@ -1044,9 +1022,9 @@ b16AE   JSR s1982
         STA hyperdriveLanscapeMoveCOunter
         LDA #$A0
         STA hyperdriveLanscapeMoveRate
-b16C2   LDA #<p0120
+b16C2   LDA #CHAR_SPACE
         STA currentCharacter
-        LDA #>p0120
+        LDA #WHITE
         STA colorForCurrentCharacter
         JSR WriteCurrentCharacterToCurrentXYPos
         DEC hyperdriveLanscapeMoveRate
@@ -1140,9 +1118,10 @@ b1735   =*+$01
 j173E
         RTS 
 
+; Redundant/Orphaned Code
         .BYTE $CF,$22,$C9 ;DCP $C922
         CPX #$F0
-        ORA (p60,X)
+        ORA (camelSpitShipDifference,X)
         LDA $D01F    ;Sprite to Background Collision Detect
         LDA #$FF
         STA currentEnemyID
@@ -1156,7 +1135,8 @@ CamelCheckMarkerUpdate
         BEQ CamelUpdateMarker
         RTS 
 
-        STA f1A,X
+; Redundant/Orphaned Code
+        STA $1A,X
         LDA shipState
         BNE b175E
         JMP j16A4
@@ -1168,7 +1148,11 @@ b175E   RTS
         BEQ MoveCamelBackLegs
         RTS 
 
-MoveCamelBackLegs   JSR FlashPlayerScore
+;-------------------------------------------------------------------------
+; MoveCamelBackLegs   
+;-------------------------------------------------------------------------
+MoveCamelBackLegs   
+        JSR FlashPlayerScore
         NOP 
         INC camelAnimationFrame
         LDA camelAnimationFrame
@@ -1753,8 +1737,8 @@ CHeckCurrentCamelHealth
         LDX #$10
 b1A97   LDY #$10
 b1A99   LDA #$20
-        STA a44
-b1A9D   DEC a44
+        STA explosionY1
+b1A9D   DEC explosionY1
         BNE b1A9D
         DEY 
         BNE b1A99
@@ -1857,12 +1841,12 @@ TwinkleStars
 ;-------------------------------------------------------------------------
 SelectStarToTwinkle
         JSR DecreaseTwinkleCounter
-        DEC a48
+        DEC starTwinkleRate
         BEQ b1B32
         JMP MoveBullet
 
 b1B32   LDA #$26
-        STA a48
+        STA starTwinkleRate
         JMP TwinkleStars
 
 ;-------------------------------------------------------------------------
@@ -2087,11 +2071,11 @@ TestForSPitBomb
 
 b1C48   LDA #$FF
         STA camelSPitState
-        LDA a58
+        LDA camelSpitBombRate
         STA camelSpitBombRateCounter
         LDA #$00
-        STA a54
-        STA a53
+        STA a54Redundant
+        STA a53Redundant
         RTS 
 
 ;*******************************************************************************
@@ -2111,10 +2095,10 @@ b1C61   DEC camelSpitX
         INC $D005    ;Sprite 2 Y Pos
         INC $D005    ;Sprite 2 Y Pos
 b1C70   DEC $D005    ;Sprite 2 Y Pos
-        INC a54
-        LDA a54
+        INC a54Redundant
+        LDA a54Redundant
         AND #$03
-        STA a54
+        STA a54Redundant
         TAX 
         LDA spitBombSpriteFrames,X
         STA Sprite2Ptr
@@ -2136,7 +2120,7 @@ b1C96   LDA $D010    ;Sprites 0-7 MSB of X coordinate
 ;-------------------------------------------------------------------------
 j1C9E
         JSR SpitHomeOnShip
-        DEC a53
+        DEC a53Redundant
         BEQ b1CA6
         RTS 
 
@@ -2156,10 +2140,10 @@ EnableSpitSPrite
 ;*******************************************************************************
 ; Redundant/Orphaned Code
 ;*******************************************************************************
-        DEC a5A
+        DEC a5ARedundant
         BEQ b1D1E
-        LDA a5A
-        STA a5A
+        LDA a5ARedundant
+        STA a5ARedundant
         RTS 
 
 ;-------------------------------------------------------------------------
@@ -2233,7 +2217,7 @@ CamelSpitSound
 ; Redundant/Orphaned Code
 ;*******************************************************************************
 b1D1E   LDA #$03
-        STA a5A
+        STA a5ARedundant
         JMP j1C57
 
 ;-------------------------------------------------------------------------
@@ -2380,14 +2364,6 @@ b1DFE   DEX
         BNE b1DE8
         JMP NextLine
 
-explosionX1                             = $40
-explosionX2                             = $41
-explosionX3                             = $42
-explosionX4                             = $43
-explosionY1                             = $44
-explosionY2                             = $45
-explosionY3                             = $46
-explosionY4                             = $47
 ;-------------------------------------------------------------------------
 ; NextLine
 ;-------------------------------------------------------------------------
@@ -2486,7 +2462,7 @@ b1EA5   ASL
         DEX 
         BNE b1EA5
         ROR 
-        STA a06
+        STA tempVar
         LDX currentCharacter
         LDA @wexplosionX1-1,X
         CLC 
@@ -2495,11 +2471,11 @@ b1EA5   ASL
         STA SpriteXPos-2,X
         BCC b1EC5
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
-        ORA a06
+        ORA tempVar
         STA $D010    ;Sprites 0-7 MSB of X coordinate
         JMP j1ECF
 
-b1EC5   LDA a06
+b1EC5   LDA tempVar
         EOR #$FF
         AND $D010    ;Sprites 0-7 MSB of X coordinate
         STA $D010    ;Sprites 0-7 MSB of X coordinate
@@ -2547,7 +2523,8 @@ DecreaseExplosionCounter
 
 b1EFB   JMP DisableExplosionSprites
 
-        ORA fD0,X
+; Redundant Code
+        ORA $D0,X
 ;-------------------------------------------------------------------------
 ; InitializeGameVariables
 ;-------------------------------------------------------------------------
@@ -2588,7 +2565,7 @@ InitializeGameVariables
         LDA #$00
         STA currentStar
         LDA #TWINKLE_RATE
-        STA a48
+        STA starTwinkleRate
         LDA #$00
         STA unknownPurpose1
         LDA #$10
@@ -2599,14 +2576,14 @@ InitializeGameVariables
         STA camelSpitRate
         LDA #$07
         STA camelSpitBombRateCounter
-        STA a58
+        STA camelSpitBombRate
         LDA #$00
         STA camelSPitState
         LDA #$D0
         STA camelSpitFrame
         LDA #$01
         STA $D029    ;Sprite 2 Color
-        STA a5A
+        STA a5ARedundant
         LDA #$00
         STA a5CRedundant
         STA damageFlashFlag
@@ -2635,8 +2612,8 @@ b1FA3   LDA #BOTTOM_ROWS_DO_CLEAR
         STA bottomRowFlag
         JSR DisplayCamelBonus
         JSR SetLevelDifficulty
-        LDA aFD
-        STA aFD
+        LDA camelCollision
+        STA camelCollision
         LDA #$19
         STA $D401    ;Voice 1: Frequency Control - High-Byte
         LDA #$00
@@ -2782,14 +2759,14 @@ b2458   STA (scoreColorLo),Y
 scoreFlashColors = *-$01
         .BYTE $0E,$07,$0A,$01,$EA
 b2463   STY scoreScreenLoPtr
-b2465   LDA (p64),Y
+b2465   LDA (storeScreenLo),Y
         CLC 
         ADC #$01
-        STA (p64),Y
+        STA (storeScreenLo),Y
         CMP #$3A
         BNE b2477
         LDA #$30
-        STA (p64),Y
+        STA (storeScreenLo),Y
         DEY 
         BNE b2465
 b2477   LDY scoreScreenLoPtr
@@ -3313,7 +3290,7 @@ ResetRocketSPrite
         JMP HyperDriveResetShipSrite
 
 ; Redundant/Orphaned Code
-        DEC a6B
+        DEC a6BRedundant
         BEQ ResetCamelSpeedCounter
         RTS 
 
@@ -3433,14 +3410,14 @@ b283D   LDA camelCurrentColorArray,Y
         LDA #$38
         STA screenLineLoPtr
         LDA #$4F
-        STA a64
+        STA storeScreenLo
         STA scoreColorLo
         JMP j2875
 
 b286B   LDA #$39
         STA screenLineLoPtr
         LDA #$70
-        STA a64
+        STA storeScreenLo
         STA scoreColorLo
 
 j2875
@@ -3584,9 +3561,9 @@ b2942   LDA camelHealthArray,X
         JSR SetCamelMarkerScreenLoPtr
         NOP 
         STA currentYPosition
-        LDA #<p0124
+        LDA #CHAR_CAMEL
         STA currentCharacter
-        LDA #>p0124
+        LDA #WHITE
         STA colorForCurrentCharacter
         STX tempXStorage
         JSR WriteCurrentCharacterToCurrentXYPos
@@ -3691,7 +3668,7 @@ SetLevelDifficulty
         STA rocketMoveRate
         LDA spitBombRatesForLevels,X
         STA camelSpitBombRateCounter
-        STA a58
+        STA camelSpitBombRate
         LDX #$28
 b29DE   LDA playerStats,X
         STA SCREEN_RAM + $0397,X
@@ -3814,7 +3791,7 @@ b2B23   LDA @wa0095
         LDA collisionDetectedBits
         AND #$04
         BNE b2B22
-        LDA aFD
+        LDA camelCollision
         BEQ b2B22
         LDA collisionDetectedBits
         AND #$01
@@ -3886,13 +3863,13 @@ j2B84
         LDA #$C0
         STA $D002    ;Sprite 1 X Pos
         STA $D006    ;Sprite 3 X Pos
-        LDA #<pE0DF
+        LDA #AMC_LOGO_SPRITE1
         STA Sprite0Ptr
-        LDA #>pE0DF
+        LDA #AMC_LOGO_SPRITE2
         STA Sprite1Ptr
-        LDA #<pE2E1
+        LDA #AMC_LOGO_SPRITE3
         STA Sprite2Ptr
-        LDA #>pE2E1
+        LDA #AMC_LOGO_SPRITE4
         STA Sprite3Ptr
         LDA #$0F
         STA $D015    ;Sprite display Enable
@@ -3925,7 +3902,7 @@ b2C02   LDA f2C4F,X
         LDA #$01
         STA scoreScreenLoPtr
         LDA #$00
-        STA aFD
+        STA camelCollision
         JMP j2CD8
 
         .BYTE $EA
@@ -3955,7 +3932,7 @@ f2CAF   .BYTE $20,$20,$20,$10,$12,$05,$13,$13
 ; j2CD8
 ;-------------------------------------------------------------------------
 j2CD8
-        LDA aC5
+        LDA lastKeyPressed
         CMP #$04
         BNE b2CE1
         JMP j2D00
@@ -3989,7 +3966,7 @@ j2D00
         BNE b2D0C
         LDA #$31
 b2D0C   STA SCREEN_RAM + $0306
-b2D0F   LDA aC5
+b2D0F   LDA lastKeyPressed
         CMP #$40
         BNE b2D0F
         JMP b2CEF
@@ -4068,12 +4045,12 @@ j2D87
         LDA scoreScreenLoPtr
         STA playerSector
         LDA #$00
-        STA aFD
+        STA camelCollision
         LDA SCREEN_RAM + $0367
         CMP #$20
         BEQ b2D9A
         LDA #$FF
-        STA aFD
+        STA camelCollision
 b2D9A   JSR s2B3D
         JSR InitializeScreenPointerArray
         RTS 
@@ -4082,9 +4059,9 @@ b2D9A   JSR s2B3D
 ; s2DA1
 ;-------------------------------------------------------------------------
 s2DA1
-        LDA #<p0206
+        LDA #6
         STA player2Lives
-        LDA #>p0206
+        LDA #2
         STA playerTUrn
         LDA SCREEN_RAM + $0306
         CMP #$31
@@ -4101,7 +4078,7 @@ b2DB1   LDA #$01
 j2DB6
         LDX #$10
 b2DB8   LDA #$00
-        STA fCFFF,X
+        STA SpriteXPos-1,X
         DEX 
         BNE b2DB8
         LDA #$00
@@ -4150,7 +4127,7 @@ b2DEC   LDA (colorForCurrentCharacter),Y
 ;-------------------------------------------------------------------------
 j2DF8
         LDA #>SCREEN_RAM + $004F
-        STA a06
+        STA tempVar
         LDA #<SCREEN_RAM + $004F
         STA colorForCurrentCharacter
         JSR s2DD7
@@ -4254,22 +4231,22 @@ s2E93
         STA collisionDetectedBits
 b2E9A   RTS 
 
-b2E9B   LDA aC5
+b2E9B   LDA lastKeyPressed
         CMP #$04
         BNE b2E9A
         LDA #$01
         STA $D020    ;Border Color
         STA $D021    ;Background Color 0
-b2EA9   LDA aC5
+b2EA9   LDA lastKeyPressed
         CMP #$40
         BNE b2EA9
-b2EAF   LDA aC5
+b2EAF   LDA lastKeyPressed
         CMP #$04
         BNE b2EAF
         LDA #$00
         STA $D020    ;Border Color
         STA $D021    ;Background Color 0
-b2EBD   LDA aC5
+b2EBD   LDA lastKeyPressed
         CMP #$40
         BNE b2EBD
         RTS 

@@ -173,12 +173,24 @@ Sprite7Ptr                    = $07FF
 ;
 KERNEL_INTERRUPT = $EA31
 
+.enc "petscii"  ;define an ascii->petscii encoding
+        .cdef "  ", $20  ;characters
+        .cdef "--", $ad  ;characters
+        .cdef "$$", $24  ;characters
+        .cdef ">>", $3E  ;characters
+        .cdef "<<", $3C  ;characters
+        .cdef "::", $3A  ;characters
+        .cdef "..", $2E  ;characters
+        .cdef "AZ", $01
+        .cdef "09", $30
+        .cdef "@@", $00
+
 .include "constants.asm"
 
 *=$0801
 ;-------------------------------------------------------
 ; SYS 16384 ($4000)
-; This launches the program from address $4000, i.e. MainControlLoop.
+; This launches the program from address $1000, i.e. StartGame
 ;-------------------------------------------------------
 ; $9E = SYS
 ; $20,$34,$30,$39,$36,$00,$00,$00 = 4096 (StartGame
@@ -225,13 +237,13 @@ b102A   LDA currentXPosition
         STA screenLinesHiPtrArray,Y
         LDA currentXPosition
         CLC 
-        ADC #$28
+        ADC #PLAYAREA_WIDTH
         STA currentXPosition
         LDA currentYPosition
         ADC #$00
         STA currentYPosition
         INY 
-        CPY #$19
+        CPY #PLAYAREA_HEIGHT+2
         BNE b102A
         LDX #$00
 b1048   LDA screenLinesLoPtrArray,X
@@ -242,24 +254,12 @@ b1048   LDA screenLinesLoPtrArray,X
         LDA #$20
 b1056   STA (currentXPosition),Y
         INY 
-        CPY #$28
+        CPY #PLAYAREA_WIDTH
         BNE b1056
         INX 
-        CPX #$19
+        CPX #PLAYAREA_HEIGHT+2
         BNE b1048
         JMP WriteScreenHeaderText
-
-.enc "petscii"  ;define an ascii->petscii encoding
-        .cdef "  ", $20  ;characters
-        .cdef "--", $ad  ;characters
-        .cdef "$$", $24  ;characters
-        .cdef ">>", $3E  ;characters
-        .cdef "<<", $3C  ;characters
-        .cdef "::", $3A  ;characters
-        .cdef "..", $2E  ;characters
-        .cdef "AZ", $01
-        .cdef "09", $30
-        .cdef "@@", $00
 
 gameHiScore = txtScreenHeader + $13
 txtScreenHeader   =*-$01
@@ -328,7 +328,7 @@ GetCharacterAtCurrentXYPos
 ;---------------------------------------------------------------------------------
 DrawLandscape   
         LDX landscapePosition
-        LDY #$28
+        LDY #PLAYAREA_WIDTH
 b119A   LDA landscapeRow0,X
         STA SCREEN_RAM + $01B7,Y
         LDA landscapeRow1,X
@@ -345,7 +345,7 @@ b119A   LDA landscapeRow0,X
         DEX 
         CPX #$00
         BNE b11C7
-        LDX #$28
+        LDX #PLAYAREA_WIDTH
 b11C7   DEY 
         BNE b119A
         RTS 
@@ -368,7 +368,7 @@ b11DE   DEC landscapePosition
         LDA landscapePosition
         CMP #$00
         BNE DrawLandscape
-        LDA #$28
+        LDA #PLAYAREA_WIDTH
         STA landscapePosition
         JMP DrawLandscape
 
@@ -388,13 +388,17 @@ b11F2   LDA #$08
         NOP 
         LDA shipSpriteFrame
         STA Sprite0Ptr
+
         INC $D025    ;Sprite Multi-Color Register 0
+
         LDA shipYPosition
         STA $D001    ;Sprite 0 Y Pos
+
         LDA shipXPosition
         CLC 
         ASL 
         STA SpriteXPos    ;Sprite 0 X Pos
+
         BCS b121B
         LDA $D010    ;Sprites 0-7 MSB of X coordinate
         AND #$FE
@@ -679,13 +683,16 @@ b137A   LDA #CHAR_BLOCK
         RTS 
 
 ;-------------------------------------------------------------------------
-; s139A
+; Redundant Code
 ;-------------------------------------------------------------------------
 s139A
         DEC unknownPurpose1
         BEQ UpdateCamelDirectionMarker
         RTS 
 
+;-------------------------------------------------------------------------
+; End of Redundant Code
+;-------------------------------------------------------------------------
 UpdateCamelDirectionMarker   
         LDA #$13
         STA unknownPurpose1
@@ -694,9 +701,15 @@ b13A4   =*+$01
         BEQ MoveCamelMarkerLeft
         JMP MoveCamelMarkerRight
 
+;-------------------------------------------------------------------------
+; Redundant Code
+;-------------------------------------------------------------------------
         BEQ b13A4
         DEC $D00E    ;Sprite 7 X Pos
         RTS 
+;-------------------------------------------------------------------------
+; End of Redundant Code
+;-------------------------------------------------------------------------
 
 MoveCamelMarkerLeft   
         LDA #$13
@@ -722,10 +735,16 @@ b13D1   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         STA $D010    ;Sprites 0-7 MSB of X coordinate
         RTS 
 
+;-------------------------------------------------------------------------
+; Redundant Code
+;-------------------------------------------------------------------------
         JSR s139A
         LDX landscapePosition
         LDY #$28
         JMP b119A
+;-------------------------------------------------------------------------
+; End of Redundant Code
+;-------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------
 ; MoveCamelMarkerRight
@@ -961,6 +980,9 @@ b165D   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         STA $D010    ;Sprites 0-7 MSB of X coordinate
         RTS 
 
+;*******************************************************************************
+; Redundant/Orphaned Code
+;*******************************************************************************
         .BYTE $D0
         AND #$D7
         STA $D010    ;Sprites 0-7 MSB of X coordinate
@@ -982,9 +1004,6 @@ b165D   LDA $D010    ;Sprites 0-7 MSB of X coordinate
         CMP #$FF
         BNE b169E
         STA currentEnemyID
-;-------------------------------------------------------------------------
-; j168C
-;-------------------------------------------------------------------------
 j168C
         LDA $D015    ;Sprite display Enable
         AND #$87
@@ -1000,9 +1019,6 @@ b169E   RTS
         .BYTE $C7,$22
         JMP j1613
 
-;-------------------------------------------------------------------------
-; j16A4
-;-------------------------------------------------------------------------
 j16A4
         LDA $D01F    ;Sprite to Background Collision Detect
         AND #$80
@@ -1032,9 +1048,6 @@ b16C2   LDA #CHAR_SPACE
         LDA hyperdriveLanscapeMoveCOunter
         JSR s16FC
         LDX tempXStorage
-;-------------------------------------------------------------------------
-; j16DF
-;-------------------------------------------------------------------------
 j16DF
         DEX 
         BNE b16AE
@@ -1052,16 +1065,10 @@ b16E3   LDA hyperdriveLanscapeMoveCOunter
         RTS 
 
 b16F6   LDA #$00
-;-------------------------------------------------------------------------
-; j16F8
-;-------------------------------------------------------------------------
 j16F8
         STA f22CF,X
         RTS 
 
-;-------------------------------------------------------------------------
-; s16FC
-;-------------------------------------------------------------------------
 s16FC
         STA currentCharacter
         JMP WriteCurrentCharacterToCurrentXYPos
@@ -1085,6 +1092,10 @@ b1714   LDA shipSpeed
         RTS 
 
 b171B   JMP s139A
+
+;-------------------------------------------------------------------------
+; End of Redundanct Code
+;-------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------
 ; CamelUpdateMarker   
@@ -3485,7 +3496,7 @@ b28BA   STA COLOR_RAM + $004F,X
         STA COLOR_RAM + $0070,X
         DEX 
         BNE b28BA
-        LDX #$28
+        LDX #PLAYAREA_WIDTH
         LDA #$20
 b28C7   STA SCREEN_RAM + $009F,X
         DEX 
@@ -3525,7 +3536,7 @@ b2903   STA $D400    ;Voice 1: Frequency Control - Low-Byte
         BNE b28FE
         DEC scoreScreenLoPtr
         BNE b28FC
-        LDX #$28
+        LDX #PLAYAREA_WIDTH
         LDA #$20
 b291C   STA SCREEN_RAM + $009F,X
         DEX 
@@ -3662,7 +3673,7 @@ SetLevelDifficulty
         LDA spitBombRatesForLevels,X
         STA camelSpitBombRateCounter
         STA camelSpitBombRate
-        LDX #$28
+        LDX #PLAYAREA_WIDTH
 b29DE   LDA playerStats,X
         STA SCREEN_RAM + $0397,X
         LDA #$07

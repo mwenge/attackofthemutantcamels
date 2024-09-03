@@ -1,0 +1,99 @@
+; The IO space
+; ------------
+
+; Video controller locations
+
+INTL		EQU	00h
+INTH		EQU	01h
+STARTL		EQU	02h
+STARTH		EQU	03h
+HCNTL		EQU	04h
+HCNTH		EQU	05h
+VCNTL		EQU	06h
+VCNTH		EQU	07h
+SCROLL1		EQU	08h
+SCROLL2		EQU	09h
+SCROLL3		EQU	0Ah
+ACK		EQU	0Bh
+MODE		EQU	0Ch
+BORDL		EQU	0Dh
+BORDH		EQU	0Eh
+PMASK		EQU	0Fh
+INDEX		EQU	10h
+ENDL		EQU	11h
+ENDH		EQU	12h
+MEM		EQU	13h
+GPR		EQU	14h
+DIAG		EQU	15h
+DIS		EQU	16h
+HLPL		EQU	00h
+HLPH		EQU	01h
+VLPL		EQU	02h
+VLPH		EQU	03h
+STATUS		EQU	04h
+
+; Blitter locations
+
+BLPROG0		EQU	30h
+BLPROG1		EQU	31h
+BLPROG2		EQU	32h
+BLCMD		EQU	33h
+BLCON		EQU	34h
+BLDEST0		EQU	20h
+BLDEST1		EQU	21h
+BLDEST2		EQU	22h
+BLSRC0		EQU	23h
+BLSRC1		EQU	24h
+BLSRC2		EQU	25h
+BLSTAT		EQU	26h
+BLINNER		EQU	27h
+BLOUTER		EQU	28h
+
+; External IO
+
+PORT1		EQU	40h
+PORT2		EQU	50h
+PORT3		EQU	40h
+
+; Expansion IO base locations
+
+GPIO0		EQU	60h
+GPIO1		EQU	70h
+
+
+; Blitter Command Definition
+
+BL_SRC0		EQU	0
+BL_SRC1		EQU	1
+BL_SRC2		EQU	2
+BL_DST0		EQU	3
+BL_DST1		EQU	4
+BL_DST2		EQU	5
+BL_MODE		EQU	6
+BL_CMPL		EQU	7
+BL_OUT		EQU	8
+BL_IN		EQU	9
+BL_STEP		EQU	10
+BL_PAT		EQU	11
+BL_CMD		EQU	12
+
+
+; DSP memory mapped registers:
+
+DSP_SEG		EQU 4100h
+
+DSP_SINE	EQU 0						; start of sine table
+DSP_CONST	EQU 200h					; start of constants area
+DSP_REGS	EQU 280h					; start of internal registers area.
+DSP_PC		EQU 294h					; The DSP program counter.
+
+DSP_DRAM	EQU 300h
+DSP_PRAM	EQU 400h
+
+DSP_STATUS	EQU 600h					; offset to run/status register from above
+DSP_STOP	EQU 0						; segment. STOP and RUN are the values to
+DSP_RUN		EQU 10h					; write to DSP_STATUS
+
+
+
+

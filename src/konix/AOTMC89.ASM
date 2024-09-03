@@ -1,4 +1,4 @@
-%include "kms.inc"			;PORT definitions file !
+include "kms.inc"			;PORT definitions file !
 
 ;-------------------------------------------------------------------
 ;
